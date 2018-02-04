@@ -1,4 +1,72 @@
+% Pattern Duda
+% Deep Learning Book
+% Tutorial for HMM
+% Fundamentals of speech recognition Rabiner - HMM np.
+% https://web.stanford.edu/class/cs224s/lectures/
+% The HTK Book file:///home/michal/Downloads/The-HTK-book.pdf
+% Homayoon Beigi Fundamentals ofSpeaker Recognitio - no jest troszeczkę
+% http://www.practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
+% https://dsp.stackexchange.com/questions/19564/cepstral-mean-normalization
+
+% Wyróżnione
+% Parallel Speaker and Content Modelling for Text-dependent Speaker Verification https://pdfs.semanticscholar.org/fcb5/af7bbb24e3bea6564e57e3a2cceca6af5481.pdf
+% COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION https://arxiv.org/pdf/1707.04373.pdf
+
+% W sumie nie wiem, miałem w zakładkach
+% Deep Neural Networks for extracting Baum-Welch statistics for SpeakerRecognition 
+% A NOVEL SCHEME FOR SPEAKER RECOGNITION USING A PHONETICALLY-AWARE DEEP NEURAL NETWORK http://ieeexplore.ieee.org/ielx7/6844297/6853544/06853887.pdf?tp=&arnumber=6853887&isnumber=6853544#pdfjs.action=download
+% A tutorial on text-independent speaker verification
+% OPTIMISATION OF NEURAL MODELSS5.1 FOR SPEAKER IDENTIFICATION http://ieeexplore.ieee.org/ielx5/132/3385/00115617.pdf?tp=&arnumber=115617&isnumber=3385&tag=1#pdfjs.action=download
+% DEEP NEURAL NETWORKS BASED SPEAKER MODELING AT DIFFERENT LEVELS OF PHONETIC GRANULARITY http://ieeexplore.ieee.org/ielx7/7943262/7951776/07953196.pdf?tp=&arnumber=7953196&isnumber=7951776#pdfjs.action=download
+% Front-End Factor Analysis for Speaker Verification http://ieeexplore.ieee.org/ielx5/10376/5710472/05545402.pdf?tp=&arnumber=5545402&isnumber=5710472&tag=1#pdfjs.action=download
+% DEEP NEURAL NETWORK-BASED SPEAKER EMBEDDINGS FOR END-TO-END SPEAKER VERIFICATION http://ieeexplore.ieee.org/ielx7/7836849/7846230/07846260.pdf?tp=&arnumber=7846260&isnumber=7846230#pdfjs.action=download
+% PLDA FOR SPEAKER VERIFICATION WITH UTTERANCES OF ARBITRARY DURATION http://ieeexplore.ieee.org/ielx7/6619549/6637585/06639151.pdf?tp=&arnumber=6639151&isnumber=6637585#pdfjs.action=download
+% Speaker Adaptive Bottleneck Features Extraction for LVCSR Based on Discriminative Learning of Speaker Codes http://ieeexplore.ieee.org/ielx7/6924027/6936571/06936584.pdf?tp=&arnumber=6936584&isnumber=6936571#pdfjs.action=download
+
+% Z opisami
+% DNN based Speaker Recognition on Short Utterances https://arxiv.org/pdf/1610.03190.pdf
+% TIME DELAY DEEP NEURAL NETWORK-BASED UNIVERSAL BACKGROUND MODELSFOR SPEAKER RECOGNITION http://ieeexplore.ieee.org/document/7404779/
+% IMPROVING SPEAKER RECOGNITION PERFORMANCE IN THE DOMAIN ADAPTATIONCHALLENGE USING DEEP NEURAL NETWORKS http://ieeexplore.ieee.org/document/7078604/
+% Deep Neural Networks for extractingBaum-Welch statistics for Speaker Recognition http://cs.uef.fi/odyssey2014/program/pdfs/28.pdf http://www.crim.ca/perso/patrick.kenny/stafylakis_Odyssey_14_presentation.pdf (presentation)¶
+% NEW TYPES OF DEEP NEURAL NETWORK LEARNING FOR SPEECH RECOGNITION AND RELATED APPLICATIONS: AN OVERVIEW http://ieeexplore.ieee.org/document/6639344/¶
+% Deep Neural Network Approaches to Speaker and Language Recognition https://groups.csail.mit.edu/sls/publications/2015/Dehak_IEEE-2015.pdf¶
+% AANN: an alternative to GMM for pattern recognition
+
+% Sequence Dependent - Category
+% A NOVEL SCHEME FOR SPEAKER RECOGNITION USING A PHONETICALLY-AWAREDEEP NEURAL NETWORK http://ieeexplore.ieee.org/document/6853887/
+% AN ITERATIVE DEEP LEARNING FRAMEWORK FOR UNSUPERVISED DISCOVERY OFSPEECH FEATURES AND LINGUISTIC UNITS WITH APPLICATIONS ON SPOKEN TERMDETECTION https://arxiv.org/pdf/1602.00426.pdf
+% DEEP NEURAL NETWORKS BASED SPEAKER MODELING AT DIFFERENT LEVELS OF PHONETIC GRANULARITY
+% Deep Neural Network based Text-Dependent Speaker Recognition:Preliminary Results
+
+% Bottleneck Features - Category
+% Investigation of Bottleneck Features and Multilingual Deep Neural Networks for Speaker Verification https://pdfs.semanticscholar.org/ab77/e56b705cde2e6e045102537b905d87c21ad4.pdf
+
+% Google - End to End global password - Category
+% End-to-End Text-Dependent Speaker Verification https://static.googleusercontent.com/media/research.google.com/pl//pubs/archive/44681.pdf
+% Locally-Connected and Convolutional Neural Networks for Small FootprintSpeaker Recognition
+
+% RedDots - Category 
+% Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus http://cs.uef.fi/sipu/pub/1125.pdf
+% EXPLOITING SEQUENCE INFORMATION FOR TEXT-DEPENDENT SPEAKER VERIFICATION https://infoscience.epfl.ch/record/225954/files/Dey_Idiap-RR-04-2017.pdf
+% Parallel Speaker and Content Modelling for Text-dependent Speaker Verification https://pdfs.semanticscholar.org/fcb5/af7bbb24e3bea6564e57e3a2cceca6af5481.pdf
+% COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION https://arxiv.org/pdf/1707.04373.pdf
+% Tandem Features for Text-dependent Speaker Verification on the RedDots Corpus http://www.crim.ca/perso/patrick.kenny/Alam_interspeech2016.pdf
+% i-vector/HMM Based Text-dependent Speaker Verification System for RedDots Challenge http://www.fit.vutbr.cz/research/groups/speech/publi/2016/zeinali_interspeech2016_IS161174.pdf
+
+% Random
+% Deep Speech: Scaling up end-to-endspeech recognition https://arxiv.org/pdf/1412.5567.pdf
+% Fader Networks:Manipulating Images by Sliding Attributes https://arxiv.org/pdf/1706.00409.pdf
+
+
 % Część teoretyczna
+@Book{deeplearningbook,
+    title={Deep Learning},
+    author={Ian Goodfellow and Yoshua Bengio and Aaron Courville},
+    publisher={MIT Press},
+    note={\url{http://www.deeplearningbook.org}},
+    year={2016}
+}
+
 @Book{TAPL,
  author = {Pierce, Benjamin},
  title = {Types and programming languages},

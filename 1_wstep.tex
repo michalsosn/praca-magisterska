@@ -1,135 +1,122 @@
 \chapter{Wstęp}\label{chap:wstep}
 
-Zakresem niniejszej pracy inżynierskiej jest
-tworzenie kompilatorów dla języków funkcyjnych ze statycznymi systemami typów.
-Przedmiotem pracy jest usprawnienie
-programowania z~użyciem typów w~Glasgow Haskell Compiler.
-Temat został wybrany ze względu na chęć zapoznania się z~budową kompilatora oraz
-udziału w~rozwoju powszechnie używanego programu.
+Zakresem niniejszej pracy magisterskiej są systemy rozpoznawania mówcy zależne od tekstu. Celem
+pracy jest zbadanie możliwości wykorzystania modelu sieci neuronowej do rozwiązania tego problemu. 
 
-W~popularnych, statycznie typowanych językach programowania, gramatyka przewiduje
-kilka rodzajów wyrażeń. Są to termy, służące do wyrażania obliczeń, które mają zostać
-wykonane po uruchomianiu programu oraz typy, które przypisuje się termom, by
-rozróżnić termy poprawne oraz niepoprawne.
-Niektóre języki, w~tym Haskell, zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
-typów taką rolę, jak typy wobec termów. Zawarte w~temacie pracy mechanizmy programowania
-z~użyciem typów dodają do typów, obok ich pierwotnej roli, możliwości
-wyrażania obliczeń, jakie zwykle zarezerwowana są dla termów.
-Obliczenia te wykonywane są na etapie sprawdzania typów w~czasie kompilacji.
+Rozpoznawanie mówcy polega na analizie nagrań dźwiękowych mowy w celu wydobycia cech biometrycznych 
+charakteryzujących osobę mówiącą. Wyróżnia się dwa praktyczne problemy do rozwiązania z wykorzystaniem tych
+cech: problem weryfikacji mówcy oraz problem identyfikacji mówcy. 
 
-Praca została poświęcona językowi Haskell i~kompilatorowi Glasgow Haskell
-Compiler. Wybór ten został podyktowany tym, iż jest to projekt \foreign{open source}
-i~dołączenie do niego ułatwione jest dzięki zasobom opisującym jak się wdrożyć
-oraz pomocnej społeczności.
-Drugim kryterium była dostępność rozszerzeń umożliwiających
-programowanie z~użyciem typów.
-GHC oferuje między innymi uogólnione algebraiczne
-typy danych (\foreign{GADTs}\cite{ExtPhantomTypes}\cite{ExtGADTs}),
-promocję typów danych (\foreign{data type promotion}\cite{ExtPromotion}),
-zależności funkcyjne między parametrami w~klasach typów
-(\foreign{functional dependencies in multi-parameter type classes}\cite{ExtFunDeps})
-i~rodziny typów (\foreign{type families}\cite{ExtAssocTyFams}\cite{ExtAssocTypesWithClass}\cite{ExtClosedTyFams})
-Szczególnie istotnym rozszerzeniem są rodziny typów, gdyż umożliwiają
-definiowanie na poziomie typów funkcji wykorzystujących
-dopasowywanie wzorców oraz zależności funkcyjne w~klasach typów,
-które dają równoważne możliwości,
-lecz wymagają programowania w~stylu relacyjnym zamiast funkcyjnego.
-Biblioteka standardowa GHC dostarcza również pomocne moduły, na przykład \code{Data.Type},
-\code{Data.Proxy} i~\code{GHC.TypeLits}, z~przydatnymi typami i~funkcjami na poziomie
-typów, jak operatory logiczne.
+Weryfikacja mówcy polega na stwierdzeniu, czy nagranie pochodzi od pewnej zarejestrowanej wcześniej osoby 
+lub wykryciu, że jest na nim ktoś inny. Ten przypadek występuje na przykład przy uwierzytelnianiu za pomocą głosu 
+do systemu bankowego. Konieczne jest wtedy wykrycie, gdy oszust podaje się za prawdziwego właściciela konta. 
+Identyfikacja mówcy polega na rozpoznaniu, która z zarejestrowanych osób jest na nagraniu lub czy 
+jest na nim ktoś niezarejestrowany. Identyfikacja może być wykorzystana przez służby policyjne do
+zidentyfikowania osób na zdobytym nagraniu.
 
-Programowanie z~użyciem typów możliwe jest również w~innych językach. Na przykład,
-Scala oferuje do tego \foreign{path dependent types}, a~w~C++ możliwe jest
-metaprogramowanie z~użyciem szablonów. Istnieją też języki z~typami zależnymi
-jak Agda lub Idris. Wiele z~tych języków ma implementacje o~otwartych źródłach
-i~mogłoby służyć do realizacji pracy o~tym samym zakresie zamiast Haskella.
+Rozpoznawanie mówcy można również podzielić ze względu na to, czy treść nagrania jest znana z góry
+na rozpoznawanie mówcy zależne od tekstu i niezależne od tekstu. Weryfikacja mówcy zwykle może
+być przeprowadzona zależnie od tekstu, gdyż w typowych zastosowaniach można oczekiwać od weryfikowanej
+osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w sytuacji, 
+gdy nagrań rejestrujących jest tylko kilka. W przypadku, gdy nagranie nie zawiera oczekiwanej treści 
+akceptowalne jest odrzucenie weryfikowanego nagrania niezależnie od mówcy. 
+Identyfikację z kolei trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą 
+być tego nieświadome.
+% cite że poprawia skuteczność jak mało nagrań
 
-Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgodne
-z~aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i~Utrecht
-Haskell Compiler\cite{WikiImplementations}. Porównanie repozytoriów pozwala
-stwierdzić, że spośród nich GHC jest bardziej rozwinięty. Różnica ta objawia się
-w~tym, iż rozszerzenia kompilatora pozwalające na programowanie na poziomie
-typów jak rodziny typów istnieją wyłącznie w~GHC\cite{UHCUserGuide}. Z~tego
-powodu w~pracy został wybrany ten kompilator.
+Jako że przedmiotem pracy jest rozpoznawanie mówcy zależne od tekstu, uwaga zostanie poświęcona problemowi
+weryfikacji, a nie identyfikacji mówcy. Ten problem jest również ciekawy ze względu na potencjalne zastosowania,
+przypuszczalnie większe niż problem identyfikacji. Zaletą bazowania na nagraniu mowy jest możliwość
+jego nieinwazyjnego pozyskania, jednakże niska skuteczność rozpoznawania sprawiała, że takie systemy
+mogły pełnić tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjnego hasła.
 
-Rodziny typów zostały wprowadzone do Haskella w~wersji 6.10.1, czyli w~roku
-2008\cite{WikiIndexedTypes}. Do tej pory są przedmiotem prac naukowych, a~ich implementacja jest
-nieustannie rozwijana. Na przykład, w~roku 2015 zostały wprowadzone do GHC
-różnowartościowe rodziny typów\cite{WikiInjectiveTypeFamilies}.
-Aktywny rozwój świadczy o~tym, iż jest to
-temat bardzo aktualny. Czynnik ten sprawia też, iż wiele usprawnień do
-nowo dodanych funkcji, ułatwiających korzystanie z~nich, wciąż czeka na realizację.
-Istotny jest też fakt, iż type checker to największy komponent GHC\cite{AOSA},
-więc podczas modyfikacji z~dużym prawdopodobieństwem powstają nowe błędy.
-Podjęcie się realizacji tych usprawnień i~naprawienia błędów są zatem dobrym tematem na pracę.
+Systemu bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
+związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
+stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
+osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
+wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi GMM w obecnych systemach do rozpoznania 
+jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw. \foreign{bottleneck features}.
+Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
+neuronowych. Celem tej pracy jest zbadanie tematu i być może wypróbowanie innego sposobu zaaplikowania
+sieci neuronowej.
+% bottleneck paper, google paper
+
+Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety, 
+że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców, 
+albo dostępne, lecz za opłatą. Na szczęście w 2015 ta potrzeba
+została zaadresowana przez naukowców między innymi z Singapuru. Zgromadzili oni nagrania o znanej
+treści od ochotników z całego świata i opublikowali zbiór RedDots. Trzeba jednak przyznać, że
+zasoby posiadane przez korporacje w postaci danych i w postaci czasu i talentu pracowników sprawiają,
+że dorównanie ich wynikom jest nierealne. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
+jest w ogóle warty uwagi i porównanie go z systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
-Celem pracy jest dokonanie jak największej liczby usprawnień w~kompilatorze
-GHC. Przez usprawnienia rozumiane są zmiany w~GHC lub w~powiązanych z~tym
-projektem bibliotekach. Zmiany w~GHC zgłaszane są w~systemie Trac, który
-używany jest w~projekcie do organizacji pracy programistów. Jako cele pracy
-wybranych zostało kilka zgłoszeń spośród tych znajdujących się w~systemie Trac.
+Celem pracy jest stworzenie systemu do rozpoznawania mówcy wykorzystującego sieć neuronową. 
+Zostanie on przetestowany na zbiorze RedDots i porównany z innymi stworzonymi systemami.
+Nie oczekujemy uzyskania lepszych wyników, lecz warto by było, gdyby świadczyły o tym,
+że dana metoda nie jest zupełnie losowa.
 
-Podjęte zostały wyłącznie usprawnienia polegające na zmianach
-w~kodzie, w~częściach związanych z~rozszerzeniami opisanymi wcześniej. Wybrane
-usprawnienia to:
+Systemy, które zostały stworzone i przetestowane, to:
 
 \begin{itemize}
- \item Ujednolicenie wyświetlania rodzin typów w~błędach i~ostrzeżeniach kompilatora.
- \item Dodanie ostrzeżeń o~nieużywanych zmiennych w~rodzinach typów.
- \item Naprawienie błędu z~niewłaściwym parsowaniem zmiennych zaczynających się od podkreślnika w~przypadku kompilacji z~rozszerzeniem \code{NamedWildCards}.
+  \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła (GMM-UBM)
+  \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych (HMM-GMM)
+  \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
 \end{itemize}
 
-Poprawne wprowadzenie zmiany w~kodzie wymaga przejścia przez procedurę ustaloną
-przez osoby z prawem zapisu do repozytorium\cite{WikiFixingBugs}. Konieczne
-jest zatem pisanie kodu akceptowalnej jakości, zgodnego z~ustalonymi konwencjami.
-Zgodnie z~procedurą, wykonanie usprawnienia wymaga:
+Modele zostaną przetestowane na zbiorze RedDots. Policzone zostaną następujące miary jakości:
 
 \begin{itemize}
-  \item Informowania o~stanie pracy w~systemie Trac. Oznaczenie swojego konta jako właściciela zadania, uzupełnienie informacji na przykład o~testach i~powiązanych zadaniach, a~na koniec oznaczenie zgłoszenia jako zrealizowanego.
-  \item Przygotowania testów pokrywających wprowadzone zmiany. Dodanie ich do zestawu testów wykonywanych w~czasie walidacji.
-  \item Dokonanie zmian w~kodzie w~zgodzie z~obowiązującymi konwencjami wraz z~dokumentacją. Sporządzenie z~nich commitów w~systemie kontroli wersji git.
-  \item Wysłanie łatki do systemu Phabricator, gdzie przejdzie ona inspekcję. Jeżeli nie będzie ku temu przeszkód, zmiany zostaną przeniesione do głównego repozytorium.
+  \item Krzywa ROC
+  \item EER
+  \item AUR
 \end{itemize}
+
+Modele zostaną na ich podstawie porównane między sobą i z wynikami innych prac. Osobno zostaną rozważeni mężczyźni 
+i kobiety, gdyż zbiór zawiera o wiele nagrań mężczyzn i wiele prac zupełnie ignoruje wyniki dla kobiet, 
+gdyż jest ich za mało. Rozpatrzone zostaną cztery zestawy testowe zdefiniowane w RedDots.
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
-Podstaw teorii budowy kompilatorów dostarcza \cite{Dragon}. Autorzy opisują
-budowę kompilatora, a~następnie każdą fazę kompilacji. Ma to zastosowanie także
-w~przypadku kompilatora GHC. Krótki opis poświęcony konkretnie GHC dostępny jest
-w~\cite{AOSA}. Podstawy teorii typów zawarte są w~\cite{TAPL}. Omówiony jest
-w~tej pozycji nietypowany i~typowany rachunek lambda i~kilka jego wzbogaconych
-wersji. To bardzo istotne, gdyż pojęcia z~rachunku lambda występują powszechnie
-w~dokumentacji, w~kodzie GHC i~są powszechnie używane w~dyskusjach przez
-programistów. Z~drugiej strony część poświęcona podtypowaniu nie ma
-bezpośredniego zastosowania do GHC oraz opis nie obejmuje typów
-zależnych. Szczególnie warte uwagi w~ramach wprowadzenia teoretycznego są
-również dwa kursy, dostępne za darmo na platformie Coursera: \foreign{Automata}
-prowadzony przez Jeffa Ullmana oraz \foreign{Programming Languages} prowadzony
-przez Dana Grossmana. Są to zaadoptowane do formy kursu internetowego kursy
-akademickie.
+Podstawy teorii rozpoznawania mowy są dobrze opisane w \titlei{Fundamentals of speech recognition} 
+od dr Lawrence Rabinera oraz w jego 
+\titlei{A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition}, które
+skupia się na praktycznym wprowadzeniu do ukrytych modeli Markowa, użytych w tej pracy.
+Innym bardzo praktycznym zasobem na ten temat jest \titlei{The HTK Book}, opisująca rozwiązanie
+tego problemu zastosowane w pakiecie \titlei{Hidden Markov Model Toolkit} i publicznie dostępne zasoby
+kursu \titlei{CS 224S Spoken Language Processing} z Uniwersytetu Stanford.
 
-Praca nad GHC wymaga znajomości Haskella, w~którym jest tworzony
-kompilator. \cite{LearnYouAHaskell} i~\cite{RealWorldHaskell} stanowią dobre
-wprowadzenie do tego języka, obie pozycje są dostępne za darmo w~Internecie.
-Z~rozszerzeniami zmienionymi w~tej pracy, \code{TypeFamilies}
-i~\code{PartialTypeSignatures} można zapoznać się w~poradniku użytkownika GHC,
-w~zasobach \cite{GuideTypeFamilies} i~\cite{GuidePartialTypeSignatures}.
+O rozpoznawaniu mówcy traktuje \titlei{Fundamentals of Speaker Recognition} od prof. Homayoona Beigi.
+Jest to przydatny zasób, jednakże bardziej pomocne może okazać przejrzenie się mniejszych, lecz
+bardziej aktualnych publikacji na ten temat.
+% cite Rabiner, Rabiner tutorial, Beigi
 
-Strona systemu Trac projektu GHC zawiera wiele zasobów pozwalających
-zainteresowanym programistom wdrożyć się w~projekt. Jest tam między innymi opis
-jak pobrać i~skompilować źródła GHC\cite{WikiNewcomers}, opis procedury
-wprowadzania zmian w~kodzie\cite{WikiFixingBugs} oraz instrukcja konfiguracji
-i~wykorzystania narzędzia Phabricator\cite{WikiPhabricator}.
+Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w \titlei{Pattern Classification} prof. Richarda Dudy.
+Porusza takie tematy jak statystyka Bayesowska, \foreign{Expectation Maximization}, sieci neuronowe, RBM 
+i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie 
+uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa. 
+Doskonałym zasobem do głębokich sieci neuronowych jest dostępna legalnie w Internecie książka 
+\titlei{Deep Learning}\cite{deeplearningbook} od Iana Godfellowa i innych.
+
+Godne polecenia są kursy internetowe dostępne za darmo na platformie Coursera.
+Wysoko oceniane, również przez autora, związane z tematem pracy kursy to
+\titlei{Machine Learning} od Andrew Ng, 
+\titlei{Neural Networks for Machine Learning} od Geoffrey Hintona,
+\titlei{Digital Signal Processing} od Paolo Prandoniego i  Martina Vetterliego.
+Są to zaadoptowane do formy kursu internetowego kursy akademickie. Pozwalają 
+doświadczyć lekcji prowadzonych przez światowej sławy naukowców, niezależnie
+od miejsca urodzenia, co jest bardzo cenne.
 
 \section{Układ pracy}\label{sec:uklad_pracy}
 
-Rozdział \ref{chap:wstep} zawiera wprowadzenie i~określenie tematu oraz celu
-pracy. Rozdział \ref{chap:teoria} zawiera opis teorii budowy kompilatorów
-i~systemów typów związanej z~tematem. Rozdział \ref{chap:technologie}
-opisuje technologie i~narzędzia wykorzystane w~pracy. W~rozdziale
-\ref{chap:badania} przedstawiono opis dokonanych zmian w~GHC. Rozdział
-\ref{chap:podsumowanie} zawiera podsumowanie czy założone cele zostały
-osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z~kodem aplikacji,
+Rozdział \ref{chap:wstep} zawiera wprowadzenie i określenie tematu oraz celu
+pracy. Rozdział \ref{chap:teoria} zawiera opis kilku zagadnień z zakresu
+rozpoznawania mówcy i rozpoznawania mowy, które zostały wybrane jako
+istotne dla tej pracy. Rozdział \ref{chap:technologie}
+opisuje zbiór danych, technologie i narzędzia wykorzystane w pracy. W rozdziale
+\ref{chap:badania} przedstawiono opis stworzonych systemów i wyniki testów. Rozdział
+\ref{chap:podsumowanie} zawiera porównanie wyników i podsumowanie czy założone 
+cele zostały osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z kodem aplikacji,
 wersją elektroniczną tej pracy oraz kopią wykorzystanych źródeł internetowych.
+
