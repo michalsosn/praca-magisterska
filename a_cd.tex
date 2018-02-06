@@ -8,10 +8,9 @@
 Zawartość katalogów na płycie:
 \begin{description}
     \item[doc] : elektroniczna wersja pracy dyplomowej oraz dwie prezentacje wygłoszone podczas seminarium dyplomowego
-    \item[src] : repozytorium z~kodem źródłowym aplikacji, z~gałęzią \code{master} z~dnia 2016-01-31 i~dwiema gałęziami \code{trac-10839-consistent-ppr} i~\code{trac-10982-unused-vars-in-tyfams}, na których wykonywane były prace
-    \item[web] : kopie źródeł elektronicznych umieszczonych w~bibliografii
+    \item[src] : repozytorium z kodem źródłowym aplikacji
+    \item[web] : kopie źródeł elektronicznych umieszczonych w bibliografii
 \end{description}
 
-Przełączenie się między gałęziami w~repozytorium wymaga dodatkowego uaktualnienia submodułów używanych w~projekcie komendą \code{git submodule update --init}. Szczegóły zawarte są w~zasobie \cite{WikiGettingTheSources}, którego kopię można znaleźć w~katalogu \textbf{web}.
+Miejsce budowania modeli i wizualizacje zawarte są w katalogu \textbf{notebooks} w postaci notatników \foreign{Jupyter}. Są to pliki z rozszerzeniem \textbf{.ipynb}. Wykonanie ich wymaga uruchomienia serwera \foreign{Jupyter}, pomocne w tym mogą być skrypty \foreign{runInDocker.sh} i \foreign{runJupyter.sh}. Przeglądać i edytować je można przez interfejs webowy. Skrypty zostały sporządzone dla systemu operacyjnego Linuks, lecz \foreign{Jupyter} i \foreign{Python} dostępne są na wielu platformach, więc uruchomienie programów powinno być możliwe również na innych platformach.
 
-Zbudowanie ghc wymaga przygotowania środowiska. Opis jak tego dokonać na poszczególnych platformach jest dostępny w~\cite{WikiPreparation}. Do katalogu \textbf{web} zostały skopiowane podstrony z~instrukcjami dla systemów Windows, Linux i~MacOS X. Sam proces budowania jest opisany w~zasobie \cite{WikiNewcomers}.

@@ -34,7 +34,7 @@ Systemu bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomi
 związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
 stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
-wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi GMM w obecnych systemach do rozpoznania 
+wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi \shortcut{GMM} w obecnych systemach do rozpoznania 
 jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw. \foreign{bottleneck features}.
 Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
 neuronowych. Celem tej pracy jest zbadanie tematu i być może wypróbowanie innego sposobu zaaplikowania
@@ -60,17 +60,17 @@ Nie oczekujemy uzyskania lepszych wyników, lecz warto by było, gdyby świadczy
 Systemy, które zostały stworzone i przetestowane, to:
 
 \begin{itemize}
-  \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła (GMM-UBM)
-  \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych (HMM-GMM)
-  \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
+    \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła (\shortcut{GMM-UBM})
+    \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych (\shortcut{HMM-GMM})
+    \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
 \end{itemize}
 
 Modele zostaną przetestowane na zbiorze RedDots. Policzone zostaną następujące miary jakości:
 
 \begin{itemize}
-  \item Krzywa ROC
-  \item EER
-  \item AUR
+    \item Krzywa \shortcut{ROC}
+    \item \shortcut{EER}
+    \item \shortcut{AUR}
 \end{itemize}
 
 Modele zostaną na ich podstawie porównane między sobą i z wynikami innych prac. Osobno zostaną rozważeni mężczyźni 
@@ -93,7 +93,7 @@ bardziej aktualnych publikacji na ten temat.
 % cite Rabiner, Rabiner tutorial, Beigi
 
 Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w \titlei{Pattern Classification} prof. Richarda Dudy.
-Porusza takie tematy jak statystyka Bayesowska, \foreign{Expectation Maximization}, sieci neuronowe, RBM 
+Porusza takie tematy jak statystyka Bayesowska, \foreign{expectation maximization}, sieci neuronowe, RBM 
 i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie 
 uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa. 
 Doskonałym zasobem do głębokich sieci neuronowych jest dostępna legalnie w Internecie książka 
