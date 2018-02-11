@@ -147,6 +147,20 @@ $$f(x | \theta_i) = \frac{1}{\sqrt{(2 \pi)^d |\Sigma_i|}} exp(-\frac{1}{2} (x - 
 
 gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowariancji rozmiaru $d \times d$
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/2_2_a_leipzig_datashader}
+    \caption{Wizualizacja \foreign{datashader} danych o przejazdach w okolicach Lipska.}
+    \label{fig:2_2_a_leipzig_datashader}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/2_2_a_leipzig_gmm}
+    \caption{Wizualizacja mikstur dopasowanych za pomocą \shortcut{EM} do danych o przejazdach z rysunku \ref{fig:2_2_a_leipzig_datashader}.}
+    \label{fig:2_2_a_leipzig_gmm}
+\end{figure}
+
 \subsection{Maksymalizowanie wartości oczekiwanej}\label{sec:gmm}
 
 Parametry wielowymiarowego rozkładu normalnego można wyestymować na podstawie próby, na przykład
@@ -154,21 +168,31 @@ stosując estymator maksymalizujący prawdopodobieństwo danych.
 
 Estymatory parametrów maksymalizujące prawdopodobieństwo $M$ elementów $x^j$.
 
-$\hat{\mu} = \frac{1}{m} \Sigma_{j=0}^M x^{j}$
+$\hat{\mu} = \frac{1}{m} \sum_{j=0}^M x^{j}$
 
-$\hat{\Sigma} = \frac{1}{m} \Sigma_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu})$
+$\hat{\Sigma} = \frac{1}{m} \sum_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu})$
 
 Jednak w przypadku mikstury, jeżeli nie przypiszemy z góry próbek wybranym wartościom ukrytej zmiennej, problem
 estymacji parametrów wymaga innego podejścia. Jedną z metod jest \foreign{Expectation Maximization}, iteracyjny
 algorytm wyznaczania wartości parametrów dla mikstur dystrybucji lub ogólniej dla modeli z ukrytymi zmiennymi.
-Składa się z dwóch kroków wykonywanych na zmianę do zbieżności:
+Składa się z dwóch kroków wykonywanych na zmianę do uzyskania zbieżności.  Algorytm nie gwarantuje znalezienia 
+globalnie optymalnego rozwiązania.
 
 \begin{itemize}
-    \item \foreign{Expectation} -  % todo
-    \item \foreign{Maximization} -
+    \item \foreign{Expectation} - oszacuj wartości ukrytych parametrów, w przypadku \shortcut{GMM} przypisz próbom
+        prawdopodobieństwo tego, z jakiej mikstury zostały wygenerowane. Parametry jawne są tutaj niezmieniane,
+        ich początkowe wartości można losowo zainicjalizować. Trzeba pamiętać jednak, by cechowały się dużą wariancją
+        lub inaczej gwarantowały, że każda z próbek jest zgodnie z ich wartościami możliwa do wygenerowania. Inaczej
+        pełne dopasowanie do danych będzie niemożliwe. Bardzo małe prawdopodobieństwo może przez błędy numeryczne 
+        zostać zaokrąglone do $0$ i również spowodować błąd.
+    \item \foreign{Maximization} - zakładając wyznaczone wartości ukrytych parametrów, znaleźć nowe \shortcut{MAP} estymaty
+        jawnych parametrów. Trzeba zwrócić uwagę, że pewne mikstury mogą nie mieć przypisanych żadnych próbek
+        i wtedy uaktualnienie parametrów jest niemożliwe. Do tego uaktualniając wagi \shortcut{GMM} należałoby
+        przypisać danej miksturze wagę $0$, przez co nigdy nie byłaby już użyta. Trzeba zwrócić uwagę na ten problem
+        i postarać się o lepsze zaincjalizowanie parametrów, dodatkowo modyfikować parametry, by nie dopuścić
+        do takiej sytuacji lub przynajmniej pamiętać, by usunąć mikstury z wagą $0$, gdyż będą niepotrzebne zajmować
+        zasoby komputera.
 \end{itemize}
-
-Algorytm nie gwarantuje znalezienia globalnie optymalnego rozwiązania.
 
 \subsection{Dynamic Time Warping}\label{sec:dtw}
 
@@ -512,11 +536,16 @@ parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację 
 
 $$\bar{\mu_{MAP k}} = (1 - \alpha_k) \mu_{0,k} + \alpha_k \bar{\mu_k}$$
 
-gdzie $\alpha_k = \frac{N_k}{N_k + r}$, $\bar{\mu_k} = \frac{F_k}{N_k}$, $N_k = \sum_{x_i \in X} P(\theta_k | x_i)$, $F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$
+gdzie 
+
+$$\alpha_k = \frac{N_k}{N_k + r}$$
+$$\bar{\mu_k} = \frac{F_k}{N_k}$$
+$$N_k = \sum_{x_i \in X} P(\theta_k | x_i)$$
+$$F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$$
 
 %c COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION
 
-\subsection{i-wektory} 
+% \subsection{i-wektory} 
 % TODO
 
 %C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
@@ -617,32 +646,37 @@ działający zupełnie losowo będzie miał krzywą biegnącą prosto od $(0, 0)
 na wykresie jest najbliżej punktu $(0, 1)$.
 
 Przydatna jest możliwość zawarcia oceny klasyfikatora za pomocą jednej liczby zamiast całego wykresu.
-Dlatego wylicza się pole pod krzywą \shortcut{ROC}, tzw. \shortcut{AUC}. (\textbf{\foreign{area under the curve}})
+Dlatego wylicza się pole pod krzywą \shortcut{ROC}, tzw. \shortcut{AUC}. (\foreign{area under the curve})
 
 $$\mathit{AUC} = \int_{-\infty}^{\infty} \mathit{TPR}(T) \mathit{FPR}'(T) dT$$. 
 
 \shortcut{AUC} przyjmuje od $0.5$ dla klasyfikatora losowego do $1.0$ dla klasyfikatora idealnego.
 
-Alternatywą do \shortcut{AUC} jest \shortcut{EER} (\textbf{\foreign{equal error rate}}). Wyznacza się je
+Alternatywą dla \shortcut{AUC} jest \shortcut{EER} (\foreign{equal error rate}). Wyznacza się je
 przez znalezienie punktu, dla którego wartości \shortcut{FPR} i \shortcut{TPR} są równe. Wartość błędu 
 w tym punkcie stanowi wartość \shortcut{EER}. Graficznie będzie to punkt przecięcia krzywej \shortcut{ROC}
 z linią od $(0, 1)$ do $(1, 0)$.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/2_2_b_roc_example}
+    \caption{Przykładowy wykres krzywej \shortcut{ROC} wygenerowany na podstawie wyników modelu \shortcut{GMM-UBM} opisanego w pracy.}
+    \label{fig:2_2_b_roc_example}
+\end{figure}
+
 \subsection{LSTM}
-% TODo
+% TODO
 
 \section{Istniejące systemy weryfikacji mówcy}\label{sec:istniejace_systemy}
 
-%%% Text-independent
 \subsection{Metody niezależne od tekstu}
 
-%%% GMM UBM
 Jednym ze sposobów weryfikacji mówcy stosowanym od dawna jest \shortcut{GMM-UBM}. Polega on na utworzeniu modelu tła
 (\foreign{universal background model}), modelu mikstur gaussowskich i dopasowaniu ich do ramek \shortcut{MFCC} z nagrań
-treningowych. Następnie, do każdego mówcy tworzony jest osobny model przez \shortcut{MAP} adaptację modelu tła do nagrań danego
+treningowych. Dla każdego mówcy tworzony jest osobny model przez \shortcut{MAP} adaptację modelu tła do nagrań danego
 mówcy. W
 %C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
-następnie dokonywane liczona jest różnica między logarytmem prawdopodobieństwa wygenerowania nagrania przez model
+następnie liczona jest różnica między logarytmem prawdopodobieństwa wygenerowania nagrania przez model
 dla mówcy i przez model tła. Różnica ta porównywana jest z progiem i na tej podstawie podejmowana jest decyzja
 o weryfikacji. Podobnie można weryfikować treść nagrania, przez adaptację modelu tła do nagrań konkretnej treści.
 Jeżeli treść wszystkich wypowiedzi jest znana i jest to zbiór zamknięty, to zamiast porównywać model dla jednej
@@ -651,10 +685,9 @@ modelu ze średnim wynikiem pozostałych lub z najlepszym wynikiem pozostałych.
 zweryfikować mówcę i treść wypowiedzi.
 
 Autorzy testują wiele modeli, w tym zarówno do weryfikacji mówcy i treści mają \shortcut{GMM-UBM} z 512 miksturami.
-Jako cechy używają 19 \shortcut{MFCC} z delta i delta-delta cechami. \shortcut{MAP}-adaptacja z \foreign{relevance factor} 3.
+Jako cech używają 19 \shortcut{MFCC} z delta i delta-delta cechami. \shortcut{MAP}-adaptacja z \foreign{relevance factor} 3.
 Do weryfikacji mówcy przy adaptacji korzystają z nagrań tego mówcy, a do weryfikacji treści nagrań tej samej treści.
 
-%%% GMM i-vectors PLDA
 Podejście z miksturami można rozwinąć. Bardzo popularnym rozwinięciem są i-wektory, w których
 zamiast liczyć log-prawdopodobieństwo liczone są wektory charakteryzujące mówcę, a następnie do
 odpowiedzenia na problem weryfikacji wykorzystywane
@@ -671,16 +704,11 @@ Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyte jest
 
 \subsection{Metody zależne od tekstu}
 
-%%% Text-dependent
 Powyższe systemy nie uwzględniają kolejności w jakiej ramki powinny być w wypowiedzi. W problemie weryfikacji
 zależnej od tekstu jest to jednak możliwe i powinno pozwolić na poprawienie skuteczności systemu.
 W \shortcut{GMM-UBM} te same mikstury uczestniczą niezależnie od czasu, a i-wektory są uśredniane dla całej
 wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} możliwe jest uwzględnienie tych informacji.
 %cite Parallel Speaker and Content Modelling for Text-dependent Speaker Verification
-
-%%% DTW
-
-%%% HMM GMM (i-vectors PLDA / JFA)
 
 W pracy
 %C Parallel Speaker and Content Modelling for Text-dependent Speaker Verification
