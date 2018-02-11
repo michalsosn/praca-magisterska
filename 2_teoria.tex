@@ -157,7 +157,7 @@ gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowarianc
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{images/2_2_a_leipzig_gmm}
-    \caption{Wizualizacja mikstur dopasowanych za pomocą \shortcut{EM} do danych o przejazdach z rysunku \ref{fig:2_2_a_leipzig_datashader}.}
+    \caption{Wizualizacja \shortcut{GMM} dopasowanych za pomocą \shortcut{EM} do danych o przejazdach z rysunku \ref{fig:2_2_a_leipzig_datashader}.}
     \label{fig:2_2_a_leipzig_gmm}
 \end{figure}
 
@@ -476,9 +476,7 @@ Jeśli chodzi o $B$, to zachowuje argumenty, dla których w $A$ jest maksimum:
 $$B_{t, x_i} = argmax_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t) =$$
 $$argmax_{x_{t-1}} H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
 
-Po zakończeniu obliczeń możemy znaleźć najbardziej prawdopodobną ścieżkę stanów przez wybranie stanu $x_i$ z największym prawdopodobieństwem w chwili $T-1$ i odtworzyć całą ścieżkę korzystając z $B$.
-
-% cite Rabiner Tutorial
+Po zakończeniu obliczeń możemy znaleźć najbardziej prawdopodobną ścieżkę stanów przez wybranie stanu $x_i$ z największym prawdopodobieństwem w chwili $T-1$ i odtworzyć całą ścieżkę korzystając z $B$\cite{aTutorialOnHidden}.
 
 \section{Rozpoznawanie mówcy}\label{sec:rozpoznawanie_mowcy}
 
@@ -524,15 +522,14 @@ gdzie $\mu_0$, $\sigma_0^2$ to średnia i wariancja \foreign{priora}, $\bar{\mu}
 dla $n = 0$ \shortcut{MAP} estymatem będzie po prostu poprzednia średnia $\mu_0$, a im większa liczba danych, tym
 większy będzie współczynnik przy $\bar{\mu}$. Do tego im większa będzie wariancja \foreign{priora} $\sigma_0^2$ względem
 $\sigma^2$, tym również poprzednia wartość średniej będzie miała mniejszy wpływ na wynik, przy bardzo dużej wariancji
-mówi się o \foreign{uninformative prior}.
-%cite Rabiner book
+mówi się o \foreign{uninformative prior}\cite{fundamentalsOfSpeech}.
 
 Adaptacja \shortcut{GMM} wygląda podobnie, lecz dodatkowo uwzględnia przy każdej miksturze prawdopodobieństwo,
 że próbka pochodzi z tej mikstury $P(\theta_i | x_j)$. Wartości te służą jako wagi dla próbek. Do tego w
 praktyce, jako że \foreign{prior} nie jest opisana jako zmienna, lecz jako punktowa wartość, to zamiast
 operować na $\sigma_0$ i $\sigma$, wprowadzony zostaje parametr $r$, \foreign{relevance factor}, odpowiadający
 stosunkowi wariancji $\frac{\sigma^2}{\sigma_0^2}$. Im większy $r$, tym większy wpływ poprzedniej wartości
-parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację $k$ mikstury z \shortcut{GMM}:
+parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację $k$ mikstury z \shortcut{GMM}\cite{comparisonOfMultiple}: 
 
 $$\bar{\mu_{MAP k}} = (1 - \alpha_k) \mu_{0,k} + \alpha_k \bar{\mu_k}$$
 
@@ -543,15 +540,14 @@ $$\bar{\mu_k} = \frac{F_k}{N_k}$$
 $$N_k = \sum_{x_i \in X} P(\theta_k | x_i)$$
 $$F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$$
 
-%c COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION
-
 % \subsection{i-wektory} 
 % TODO
 
-%C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
+%cite Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
 
 %I-wektory polegają na reprezentowaniu nagrań w postaci $S = m + Tw$, gdzie w to i-wektor, $S$ to nagranie, $m$ to UBM-superwektor, T to macierz niskiego rzędu
 %
+
 %%c COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION
 %Model uwzględnia zakłócenia, które mogą pojawić się w danej wypowiedzi i nie występować w innych.
 %Wykorzystuje superwektory, tzn. wektory uzyskane przez połączenie wektorów średnich z \shortcut{GMM}.
@@ -575,6 +571,8 @@ $$F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$$
 %$\Sigma$ to macierz diagonalna o wartościach $\Sigma_c$
 %$N(s)$ to macierz diagonalna o wartościach $N_c(s)I$
 %$F(s)$ to superwektor statystyk pierwszego rzędu
+
+% cite A Study of Interspeaker Variabilityin Speaker Verification <- to się przyda! to samo co w tym niecytatym tutku
 
 % \subsection{PLDA}
 % TODO ?
@@ -664,7 +662,7 @@ z linią od $(0, 1)$ do $(1, 0)$.
     \label{fig:2_2_b_roc_example}
 \end{figure}
 
-\subsection{LSTM}
+% \subsection{LSTM}
 % TODO
 
 \section{Istniejące systemy weryfikacji mówcy}\label{sec:istniejace_systemy}
@@ -674,8 +672,7 @@ z linią od $(0, 1)$ do $(1, 0)$.
 Jednym ze sposobów weryfikacji mówcy stosowanym od dawna jest \shortcut{GMM-UBM}. Polega on na utworzeniu modelu tła
 (\foreign{universal background model}), modelu mikstur gaussowskich i dopasowaniu ich do ramek \shortcut{MFCC} z nagrań
 treningowych. Dla każdego mówcy tworzony jest osobny model przez \shortcut{MAP} adaptację modelu tła do nagrań danego
-mówcy. W
-%C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
+mówcy. W \cite{utteranceVerificationFor}
 następnie liczona jest różnica między logarytmem prawdopodobieństwa wygenerowania nagrania przez model
 dla mówcy i przez model tła. Różnica ta porównywana jest z progiem i na tej podstawie podejmowana jest decyzja
 o weryfikacji. Podobnie można weryfikować treść nagrania, przez adaptację modelu tła do nagrań konkretnej treści.
@@ -693,8 +690,7 @@ zamiast liczyć log-prawdopodobieństwo liczone są wektory charakteryzujące m�
 odpowiedzenia na problem weryfikacji wykorzystywane
 jest \shortcut{LDA}, które jest metodą nadzorowanego klastrowania.
 
-Na przykład w
-%C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
+Na przykład w \cite{utteranceVerificationFor}
 zastosowano i-wektory do weryfikacji mówcy. Trenują \shortcut{GMM-UBM} z 512 miksturami, osobno dla każdej płci.
 I-wektor ma rozmiar 400, i-wektor dla danego mówcy jest średnią z wszystkich i-wektorów dla jego nagrań.
 Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyte jest
@@ -707,11 +703,9 @@ Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyte jest
 Powyższe systemy nie uwzględniają kolejności w jakiej ramki powinny być w wypowiedzi. W problemie weryfikacji
 zależnej od tekstu jest to jednak możliwe i powinno pozwolić na poprawienie skuteczności systemu.
 W \shortcut{GMM-UBM} te same mikstury uczestniczą niezależnie od czasu, a i-wektory są uśredniane dla całej
-wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} możliwe jest uwzględnienie tych informacji.
-%cite Parallel Speaker and Content Modelling for Text-dependent Speaker Verification
+wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} możliwe jest uwzględnienie tych informacji\cite{parallelSpeakerAnd}.
 
-W pracy
-%C Parallel Speaker and Content Modelling for Text-dependent Speaker Verification
+W pracy \cite{parallelSpeakerAnd}
 pracy utworzono kilka modeli \shortcut{HMM} z emisjami \shortcut{GMM}. Autorzy osobno
 zajmują się problemem weryfikacji mówcy i weryfikacji treści. Używany jest zbiór RedDots.
 
@@ -734,8 +728,7 @@ Użyli 19 \shortcut{MFCC} z delta i delta-delta cechami. \shortcut{GMM-UBM} ma 5
 dotyczy tylko wektora średnich. Liczba segmentów w drugiej części to 4 i 8, lecz 8 nie poprawiło im wyników. Liczba
 stanów HMM w pierwszej części to 4 lub 8 i 8 lekko poprawiło im wyniki.
 
-Podobny pomysł jest wykorzystany w jednym z systemów do weryfikacji treści w
-%C Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
+Podobny pomysł jest wykorzystany w jednym z systemów do weryfikacji treści w \cite{utteranceVerificationFor}
 Wytrenowali 512 miksturowy \shortcut{GMM UBM}. Ich HMM jest typu \foreign{left-to-right} z 5 stanami.
 Naukę rozpoczynając dzieląc jedno nagranie na 5 równych segmentów.
 Każdy z 5 \shortcut{GMM} emitujących \shortcut{MAP}-adaptują z modelu tła korzystając z próbek odpowiedniego segmentu.
@@ -743,8 +736,7 @@ Pozostałe nagrania są dzielone na segmenty korzystając z tego modelu. Następ
 wypowiedzi \shortcut{MAP}-adaptując model tła korzystając z wszystkich nagrań, zakładając podział na ramki jak
 w poprzednim kroku.
 
-W
-%c COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION
+W \cite{comparisonOfMultiple}
 model \shortcut{HMM} został bardziej rozwinięty. Wykorzystano wiedzę o treści wypowiedzi w postaci transkrypcji,
 Mając transkrypcje można lepiej dopasować \shortcut{GMM}, niż używając jednego zestawu bardzo wielu mikstur
 do każdej ramki ten sam zestaw.
@@ -752,16 +744,14 @@ Można wykorzystać model stworzony na potrzeby rozpoznawania mowy.
 Taki model ma stany ukryte, które mają odpowiadać fonemom języka. Na przykład angielski ma 39
 fonemów, czemu odpowiadałoby 39 stanów, lecz powszechne jest rozszerzenie
 modelu do 3 stanów na jeden fonem, co ma pozwolić osobno określić cechy dla początku, środka i końca fonemu.
-Bardziej złożone systemy, jak HTK
-% cite HTK book
+Bardziej złożone systemy, jak HTK\cite{theHtkBook}
 , dodatkowo pozwalają na zbudowanie tzw. modelu trójfonowego (\foreign{triphone}), co oznacza,
 że nie używają trzech stanów na fonem, lecz
 przypisują inne stany w zależności od fonemu bezpośrednio przed i bezpośrednio po danym fonemie.
 Powoduje to duży wzrost wymaganych stanów, to znaczy z $3 \times 39$ do $3 \times 39^3$,
 dlatego te systemy dodatkowo łączą bardzo podobne trójki, by dzieliły ze sobą mikstury.
 Określenie podobieństwo bazuje na wiedzy o podziałach głosek i tym jak układ głosowy przechodzi między nimi.
-W
-% cite COMPARISON OF MULTIPLE FEATURES AND MODELING METHODS FORTEXT-DEPENDENT SPEAKER VERIFICATION
+W \cite{comparisonOfMultiple}
 użyto modelu jednofonowego (\foreign{monophone}), choć użyli też trójfonowego w nieco innym przypadku.
 
 Do modelowania emisji używa się \shortcut{GMM}. Jako, że stanów jest dużo więcej niż w \shortcut{GMM-UBM}
@@ -775,23 +765,20 @@ Mając taki model można użyć algorytmu Viterbiego lub \foreign{forward-backwa
 przez \shortcut{MAP}-adaptację można stworzyć ich własny zestaw mikstur do każdego stanu i potem weryfikować mówcę przez porównanie logarytmu prawdopodobieństwa
 pochodzenia nagrania od mówcy, a pochodzenia od modelu do rozpoznawania mowy, tak jak w opisanej wcześniej \shortcut{GMM-UBM}.
 
-Zamiast tego na przykład w tej pracy
-% cite i-vector/HMM Based Text-dependent Speaker Verification Systemfor RedDots Challenge
+Zamiast tego na przykład w tej pracy \cite{iVectorHmmBased}
 użyto \shortcut{HMM}, lecz dokonując rejestracji i weryfikacji z wykorzystaniem metody i-wektorów. W przeciwieństwie do poprzedniej pracy, tu \shortcut{HMM} jest jednofonowy. Autorzy przetestowali
 i-wektory rozmiaru 400 oraz 600 i dokonują weryfikacji przez obliczenie podobieństwa cosinusowego.
 
 \subsection{Metody wykorzystujące sieci neuronowe}
 
-W
-% A novel scheme for speaker recognition using a phonetically-aware deep neural network
+W \cite{aNovelSchemeFor}
 połączono ideę i-wektory z \shortcut{DNN}. Autorzy zauważyli, że do obliczenia i-wektorów można użyć dowolnego modelu, który definiuje $K$ klas i pozwala obliczyć prawdopodobieństwo
 przynależności do klasy dla ramki $P(\theta_k | x)$.
 Tutaj użyto \shortcut{DNN} wytrenowanej na nagraniach z transkrypcją do rozpoznawania mowy. Sieć ma 7 warstw, 1200 wymiarów w warstwach ukrytych, w ostatniej warstwie ma 3450 wymiarów i funkcję aktywacji softmax. 
 Wyjście interpretowane są jako przynależności do trójek fonów. Trójki te pełnią rolę klas, a wartość na wyjściu jako wymagane prawdopodobieństwo, dzięki czemu \shortcut{DNN} może zastąpić \shortcut{GMM}
 przy obliczaniu statystyk w metodzie i-wektorów. Weryfikacja następuje z wykorzystaniem \shortcut{gPLDA}.
 
-W 
-% c TIME DELAY DEEP NEURAL NETWORK-BASED UNIVERSAL BACKGROUND MODELSFOR SPEAKER RECOGNITION
+W \cite{timeDelayDeep}
 również użyta została \shortcut{DNN} do rozpoznawania mowy i zaadaptowana do weryfikacji mówcy. Wykorzystana sieć ma architekturę \foreign{Time-delay neural network}. Ma 6 warstw \foreign{feed-forward},
 na wejściu przyjmuje kilka kopii sygnału wejściowego z różnym przesunięciem w czasie, wagi w warstwach przetwarzających kopie są współdzielone. Takie przetwarzanie kilku kopii jest wykonywane na
 4 warstwach, z różnym przesunięciem i w efekcie sieć ma uwzględniać kontekst aż 13 ramek z przeszłości i 9 ramek z przyszłości. Ostatnia warstwy kończy się softmaxem z wyjściami odpowiadającymi 5297 trójkom fonemów.
@@ -799,8 +786,7 @@ Ciekawe są ich następne kroki, gdyż trenują \shortcut{GMM} rozmiaru równie�
 do danych ważonych przynależnością do $k$ trójki fonemów wyznaczoną przez \shortcut{TDNN}. Następnie używają \shortcut{GMM} standardowo do i-wektorów (600 wymiarowych) i \shortcut{PLDA}.
 Autorzy zauważają również, że sieć i \shortcut{GMM} mogą używać różnych wektorów cech, co może być korzystne, gdyż rozwiązują różne problemy - klasyfikacji fonemów oraz weryfikacji mówcy.
 
-W
-% Investigation of Bottleneck Features and Multilingual Deep Neural Networksfor Speaker Verification
+W \cite{investigationOfBottleneck}
 używany jest \shortcut{DNN} wytrenowany do rozpoznawania fonemów. Najpierw autorzy wytrenowali \shortcut{GMM-HMM}, by wykorzystać go do przypisywania do ramek sygnału jaki
 jest w nich fonem. Następnie na tych danych, tym razem już oznakowanych przez \shortcut{GMM-HMM}, trenowany jest \shortcut{DNN} do dyskryminacji fonemów. Autorzy używają
 jednocześnie nagrań z angielskiego i chińskiego, by rozpoznawać więcej fonemów i uzyskać model działający dla wypowiedzi w różnych językach.
@@ -813,14 +799,13 @@ Zaletą \shortcut{DNN} jest możliwość operowania na większych wektorach wekt
 do tego każda ramka zawiera 40 współczynników z filtrów w częstotliwości Mela oraz 80 cech delta i delta-delta. Sieć ma pięć warstw ukrytych, wszystkie mają wyjścia rozmiaru 1200, z wyjątkiem
 ostatniej, która ma rozmiar 39 i generuje \foreign{bottleneck features}. Na wyjściu autorzy rozważają różny rozmiar wektora, jednak wszystkie rozważone parametry są ponad 2000 i są zależne
 od budowy \shortcut{HMM-GMM} i tego ile trójek fonemów rozróżnia. Tworzone później \shortcut{GMM} ma 2048 mikstur, i-wektory są rozmiaru 400, \shortcut{gPLDA} operuje w 200 wymiarach.
-Warto zauważyć, że ostateczny wynik osiągnięty przez autorów ma wyższą \shortcut{EER} niż \foreign{baseline} w postaci shortcut{GMM-UBM}.
+Warto zauważyć, że ostateczny wynik osiągnięty przez autorów ma wyższą \shortcut{EER} niż \foreign{baseline} w postaci \shortcut{GMM-UBM}.
 
-W pracy
-% End-to-End Text-Dependent Speaker Verification
+W pracy \cite{endToEnd}
 opisany jest model stworzony przez Google do weryfikacji mówcy. Wszystkie wykorzystane w nim nagrania zawierały fazę "Ok Google", co jest uproszczeniem wobec poprzednio wymienionych rozwiązań. 
 Zaproponowane modele, bazujące na sieci neuronowej, charakteryzują się tym, że w całości rozwiązują problem weryfikacji
 i są trenowane w całości, podczas gdy poprzednio wymienione modele były rozbite na osobno działające podsystemy.
-Na przykład \shortcut{DNN} z poprzednich prac były trenowane do rozpoznawania mowy i zaadaptowane do rozpoznawania mówcy albo w przypadku \shortcut{GMM} celem jest modelowanie dystrybucji cech, nie weryfikacja. Takie rozbicie skutkuje nieoptymalnym  działaniem i zwiększa liczbę obliczeń. Tutaj system p
+Na przykład \shortcut{DNN} z poprzednich prac były trenowane do rozpoznawania mowy i zaadaptowane do rozpoznawania mówcy albo w przypadku \shortcut{GMM} celem jest modelowanie dystrybucji cech, nie weryfikacja. Takie rozbicie skutkuje nieoptymalnym działaniem i zwiększa złożoność obliczeń.
 
 Pierwsza sieć, którą zaproponowali, to \shortcut{DNN} z lokalnie połączoną pierwszą warstwą i w pełni połączonymi kolejnymi warstwami. Warstwy używają funkcji aktywacji \shortcut{ReLU}, z wyjątkiem
 ostatniej z \foreign{softmaxem}. Wektor na wyjściu ma wymiar na każdego mówcę. Po wytrenowaniu sieci, dla każdej ramki z nagrania obliczane są wartości na wyjściach ostatniej ukrytej warstwy,

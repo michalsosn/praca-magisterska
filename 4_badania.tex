@@ -73,3 +73,35 @@ iż w~przypadku \code{UnusedTyVarWarningsNamedWCs} kompilacja zachodzi
 z~dodatkowo uaktywnionym rozszerzeniem \code{NamedWildCards}. Ma to związek ze zgłoszeniem
 opisanym w~sekcji.
 
+
+\begin{table}[H]
+    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład gdy elementy jednej sekwencja są wielokrotnie dopasowana do pierwszego elementu z drugiej sekwencji, dopóki jest to możliwe.}
+    \centering
+    \label{tab:dtw_example0}
+    \small
+    \tabulinesep =_3pt^3pt
+    \begin{tabu}{r*{7}{r}}
+        \multirow{2}{*}{} & & \multicolumn{5}{c}{N}
+        \\
+        & & - & 1 & 20 & 20 & 20 & 20
+        \\ \midrule
+        \multirow{5}{*}{M} & - & 0 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$
+        \\
+        & 1 & $\infty$ & 0 & 19 & 38 & 57 & 76
+        \\
+        & 1 & $\infty$ & 0 & 19 & 38 & 57 & 76
+        \\
+        & 1 & $\infty$ & 0 & 19 & 38 & 57 & 76
+        \\
+        & 10 & $\infty$ & 9 & 10 & 20 & 30 & \textbf{40}
+        \\
+    \end{tabu}
+\end{table}
+
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.8\textwidth]{images/2_2_b_roc_example}
+%    \caption{Przykładowy wykres krzywej \shortcut{ROC} wygenerowany na podstawie wyników modelu \shortcut{GMM-UBM} opisanego w pracy.}
+%    \label{fig:2_2_b_roc_example}
+%\end{figure}
+
