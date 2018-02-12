@@ -1,26 +1,27 @@
 \chapter{Wstęp}\label{chap:wstep}
 
 Zakresem niniejszej pracy magisterskiej są systemy rozpoznawania mówcy zależne od tekstu. Celem
-pracy jest zbadanie możliwości wykorzystania modelu sieci neuronowej do rozwiązania tego problemu. 
+pracy jest zbadanie możliwości wykorzystania modelu sieci neuronowej do rozwiązania tego problemu.
 
-Rozpoznawanie mówcy polega na analizie nagrań dźwiękowych mowy w celu wydobycia cech biometrycznych 
+Rozpoznawanie mówcy polega na analizie nagrań dźwiękowych mowy w celu wydobycia cech biometrycznych
 charakteryzujących osobę mówiącą. Wyróżnia się dwa praktyczne problemy do rozwiązania z wykorzystaniem tych
-cech: problem weryfikacji mówcy oraz problem identyfikacji mówcy. 
+cech: problem weryfikacji mówcy oraz problem identyfikacji mówcy.
 
-Weryfikacja mówcy polega na stwierdzeniu, czy nagranie pochodzi od pewnej zarejestrowanej wcześniej osoby 
-lub wykryciu, że jest na nim ktoś inny. Ten przypadek występuje na przykład przy uwierzytelnianiu za pomocą głosu 
-do systemu bankowego. Konieczne jest wtedy wykrycie, gdy oszust podaje się za prawdziwego właściciela konta. 
-Identyfikacja mówcy polega na rozpoznaniu, która z zarejestrowanych osób jest na nagraniu lub czy 
+Weryfikacja mówcy polega na stwierdzeniu, czy nagranie pochodzi od pewnej zarejestrowanej wcześniej osoby
+lub wykryciu, że jest na nim ktoś inny. Ten przypadek występuje na przykład przy uwierzytelnianiu za pomocą głosu
+do systemu bankowego. Konieczne jest wtedy wykrycie, gdy oszust podaje się za prawdziwego właściciela konta.
+Identyfikacja mówcy polega na rozpoznaniu, która z zarejestrowanych osób jest na nagraniu lub czy
 jest na nim ktoś niezarejestrowany. Identyfikacja może być wykorzystana przez służby policyjne do
 zidentyfikowania osób na zdobytym nagraniu.
 
 Rozpoznawanie mówcy można również podzielić ze względu na to, czy treść nagrania jest znana z góry
 na rozpoznawanie mówcy zależne od tekstu i niezależne od tekstu. Weryfikacja mówcy zwykle może
 być przeprowadzona zależnie od tekstu, gdyż w typowych zastosowaniach można oczekiwać od weryfikowanej
-osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w sytuacji, 
-gdy nagrań rejestrujących jest tylko kilka. W przypadku, gdy nagranie nie zawiera oczekiwanej treści 
-akceptowalne jest odrzucenie weryfikowanego nagrania niezależnie od mówcy. 
-Identyfikację z kolei trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą 
+osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w sytuacji,
+gdy nagrań rejestrujących jest tylko kilka\cite{parallelSpeakerAnd}. W przypadku,
+gdy nagranie nie zawiera oczekiwanej treści
+akceptowalne jest odrzucenie weryfikowanego nagrania niezależnie od mówcy.
+Identyfikację z kolei trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą
 być tego nieświadome.
 % cite że poprawia skuteczność jak mało nagrań
 
@@ -34,26 +35,25 @@ Systemu bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomi
 związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
 stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
-wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi \shortcut{GMM} w obecnych systemach do rozpoznania 
-jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw. \foreign{bottleneck features}.
+wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi \shortcut{GMM} w obecnych systemach do rozpoznania
+jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw. \foreign{bottleneck features}\cite{investigationOfBottleneck}.
 Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
-neuronowych. Celem tej pracy jest zbadanie tematu i być może wypróbowanie innego sposobu zaaplikowania
+neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i być może wypróbowanie innego sposobu zaaplikowania
 sieci neuronowej.
-% bottleneck paper, google paper
 
-Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety, 
-że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców, 
+Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety,
+że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców,
 albo dostępne, lecz za opłatą. Na szczęście w 2015 ta potrzeba
 została zaadresowana przez naukowców między innymi z Singapuru. Zgromadzili oni nagrania o znanej
-treści od ochotników z całego świata i opublikowali zbiór RedDots. Trzeba jednak przyznać, że
+treści od ochotników z całego świata i opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
 zasoby posiadane przez korporacje w postaci danych i w postaci czasu i talentu pracowników sprawiają,
 że dorównanie ich wynikom jest nierealne. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
 jest w ogóle warty uwagi i porównanie go z systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
-Celem pracy jest stworzenie systemu do rozpoznawania mówcy wykorzystującego sieć neuronową. 
-Zostanie on przetestowany na zbiorze RedDots i porównany z innymi stworzonymi systemami.
+Celem pracy jest stworzenie systemu do rozpoznawania mówcy wykorzystującego sieć neuronową.
+Zostanie on przetestowany na zbiorze \techname{RedDots} i porównany z innymi stworzonymi systemami.
 Nie oczekujemy uzyskania lepszych wyników, lecz warto by było, gdyby świadczyły o tym,
 że dana metoda nie jest zupełnie losowa.
 
@@ -65,7 +65,7 @@ Systemy, które zostały stworzone i przetestowane, to:
     \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
 \end{itemize}
 
-Modele zostaną przetestowane na zbiorze RedDots. Policzone zostaną następujące miary jakości:
+Modele zostaną przetestowane na zbiorze \techname{RedDots}. Policzone zostaną następujące miary jakości:
 
 \begin{itemize}
     \item Krzywa \shortcut{ROC}
@@ -73,14 +73,14 @@ Modele zostaną przetestowane na zbiorze RedDots. Policzone zostaną następuj�
     \item \shortcut{AUR}
 \end{itemize}
 
-Modele zostaną na ich podstawie porównane między sobą i z wynikami innych prac. Osobno zostaną rozważeni mężczyźni 
-i kobiety, gdyż zbiór zawiera o wiele nagrań mężczyzn i wiele prac zupełnie ignoruje wyniki dla kobiet, 
-gdyż jest ich za mało. Rozpatrzone zostaną cztery zestawy testowe zdefiniowane w RedDots.
+Modele zostaną na ich podstawie porównane między sobą i z wynikami innych prac. Osobno zostaną rozważeni mężczyźni
+i kobiety, gdyż zbiór zawiera o wiele nagrań mężczyzn i wiele prac zupełnie ignoruje wyniki dla kobiet,
+gdyż jest ich za mało. Rozpatrzone zostaną cztery zestawy testowe zdefiniowane w \techname{RedDots}.
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
 Podstawy teorii rozpoznawania mowy są dobrze opisane w \titlei{Fundamentals of Speech Recognition}\cite{fundamentalsOfSpeech}
-od dr Lawrence Rabinera oraz w jego 
+od dr Lawrence Rabinera oraz w jego
 \titlei{A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition}\cite{aTutorialOnHidden}, które
 skupia się na praktycznym wprowadzeniu do ukrytych modeli Markowa, użytych w tej pracy.
 Innym bardzo praktycznym zasobem na ten temat jest \titlei{The HTK Book}\cite{theHtkBook}, opisująca rozwiązanie
@@ -92,20 +92,20 @@ Jest to przydatny zasób, jednakże bardziej pomocne może okazać przejrzenie s
 bardziej aktualnych publikacji na ten temat.
 % cite Beigi ?
 
-Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w 
+Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w
 \titlei{Pattern Classification}\cite{patternClassification} prof. Richarda Dudy.
-Porusza takie tematy jak statystyka Bayesowska, \foreign{expectation maximization}, sieci neuronowe, RBM 
-i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie 
-uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa. 
-Doskonałym zasobem do głębokich sieci neuronowych jest dostępna legalnie w Internecie książka 
+Porusza takie tematy jak statystyka Bayesowska, \foreign{expectation maximization}, sieci neuronowe, RBM
+i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie
+uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa.
+Doskonałym zasobem do głębokich sieci neuronowych jest dostępna legalnie w Internecie książka
 \titlei{Deep Learning}\cite{deeplearningbook} od Iana Godfellowa i innych.
 
 Godne polecenia są kursy internetowe dostępne za darmo na platformie Coursera.
 Wysoko oceniane, również przez autora, związane z tematem pracy kursy to
-\titlei{Machine Learning} od Andrew Ng, 
+\titlei{Machine Learning} od Andrew Ng,
 \titlei{Neural Networks for Machine Learning} od Geoffrey Hintona,
 \titlei{Digital Signal Processing} od Paolo Prandoniego i  Martina Vetterliego.
-Są to zaadoptowane do formy kursu internetowego kursy akademickie. Pozwalają 
+Są to zaadoptowane do formy kursu internetowego kursy akademickie. Pozwalają
 doświadczyć lekcji prowadzonych przez światowej sławy naukowców, niezależnie
 od miejsca urodzenia, co jest bardzo cenne.
 
@@ -117,7 +117,7 @@ rozpoznawania mówcy i rozpoznawania mowy, które zostały wybrane jako
 istotne dla tej pracy. Rozdział \ref{chap:technologie}
 opisuje zbiór danych, technologie i narzędzia wykorzystane w pracy. W rozdziale
 \ref{chap:badania} przedstawiono opis stworzonych systemów i wyniki testów. Rozdział
-\ref{chap:podsumowanie} zawiera porównanie wyników i podsumowanie czy założone 
+\ref{chap:podsumowanie} zawiera porównanie wyników i podsumowanie czy założone
 cele zostały osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z kodem aplikacji,
 wersją elektroniczną tej pracy oraz kopią wykorzystanych źródeł internetowych.
 

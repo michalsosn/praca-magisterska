@@ -19,7 +19,7 @@ prostym filtrem wysokoprzepustowym, zwykle postaci $[-0.95, 1.0]$ lub \\ $[-0.97
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/2_1_a_example_spectrogram}
-    \caption{Spektrogram sygnału \code{m0002/20150713085938321\underscore m0002\underscore 31.pcm} ze zbioru RedDots}
+    \caption{Spektrogram sygnału \code{m0002/20150713085938321\underscore m0002\underscore 31.pcm} ze zbioru \techname{RedDots}}
     \label{fig:2_1_a_example_spectrogram}
 \end{figure}
 
@@ -44,7 +44,7 @@ pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starsz
 W drugim kroku należy policzyć \foreign{Short Time Fourier Transform}, to znaczy podzielić
 sygnał na ramki i dla każdej ramki policzyć spektrum częstotliwościowe. Typowa szerokość
 okna to $25$ms, przy czym każde kolejne okno jest przesunięte o ok. połowę szerokości,
-np. można przyjąć $10$ms. W przypadku zbioru RedDots nagrania mają częstotliwość próbkowania $16$kHz,
+np. można przyjąć $10$ms. W przypadku zbioru \techname{RedDots} nagrania mają częstotliwość próbkowania $16$kHz,
 więc by uzyskać takie przesunięcie okna muszą zawierać $400$ próbek z przesunięciem $160$ próbek.
 Następnie spektra zamieniane są w spektra mocy przez wzięcie kwadratu wartości absolutnej
 z każdej wartości w spektrum.
@@ -161,7 +161,7 @@ gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowarianc
     \label{fig:2_2_a_leipzig_gmm}
 \end{figure}
 
-\subsection{Maksymalizowanie wartości oczekiwanej}\label{sec:gmm}
+\subsection{Maksymalizowanie wartości oczekiwanej}\label{sec:expectation_maximization}
 
 Parametry wielowymiarowego rozkładu normalnego można wyestymować na podstawie próby, na przykład
 stosując estymator maksymalizujący prawdopodobieństwo danych.
@@ -175,7 +175,7 @@ $\hat{\Sigma} = \frac{1}{m} \sum_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu
 Jednak w przypadku mikstury, jeżeli nie przypiszemy z góry próbek wybranym wartościom ukrytej zmiennej, problem
 estymacji parametrów wymaga innego podejścia. Jedną z metod jest \foreign{Expectation Maximization}, iteracyjny
 algorytm wyznaczania wartości parametrów dla mikstur dystrybucji lub ogólniej dla modeli z ukrytymi zmiennymi.
-Składa się z dwóch kroków wykonywanych na zmianę do uzyskania zbieżności.  Algorytm nie gwarantuje znalezienia 
+Składa się z dwóch kroków wykonywanych na zmianę do uzyskania zbieżności.  Algorytm nie gwarantuje znalezienia
 globalnie optymalnego rozwiązania.
 
 \begin{itemize}
@@ -183,7 +183,7 @@ globalnie optymalnego rozwiązania.
         prawdopodobieństwo tego, z jakiej mikstury zostały wygenerowane. Parametry jawne są tutaj niezmieniane,
         ich początkowe wartości można losowo zainicjalizować. Trzeba pamiętać jednak, by cechowały się dużą wariancją
         lub inaczej gwarantowały, że każda z próbek jest zgodnie z ich wartościami możliwa do wygenerowania. Inaczej
-        pełne dopasowanie do danych będzie niemożliwe. Bardzo małe prawdopodobieństwo może przez błędy numeryczne 
+        pełne dopasowanie do danych będzie niemożliwe. Bardzo małe prawdopodobieństwo może przez błędy numeryczne
         zostać zaokrąglone do $0$ i również spowodować błąd.
     \item \foreign{Maximization} - zakładając wyznaczone wartości ukrytych parametrów, znaleźć nowe \shortcut{MAP} estymaty
         jawnych parametrów. Trzeba zwrócić uwagę, że pewne mikstury mogą nie mieć przypisanych żadnych próbek
@@ -467,7 +467,7 @@ $$V_{x_t, y_t} H_{x_{t-1}, x_t} P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1})$$
 
 $$A_{t,x_i} = max_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t) =$$
 $$max_{x_1 \dots x_{t-1}} V_{x_i, y_t} H_{x_{t-1}, x_i} P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
-$$V_{x_i, y_t} max_{x_{t-1}}(H_{x_{t-1}, x_i} A_{t-1, x_{t-1}})$$
+$$V_{x_i, y_t} max_{x_{t-1}}H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
 
 Przypadek bazowy to $A_{1,x_i} = P(X_1 = x_i, y_0) = \pi_i V_{x_i, y_0}$
 
@@ -481,7 +481,7 @@ Po zakończeniu obliczeń możemy znaleźć najbardziej prawdopodobną ścieżk�
 \section{Rozpoznawanie mówcy}\label{sec:rozpoznawanie_mowcy}
 
 W naszej pracy nad systemami rozpoznawania mówcy wyróżniliśmy trzy etapy działania: treningu (\foreign{training}),
-zapisów (\foreign{enrollment}) i prób (\foreign{evaluation}). Jest to podział inspirowany podziałem w zbiorze RedDots.
+zapisów (\foreign{enrollment}) i prób (\foreign{evaluation}). Jest to podział inspirowany podziałem w zbiorze \techname{RedDots}.
 
 W czasie treningu model jest uczony na możliwie dużym zbiorze danych i przez być może długi czas. W czasie zapisów
 jest on dostosowywany do wybranego mówcy na podstawie możliwie małego zbioru nagrań wyłącznie tego mówcy. Jest
@@ -491,8 +491,8 @@ wcześniej nagrań.
 
 \subsection{MAP adaptacja}
 
-MAP adaptacja pozwala na uzyskanie modelu dla mówcy na podstawie niewielu nagrań. Wykorzystywany jest model niezależny 
-od mówcy, jak \shortcut{UBM}, nauczony na dużym zbiorze danych. Metoda polega na znalezieniu parametrów $\lambda$ 
+MAP adaptacja pozwala na uzyskanie modelu dla mówcy na podstawie niewielu nagrań. Wykorzystywany jest model niezależny
+od mówcy, jak \shortcut{UBM}, nauczony na dużym zbiorze danych. Metoda polega na znalezieniu parametrów $\lambda$
 maksymalizujących $P(\lambda | X)$, czyli prawdopodobieństwo wartości parametrów przy uwzględnieniu zestawu danych.
 
 Zgodnie z regułą Bayesa :
@@ -507,7 +507,7 @@ W statystyce bayesowskiej parametry opisuje się jako zmienne losowe. Przy wybor
 na to czy są tzw. \foreign{conjugate prior} wobec $P(X | \lambda)$, czyli dystrybucji, która zależy od tych parametrów.
 Oznacza to taką cechę, że \foreign{posterior} będzie po uwzględnieniu \foreign{likelihood} miał rozkład z tej samej
 rodziny co \foreign{prior}, lecz z uaktualnionymi parametrami. Przykładowo rozkład normalny ma taką własność wobec
-rozkładu normalnego.  \shortcut{MAP} różni się nieco od tego podejścia, gdyż zamiast dystrybucji zwraca jedną 
+rozkładu normalnego.  \shortcut{MAP} różni się nieco od tego podejścia, gdyż zamiast dystrybucji zwraca jedną
 wartość parametru, dla której prawdopodobieństwo jest największe.
 
 Mając \shortcut{GMM} niezależny od mówcy i zakładając że parametry mają rozkład normalny, można wyznaczyć
@@ -529,18 +529,18 @@ Adaptacja \shortcut{GMM} wygląda podobnie, lecz dodatkowo uwzględnia przy każ
 praktyce, jako że \foreign{prior} nie jest opisana jako zmienna, lecz jako punktowa wartość, to zamiast
 operować na $\sigma_0$ i $\sigma$, wprowadzony zostaje parametr $r$, \foreign{relevance factor}, odpowiadający
 stosunkowi wariancji $\frac{\sigma^2}{\sigma_0^2}$. Im większy $r$, tym większy wpływ poprzedniej wartości
-parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację $k$ mikstury z \shortcut{GMM}\cite{comparisonOfMultiple}: 
+parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację $k$ mikstury z \shortcut{GMM}\cite{comparisonOfMultiple}:
 
 $$\bar{\mu_{MAP k}} = (1 - \alpha_k) \mu_{0,k} + \alpha_k \bar{\mu_k}$$
 
-gdzie 
+gdzie
 
 $$\alpha_k = \frac{N_k}{N_k + r}$$
 $$\bar{\mu_k} = \frac{F_k}{N_k}$$
 $$N_k = \sum_{x_i \in X} P(\theta_k | x_i)$$
 $$F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$$
 
-% \subsection{i-wektory} 
+% \subsection{i-wektory}
 % TODO
 
 %cite Utterance Verification for Text-Dependent Speaker Recognition: aComparative Assessment Using the RedDots Corpus
@@ -581,7 +581,7 @@ $$F_k = \sum_{x_i \in X} P(\theta_k | x_i) x_i$$
 
 Problem klasyfikacji binarnej to problem przyporządkowania elementów z
 pewnej dziedziny do jednej z dwóch klas. Nazywa się te klasy
-\foreign{positive} (klasa obiektów posiadających pewną cechę) i \foreign{negative}. 
+\foreign{positive} (klasa obiektów posiadających pewną cechę) i \foreign{negative}.
 W przypadku weryfikacji mówcy problemem będzie czy osobą na nagraniu jest ten mówca, którego oczekujemy.
 Rezultaty klasyfikacji można podzielić na cztery grupy:
 
@@ -598,8 +598,8 @@ jest zgodny ze znanym, prawdziwym podziałem. W tym celu zdefiniowano pewne wsp�
 od liczb $tp$, $fp$, $tn$ i $fn$, to znaczy:
 
 \begin{description}
-    \item[Precyzja (\foreign{precision})] Określa jaka część z elementów zaklasyfikowanych jako posiadająca cechę rzeczywiście ją posiada. $\mathit{Precision} = \frac{tp}{tp + fp}$ 
-    \item[Kompletność lub czułość (\foreign{recall}) lub czułość (\foreign{sensitivity, true positive rate})] 
+    \item[Precyzja (\foreign{precision})] Określa jaka część z elementów zaklasyfikowanych jako posiadająca cechę rzeczywiście ją posiada. $\mathit{Precision} = \frac{tp}{tp + fp}$
+    \item[Kompletność lub czułość (\foreign{recall}) lub czułość (\foreign{sensitivity, true positive rate})]
         Określa ile elementów, które posiadają cechę zostały tak zaklasyfikowanych. $\mathit{TPR} = \frac{tp}{tp + fn}$
     \item[Swoistość (\foreign{specifity, true negative rate})] Określa ile elementów spośród
         nieposiadających danej cechy zostało tak zaklasyfikowanych. $\mathit{TNR} = \frac{tn}{tn + fp}$
@@ -618,7 +618,7 @@ cechy i przez to unika błędu typu pierwszego, będąc jednak bezużytecznym.
 Z tego powodu do oceny modelu autorzy prac wykorzystywali te
 współczynniki parami: precyzja i kompletność lub czułość i swoistość.
 
-Można również obliczyć współczynnik $F$ dla pary współczynników. 
+Można również obliczyć współczynnik $F$ dla pary współczynników.
 $$\mathit{F{-}measure} = \frac{2 \cdot Recall \cdot Precision}{Recall \cdot Precision}$$
 Jest to średnia harmoniczna współczynników i pozwala uwzględnić oba jednocześnie.
 
@@ -626,16 +626,16 @@ Jest to średnia harmoniczna współczynników i pozwala uwzględnić oba jednoc
 
 Klasyfikatory binarne mogą działać na takiej zasadzie, iż ich rezultatem jest prawdopodobieństwo
 tego, że dany element należy do danej klasy. Są wtedy parametryzowane progiem,
-jakie prawdopodobieństwo jest wymagane, by obiekt został do zaklasyfikowany jako prawdziwy. 
-Można wtedy opisać klasyfikator przez wykres krzywej \shortcut{ROC} 
+jakie prawdopodobieństwo jest wymagane, by obiekt został do zaklasyfikowany jako prawdziwy.
+Można wtedy opisać klasyfikator przez wykres krzywej \shortcut{ROC}
 (\foreign{receiver operating characteristic}). Na wykresie tym nanosi się punkty z wartościami
-$(\mathit{TPR}, \mathit{FPR})$, czyli kompletność oraz $(1.0 - \text{swoistość})$, dla progu klasyfikacji 
+$(\mathit{TPR}, \mathit{FPR})$, czyli kompletność oraz $(1.0 - \text{swoistość})$, dla progu klasyfikacji
 zmieniającego się od $0$ do $1.0$.
 
-Cechy \shortcut{ROC} są takie, iż dla progu równego $0$ (wszystko uznajemy za prawdziwe, $fn = tn = 0$), 
-\shortcut{TPR} i \shortcut{FPR} 
-wyniosą $1.0$, bo wszystko jest wtedy akceptowane, niezależne od rzeczywistości. 
-Dla progu równego $1$ (wszystko klasyfikujemy jako fałszywe, $tp = fp = 0$), 
+Cechy \shortcut{ROC} są takie, iż dla progu równego $0$ (wszystko uznajemy za prawdziwe, $fn = tn = 0$),
+\shortcut{TPR} i \shortcut{FPR}
+wyniosą $1.0$, bo wszystko jest wtedy akceptowane, niezależne od rzeczywistości.
+Dla progu równego $1$ (wszystko klasyfikujemy jako fałszywe, $tp = fp = 0$),
 \shortcut{TPR} i \shortcut{FPR} wyniosą $0.0$, bo nie będzie w ogóle żadnych pozytywów.
 Krzywa zatem będzie biec od punktu $(0, 0)$ do $(1, 1)$. Krzywa dla idealnego klasyfikatora
 będzie przechodzić przez punkt $(0, 1)$, gdzie kompletność i swoistość wynoszą $1$. Klasyfikator
@@ -646,12 +646,12 @@ na wykresie jest najbliżej punktu $(0, 1)$.
 Przydatna jest możliwość zawarcia oceny klasyfikatora za pomocą jednej liczby zamiast całego wykresu.
 Dlatego wylicza się pole pod krzywą \shortcut{ROC}, tzw. \shortcut{AUC}. (\foreign{area under the curve})
 
-$$\mathit{AUC} = \int_{-\infty}^{\infty} \mathit{TPR}(T) \mathit{FPR}'(T) dT$$. 
+$$\mathit{AUC} = \int_{-\infty}^{\infty} \mathit{TPR}(T) \mathit{FPR}'(T) dT$$.
 
 \shortcut{AUC} przyjmuje od $0.5$ dla klasyfikatora losowego do $1.0$ dla klasyfikatora idealnego.
 
 Alternatywą dla \shortcut{AUC} jest \shortcut{EER} (\foreign{equal error rate}). Wyznacza się je
-przez znalezienie punktu, dla którego wartości \shortcut{FPR} i \shortcut{TPR} są równe. Wartość błędu 
+przez znalezienie punktu, dla którego wartości \shortcut{FPR} i \shortcut{TPR} są równe. Wartość błędu
 w tym punkcie stanowi wartość \shortcut{EER}. Graficznie będzie to punkt przecięcia krzywej \shortcut{ROC}
 z linią od $(0, 1)$ do $(1, 0)$.
 
@@ -707,7 +707,7 @@ wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} mo�
 
 W pracy \cite{parallelSpeakerAnd}
 pracy utworzono kilka modeli \shortcut{HMM} z emisjami \shortcut{GMM}. Autorzy osobno
-zajmują się problemem weryfikacji mówcy i weryfikacji treści. Używany jest zbiór RedDots.
+zajmują się problemem weryfikacji mówcy i weryfikacji treści. Używany jest zbiór \techname{RedDots}.
 
 Najpierw tworzą \shortcut{HMM} dla każdej frazy w ten sposób, że emisje modelu są inicjalizowane przez
 skopiowanie parametrów \shortcut{UBM},
@@ -744,7 +744,7 @@ Można wykorzystać model stworzony na potrzeby rozpoznawania mowy.
 Taki model ma stany ukryte, które mają odpowiadać fonemom języka. Na przykład angielski ma 39
 fonemów, czemu odpowiadałoby 39 stanów, lecz powszechne jest rozszerzenie
 modelu do 3 stanów na jeden fonem, co ma pozwolić osobno określić cechy dla początku, środka i końca fonemu.
-Bardziej złożone systemy, jak HTK\cite{theHtkBook}
+Bardziej złożone systemy, jak \shortcut{HTK}\cite{theHtkBook}
 , dodatkowo pozwalają na zbudowanie tzw. modelu trójfonowego (\foreign{triphone}), co oznacza,
 że nie używają trzech stanów na fonem, lecz
 przypisują inne stany w zależności od fonemu bezpośrednio przed i bezpośrednio po danym fonemie.
@@ -774,7 +774,7 @@ i-wektory rozmiaru 400 oraz 600 i dokonują weryfikacji przez obliczenie podobie
 W \cite{aNovelSchemeFor}
 połączono ideę i-wektory z \shortcut{DNN}. Autorzy zauważyli, że do obliczenia i-wektorów można użyć dowolnego modelu, który definiuje $K$ klas i pozwala obliczyć prawdopodobieństwo
 przynależności do klasy dla ramki $P(\theta_k | x)$.
-Tutaj użyto \shortcut{DNN} wytrenowanej na nagraniach z transkrypcją do rozpoznawania mowy. Sieć ma 7 warstw, 1200 wymiarów w warstwach ukrytych, w ostatniej warstwie ma 3450 wymiarów i funkcję aktywacji softmax. 
+Tutaj użyto \shortcut{DNN} wytrenowanej na nagraniach z transkrypcją do rozpoznawania mowy. Sieć ma 7 warstw, 1200 wymiarów w warstwach ukrytych, w ostatniej warstwie ma 3450 wymiarów i funkcję aktywacji softmax.
 Wyjście interpretowane są jako przynależności do trójek fonów. Trójki te pełnią rolę klas, a wartość na wyjściu jako wymagane prawdopodobieństwo, dzięki czemu \shortcut{DNN} może zastąpić \shortcut{GMM}
 przy obliczaniu statystyk w metodzie i-wektorów. Weryfikacja następuje z wykorzystaniem \shortcut{gPLDA}.
 
@@ -782,7 +782,7 @@ W \cite{timeDelayDeep}
 również użyta została \shortcut{DNN} do rozpoznawania mowy i zaadaptowana do weryfikacji mówcy. Wykorzystana sieć ma architekturę \foreign{Time-delay neural network}. Ma 6 warstw \foreign{feed-forward},
 na wejściu przyjmuje kilka kopii sygnału wejściowego z różnym przesunięciem w czasie, wagi w warstwach przetwarzających kopie są współdzielone. Takie przetwarzanie kilku kopii jest wykonywane na
 4 warstwach, z różnym przesunięciem i w efekcie sieć ma uwzględniać kontekst aż 13 ramek z przeszłości i 9 ramek z przyszłości. Ostatnia warstwy kończy się softmaxem z wyjściami odpowiadającymi 5297 trójkom fonemów.
-Ciekawe są ich następne kroki, gdyż trenują \shortcut{GMM} rozmiaru również 5297 i dopasowują mikstury w ten sposób, że dla $k$ mikstury estymują jej wektor średnich i macierz kowariancji (pełną) 
+Ciekawe są ich następne kroki, gdyż trenują \shortcut{GMM} rozmiaru również 5297 i dopasowują mikstury w ten sposób, że dla $k$ mikstury estymują jej wektor średnich i macierz kowariancji (pełną)
 do danych ważonych przynależnością do $k$ trójki fonemów wyznaczoną przez \shortcut{TDNN}. Następnie używają \shortcut{GMM} standardowo do i-wektorów (600 wymiarowych) i \shortcut{PLDA}.
 Autorzy zauważają również, że sieć i \shortcut{GMM} mogą używać różnych wektorów cech, co może być korzystne, gdyż rozwiązują różne problemy - klasyfikacji fonemów oraz weryfikacji mówcy.
 
@@ -790,7 +790,7 @@ W \cite{investigationOfBottleneck}
 używany jest \shortcut{DNN} wytrenowany do rozpoznawania fonemów. Najpierw autorzy wytrenowali \shortcut{GMM-HMM}, by wykorzystać go do przypisywania do ramek sygnału jaki
 jest w nich fonem. Następnie na tych danych, tym razem już oznakowanych przez \shortcut{GMM-HMM}, trenowany jest \shortcut{DNN} do dyskryminacji fonemów. Autorzy używają
 jednocześnie nagrań z angielskiego i chińskiego, by rozpoznawać więcej fonemów i uzyskać model działający dla wypowiedzi w różnych językach.
-Sieć jest wykorzystywana w roli ekstraktora cech. Wektor wartości na wyjściu przedostatniej warstwy tej sieci jest wykorzystywany jako tzw. \foreign{bottleneck features}. 
+Sieć jest wykorzystywana w roli ekstraktora cech. Wektor wartości na wyjściu przedostatniej warstwy tej sieci jest wykorzystywany jako tzw. \foreign{bottleneck features}.
 Warstwa ta ma nieco mniej neuronów, by uzyskać tam niskowymiarową reprezentację ramek na wejściu. Jako, że sieć została wytrenowana do rozpoznawania fonemów, to cechy te powinny
 wydajnie uwzględniać informację niezbędne właśnie do tego celu, choć nie jest jasne, czemu miałyby być tam informacje charakteryzujące mówcę.
 \shortcut{GMM} są trenowane na tych cechach, tak jak w innych systemach są trenowane na \shortcut{MFCC} i używane do ekstrakcji i-wektorów. Weryfikacja następuje przez \shortcut{gPLDA}.
@@ -802,7 +802,7 @@ od budowy \shortcut{HMM-GMM} i tego ile trójek fonemów rozróżnia. Tworzone p
 Warto zauważyć, że ostateczny wynik osiągnięty przez autorów ma wyższą \shortcut{EER} niż \foreign{baseline} w postaci \shortcut{GMM-UBM}.
 
 W pracy \cite{endToEnd}
-opisany jest model stworzony przez Google do weryfikacji mówcy. Wszystkie wykorzystane w nim nagrania zawierały fazę "Ok Google", co jest uproszczeniem wobec poprzednio wymienionych rozwiązań. 
+opisany jest model stworzony przez Google do weryfikacji mówcy. Wszystkie wykorzystane w nim nagrania zawierały fazę "Ok Google", co jest uproszczeniem wobec poprzednio wymienionych rozwiązań.
 Zaproponowane modele, bazujące na sieci neuronowej, charakteryzują się tym, że w całości rozwiązują problem weryfikacji
 i są trenowane w całości, podczas gdy poprzednio wymienione modele były rozbite na osobno działające podsystemy.
 Na przykład \shortcut{DNN} z poprzednich prac były trenowane do rozpoznawania mowy i zaadaptowane do rozpoznawania mówcy albo w przypadku \shortcut{GMM} celem jest modelowanie dystrybucji cech, nie weryfikacja. Takie rozbicie skutkuje nieoptymalnym działaniem i zwiększa złożoność obliczeń.
@@ -811,12 +811,12 @@ Pierwsza sieć, którą zaproponowali, to \shortcut{DNN} z lokalnie połączoną
 ostatniej z \foreign{softmaxem}. Wektor na wyjściu ma wymiar na każdego mówcę. Po wytrenowaniu sieci, dla każdej ramki z nagrania obliczane są wartości na wyjściach ostatniej ukrytej warstwy,
 są one uśredniane dla nagrania i wynik nazywany jest d-wektorem. Pierwszy system działa przez obliczenie d-wektora na nagraniach rejestracyjnych i uśrednieniu, by uzyskać d-wektor opisujący mówcę.
 Dla nagrań testowych również jest liczony d-wektor i weryfikacja następuje przez obliczenie cosinusowego podobieństwa między tym d-wektorem i d-wektorem mówcy. Warto zauważyć, że w przeciwieństwie
-do \foreign{bottleneck features}, tutaj sieć do ekstrakcji cech jest wytrenowana do rozpoznawania mówców, a nie fonemów, więc można się spodziewać, że zachowuje informacje charakteryzujące mówcę. 
+do \foreign{bottleneck features}, tutaj sieć do ekstrakcji cech jest wytrenowana do rozpoznawania mówców, a nie fonemów, więc można się spodziewać, że zachowuje informacje charakteryzujące mówcę.
 Przy \foreign{bottleneck features} można podejrzewać, że cechy mówców są wręcz odrzucane, gdyż w problemie rozpoznania fonemów są przeszkodą.
 
-Druga sieć przyjmuje nagranie testowe oraz kilka nagrań rejestracyjnych i zwraca na wyjściu jedną liczbę 
+Druga sieć przyjmuje nagranie testowe oraz kilka nagrań rejestracyjnych i zwraca na wyjściu jedną liczbę
 reprezentującą wynik weryfikacji. Sieć ma architekturę \shortcut{LSTM}. Brane pod uwagę
-jest tylko wyjście sieci dla ostatniej ramki nagrania, przy czym jako, że to sieć rekurencyjna, 
+jest tylko wyjście sieci dla ostatniej ramki nagrania, przy czym jako, że to sieć rekurencyjna,
 to wynik może zależeć od wszystkich ramek poprzedzających. Reprezentacja mówcy jest tworzona przez uśrednienie
 wyjścia \shortcut{LSTM} dla nagrań rejestracyjnych. Nagrania testowe również przechodzą przez sieć i są
 porównywane z reprezentacjami mówców przez obliczenie podobieństwa cosinusowego. Autorzy raportują, że dopiero
