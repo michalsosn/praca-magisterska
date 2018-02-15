@@ -4,26 +4,38 @@
 
 Uzyskane wyniki są gorsze od tych ze zbadanych prac naukowych, nie licząc kilku przypadków.
 
-Model \shortcut{GMM-UBM}, prawdopodobnie dzięki jego prostocie, udało się odtworzyć i może pełnić
+Model \shortcut{GMM-UBM}, dzięki jego prostocie, udało się odtworzyć i może pełnić
 rolę \foreign{baseline} w pracy. Sposób weryfikacji tekstu przez odpowiednie zaadaptowanie \shortcut{GMM}
-okazał się skuteczny, choć model ten nie uwzględnia tego jak fonemy następują po sobie w czasie.
+okazał się skuteczny, mimo że model nie uwzględnia tego jak fonemy następują po sobie w czasie.
 
-Niestety systemu \shortcut{HMM-GMM} nie udało się wytrenować. Możliwe, że należało podobnie jak w przypadku \shortcut{DNN}
-użyć gotowego podsystemu do rozpoznawania mowy.
+Niestety drugi model \shortcut{HMM-GMM} osiągnął wyniki gorsze od oczekiwanych.
+Możliwe, że należało, podobnie jak w przypadku \shortcut{DNN}, użyć gotowego systemu do rozpoznawania mowy,
+zamiast implementować własne rozwiązanie.
+Stany \shortcut{HMM}, które miały odpowiadać fonemom, wyraźnie nie dopasowują się zgodnie z tym założeniem.
+Wyniki udało się poprawić modyfikując algorytm Viterbiego, by przypisywał większe prawdopodobieństwo
+ciągom, w którym ukryte stany pokrywają równą liczbę okien. Założenie to przypomina jednak to z jednego
+z modeli, w którym nagranie arbitralnie podzielono na kilka równych części.
 
-Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż nie jest wynikiem naśladowania innej pracy, lecz jest w pewnym
-stopniu nowy. Jego skuteczność niestety cierpi z powodu tego, że \techname{DeepSpeech} wykrywa litery, choć wygodniejsze byłyby
-fonemy. Nie jest jednak możliwe wytrenowanie go od podstaw przy obecnej dostępności zasobów i zbiorów danych.
+Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż nie został bezpośrednio wzięty z innej pracy, lecz jest w pewnym
+stopniu nowy. Jego skuteczność niestety cierpi z powodu tego, że \techname{DeepSpeech} wykrywa litery, choć odpowiednie
+do porównywania mówców byłyby fonemy. Nie jest jednak możliwe wytrenowanie go od podstaw przy obecnej
+dostępności zasobów i zbiorów danych.
 Również ocena zgodności mówców mogłaby zyskać na skuteczności, gdyby wykorzystać popularne i-wektory. W problemie weryfikacji
-treści model ten radzi sobie najlepiej i ma tutaj dodatkową zaletę, iż można go użyć do weryfikacji dowolnej treści, nie
-jest ograniczony do zamkniętego zbioru zdań jak \shortcut{GMM-UBM}. Ostatecznie wyniki są wyraźnie odmienne od losowych.
+treści model ten radzi sobie najlepiej z tych trzech kategorii i ma dodatkową zaletę, iż można go użyć do weryfikacji
+dowolnej treści. Nie jest ograniczony do zamkniętego zbioru zdań jak \shortcut{GMM-UBM}.
+Ostatecznie wyniki są mało obiecujące i mimo złożoności modelu nie są lepsze niż te z pozostałych dwóch systemów.
 
 \section{Perspektywy dalszych badań}
 
+Przede wszystkim warto byłoby wypróbować sieć nauczoną rozpoznawania fonemów, a nie liter.
+Jest to inne zadanie i szczególnie w angielskim mapowanie między literami i fonemami
+jest bardzo niejednoznaczne. Z przejrzanych prac wiadomo, że wykorzystanie sieci
+do dopasowywania ramek może dać dobre wyniki, lecz nie użyto w nich sieci rekurencyjnych.
+
 Wyniki tworzonych modeli z pewnością dałoby się poprawić wykonując dokładną
-optymalizację hiperparametrów. Podobnie można spróbować zdobyć inny zbiór danych
-niż \techname{RedDots} na potrzeby treningu i walidacji. Tylko wtedy możliwe
-byłoby porównanie wyników z tej pracy z wynikami innych prac.
+optymalizację hiperparametrów. Podobnie można spróbować zdobyć inny zbiór danych,
+niż \techname{RedDots} na potrzeby treningu i walidacji. Możliwe wtedy
+byłoby lepsze porównanie wyników z wynikami innych prac.
 
 Metoda wyznaczania prawdopodobieństwo przynależności przez obliczanie stosunku
 przynależności do mikstur gaussowskich użytkownika oraz modelu tła nie jest

@@ -7,7 +7,7 @@ Nagrania \techname{RedDots} zostały przetworzone w ten sposób:
 
 \begin{itemize}
     \item Przeprowadzane jest \foreign{voice actividy detection} za pomocą pakietu \techname{webrtcvad}. Użyty parametr agresji $2$. Z każdego nagrania zostały usunięte ramki bezpośrednio z początku i z końca, która zostały uznane za ciche. Ramki ze środka zostały niezależnie od wyniku \shortcut{VAD}.
-    \item Dla każdego obciętego nagrania obliczone zostały \shortcut{MFCC} korzystając z metody z pakietu \techname{python-speech-features}. Analizę przeprowadzono w oknach $25$ms z $10$ms skokiem. Użyto okna hamminga. Utworzono $26$ filtrów pokrywających częstotliwości nagrania i zachowano z nich $13$. Użyto $0.97$ \foreign{preemphasis}. Wynikiem jest $13$ współczynników.
+    \item Dla każdego obciętego nagrania obliczone zostały \shortcut{MFCC} korzystając z metody z pakietu \techname{python-speech-features}. Analizę przeprowadzono w oknach $25$ms z $10$ms skokiem. Użyto okna Hamminga. Utworzono $26$ filtrów pokrywających częstotliwości nagrania i zachowano z nich $13$. Użyto $0.97$ \foreign{preemphasis}. Wynikiem jest $13$ współczynników.
     \item Dla każdej ramki obliczono cechy delta i delta-delta z użyciem pakietu \techname{python-speech-features}. Cechy
         te obliczono biorąc pod uwagę sąsiedztwo $4$ ramek przed i $4$ ramek po danej ramce.
     \item Bardzo krótkie nagrania, składające się z mniej niż $85$ ramek, zostały odrzucone. Kilka nagrań miało
@@ -24,7 +24,7 @@ zawierały treść w innym języku, i one nie będą używane w modelach wykorzy
 
 W ramach pracy utworzone zostały trzy modele do weryfikacji mówcy. Zostały one tutaj opisane.
 
-\subsectionex{Model GMM-UBM}{Mikstury gaussowskie z uniwersalny modelem tła}
+\subsectionex{Model GMM-UBM}{Mikstury gaussowskie z uniwersalnym modelem tła}
 \label{sec:gmm_ubm}
 
 System \shortcut{GMM-UBM} jest wzorowany na tym opisanym w pracy \cite{utteranceVerificationFor}. Posłużono
@@ -65,24 +65,23 @@ Parametry podsystemu rozpoznawania mowy są wyznaczane tak, że najpierw do wszy
 dopasowywana jest mała 8 składnikowa mikstura tła. Następnie budowane są wszystkie trójki \shortcut{GMM}
 odpowiadające fonemom. Potem dla każdej wypowiedzi budowany jest model Markowa przez połączenie odpowiednich
 trójek zgodnie ze znanym ciągiem fonemów danej wypowiedzi. Korzystając z \shortcut{HMM} i algorytmu Viterbiego
-ramki nagrania są przyporządkowywane do części fonemów. To samo jest robione dla innych nagrań.
+ramki nagrania są przyporządkowywane do części fonemów. Algorytm jest zmodyfikowany, by dawał wyższe prawdopodobieństwo
+podziałowi, w którym każdemu ukrytemu stanowi odpowiada ta sama liczba ramek. To samo jest robione dla innych nagrań.
 Następnie parametry trójek \shortcut{GMM} są dopasowywane przez \shortcut{EM} do ramek, które zostały im przypisane.
-Po zakończeniu ramki są przypisywane ponownie z użyciem algorytmu Viterbiego i proces jest ponawiany aż do ustania zmian.
+Po ustaleniu parametrów mikstur, ramki są przypisywane ponownie z użyciem algorytmu Viterbiego i proces jest ponawiany.
 
 Rejestracje wyglądają tak, że dla każdego mówcy jest budowany jego zestaw trójek \shortcut{GMM}.
 Wypowiedzi rejestracyjne danego mówcy są przyporządkowywane
-częściom fonemów z użyciem algorytmu Viterbiego przez system rozpoznawania mowy.
-Używając tego przyporządkowania mikstury tła są \shortcut{MAP} adaptowane
-do mikstur danego mówcy.
+częściom fonemów z użyciem algorytmu Viterbiego przez opisane \shortcut{HMM}.
+Używając tego przyporządkowania mikstury tła są \shortcut{MAP} adaptowane do nagrań danego mówcy.
 
-Testy wyglądają podobnie, najpierw z użyciem systemu rozpoznawania mowy i algorytmu Viterbiego znajdowane
+Testy wyglądają podobnie. Najpierw z użyciem systemu rozpoznawania mowy i algorytmu Viterbiego znajdowane
 jest, które ramki zawierają które części fonemów. Następnie dla każdej ramki obliczany jest logarytm prawdopodobieństwa,
-iż pochodzi ona z odpowiedniej mikstury mówcy i odpowiedniej mikstury tła. Wyniki dla mikstur mówcy i mikstur tła są
-sumowane. Wynik weryfikacji mówcy obliczany jest jako stosunek tych prawdopodobieństw.
+iż pochodzi ona z odpowiedniej mikstury mówcy i odpowiedniej mikstury tła. Sumując je uzyskiwany jest wyniki dla mikstur
+mówcy i mikstur tła. Wynik weryfikacji mówcy obliczany jest jako stosunek tych prawdopodobieństw. Treść
+nagrania nie jest osobno sprawdzana.
 
 $$S_{sp}(x) = exp(\sum_{x_i \in x} log P(\theta_{sp} | x_i) - max(log P(\theta_{sp} | x_i), log P(\theta_{UBM} | x_i)))$$
-
-Modelu ostatecznie nie udało się wytrenować. %TODO
 
 \subsectionex{Model DNN-GMM}{Głęboka sieć neuronowa do dopasowania ramek, ocena miksturami gaussowskimi}
 \label{sec:dnn_gmm}
@@ -95,9 +94,9 @@ gotowy model stworzony przez organizację \techname{Mozilla}.
 
 Model ten został wytrenowany na ok. 2500 godzinach nagrań ze zbiorów \techname{WSJ}, \techname{Switchboard}
 i \techname{Fisher}. Warto zauważyć, że autorzy cytowanej pracy, \techname{Baidu}, poza tymi zbiorami użyli
-dodatkowo własnego, zamkniętego zbioru 5000 godzin nagrań. Przyjmuje ona kolejne ramki, przy czym muszą
-one być wstępnie przetworzone do \shortcut{MFCC} i dla każdej zwraca wektor 28 liczb, które odpowiadają
-25 literom alfabetu, przerwie, apostrofowi i szumowi.
+dodatkowo własnego, zamkniętego zbioru 5000 godzin nagrań. Sieć ta przyjmuje kolejne ramki, przy czym muszą
+one być wstępnie przetworzone do współczynników \shortcut{MFCC}. Dla każdej chwili zwracany jest wektor 28 liczb,
+które odpowiadają 25 literom alfabetu, przerwie, apostrofowi i szumowi.
 
 Podobnie jak w \shortcut{HMM-GMM} dla każdego nagrania znamy treść i z wykorzystaniem systemu rozpoznawania
 mowy przyporządkowujemy ramki literom. Istotna różnica jest taka, że tutaj system rozpoznawania mowy zwraca
@@ -110,14 +109,15 @@ W przypadku, gdy największe prawdopodobieństwo przypada na szum algorytm pomij
 jest przypisanie do niektórych ramek liter oraz zwrócenie prawdopodobieństwa danej sekwencji - jak jest
 bardzo małe to prawdopodobnie spodziewana treść i treść na nagraniu się różnią.
 
-Trening wygląda tak jak opisano w \shortcut{HMM-GMM}, to znaczy korzystając z przypisania ramek
-tworzy się szereg \shortcut{GMM} z $8$ składnikami mikstury i macierzami diagonalnymi,
-po jednym na literę tła i wyznacza ich parametry, by maksymalizowały prawdopodobieństwo wystąpienia
+Trening wygląda analogicznie jak opisano w \shortcut{HMM-GMM}. To znaczy korzystając z przypisania ramek
+zwróconego przez \shortcut{DNN}, tworzy się szereg \shortcut{GMM} z $8$ składnikami mikstury
+i macierzami diagonalnymi, po jednym na literę. Następnie Wyznaczane są ich parametry, by
+maksymalizowały prawdopodobieństwo wystąpienia
 ramek z ich klasy. Rejestracja wygląda tak samo, tylko \shortcut{MAP} adaptuje modele tła do
 mniejszej liczby nagrań rejestracyjnych mówcy.
 
 Metoda testowania ponownie polega na policzeniu stosunku prawdopodobieństw między \shortcut{GMM} mówcy, a tła.
-Wynik jest sumowany dla wszystkich ramek, które mają przypisane litery. Jednak weryfikacja treści nagrania
+Wynik jest sumowany dla wszystkich ramek, które mają przypisane litery. Weryfikacja treści nagrania
 bazuje na prawdopodobieństwie zwróconym przez algorytm Viterbiego, czyli prawdopodobieństwie najbardziej
 prawdopodobnej sekwencji przyporządkowań liter do ramek, w której litery zgadzają się z transkrypcją.
 
@@ -140,8 +140,8 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
         & \shortcut{EER} & \shortcut{AUC} & \shortcut{EER} & \shortcut{AUC} & \shortcut{EER} & \shortcut{AUC}
         \\ \midrule
         \shortcut{GMM-UBM} & 4.69\% & 97.56\% & 6.04\% & 97.82\% & 3.20\% & 99.04\%
-        %\\
-        %\shortcut{HMM-GMM} & ? & ? & ? & ? & ? & ?
+        \\
+        \shortcut{HMM-GMM} & 11.27\% & 95.24\% &   &   &   &
         \\
         \shortcut{DNN-GMM} & 42.72\% & 62.89\% & 19.67\% & 85.79\% & 29.54\% & 78.85\%
         \\
@@ -192,8 +192,14 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_both}
         \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści.}
-        \label{fig:4_3_gmm_roc_both}
         \label{fig:4_3_dnn_roc_both}
     \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\textwidth]{images/4_3_hmm_roc_speaker}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy.}
+        \label{fig:4_3_hmm_roc_speaker}
 \end{figure}
 

@@ -14,31 +14,32 @@ Identyfikacja mówcy polega na rozpoznaniu, która z zarejestrowanych osób jest
 jest na nim ktoś niezarejestrowany. Identyfikacja może być wykorzystana przez służby policyjne do
 zidentyfikowania osób na zdobytym nagraniu.
 
-Rozpoznawanie mówcy można również podzielić ze względu na to, czy treść nagrania jest znana z góry
+Rozpoznawanie mówcy można również podzielić według kryterium, czy treść nagrania jest znana z góry,
 na rozpoznawanie mówcy zależne od tekstu i niezależne od tekstu. Weryfikacja mówcy zwykle może
 być przeprowadzona zależnie od tekstu, gdyż w typowych zastosowaniach można oczekiwać od weryfikowanej
 osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w sytuacji,
-gdy nagrań rejestrujących jest tylko kilka\cite{parallelSpeakerAnd}. W przypadku,
-gdy nagranie nie zawiera oczekiwanej treści
-akceptowalne jest odrzucenie weryfikowanego nagrania niezależnie od mówcy.
-Identyfikację z kolei trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą
+gdy nagrań rejestrujących jest niewiele\cite{parallelSpeakerAnd}. W przypadku,
+gdy nagranie nie zawiera oczekiwanej treści, wymagane jest odrzucenie weryfikowanego nagrania
+niezależnie od tożsamości mówcy.
+Identyfikację z kolei zwykle trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą
 być tego nieświadome.
-% cite że poprawia skuteczność jak mało nagrań
 
 Jako że przedmiotem pracy jest rozpoznawanie mówcy zależne od tekstu, uwaga zostanie poświęcona problemowi
 weryfikacji, a nie identyfikacji mówcy. Ten problem jest również ciekawy ze względu na potencjalne zastosowania,
 przypuszczalnie większe niż problem identyfikacji. Zaletą bazowania na nagraniu mowy jest możliwość
-jego nieinwazyjnego pozyskania, jednakże niska skuteczność rozpoznawania sprawiała, że takie systemy
-mogły pełnić tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjnego hasła.
+jego nieinwazyjnego pozyskania. Jednakże niska skuteczność rozpoznawania sprawiała, że takie systemy
+pełnią tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjnego hasła.
 
 Systemu bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
 związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
 stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
-wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi \shortcut{GMM} w obecnych systemach do rozpoznania
-jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw. \foreign{bottleneck features}\cite{investigationOfBottleneck}.
+wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi
+\shortcut{GMM} w obecnych systemach do rozpoznania
+jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw.
+\foreign{bottleneck features}\cite{investigationOfBottleneck}.
 Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
-neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i być może wypróbowanie innego sposobu zaaplikowania
+neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i wypróbowanie innego sposobu zaaplikowania
 sieci neuronowej.
 
 Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety,
@@ -48,7 +49,7 @@ została zaadresowana przez naukowców między innymi z Singapuru. Zgromadzili o
 treści od ochotników z całego świata i opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
 zasoby posiadane przez korporacje w postaci danych i w postaci czasu i talentu pracowników sprawiają,
 że dorównanie ich wynikom jest nierealne. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
-jest w ogóle warty uwagi i porównanie go z systemami \foreign{baseline}.
+jest w ogóle warty uwagi, i porównanie go z systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
@@ -65,17 +66,14 @@ Systemy, które zostały stworzone i przetestowane, to:
     \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
 \end{itemize}
 
-Modele zostaną przetestowane na zbiorze \techname{RedDots}. Policzone zostaną następujące miary jakości:
+Modele zostaną przetestowane na zbiorze \techname{RedDots} i porównane między sobą oraz z wynikami innych prac.
+Osobno zostanie zaprezentowana skuteczność weryfikacji mówcy oraz treści. Uwzględnione zostaną następujące miary jakości:
 
 \begin{itemize}
     \item Krzywa \shortcut{ROC}
     \item \shortcut{EER}
     \item \shortcut{AUR}
 \end{itemize}
-
-Modele zostaną na ich podstawie porównane między sobą i z wynikami innych prac. Osobno zostaną rozważeni mężczyźni
-i kobiety, gdyż zbiór zawiera o wiele nagrań mężczyzn i wiele prac zupełnie ignoruje wyniki dla kobiet,
-gdyż jest ich za mało. Rozpatrzone zostaną cztery zestawy testowe zdefiniowane w \techname{RedDots}.
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
@@ -118,6 +116,6 @@ istotne dla tej pracy. Rozdział \ref{chap:technologie}
 opisuje zbiór danych, technologie i narzędzia wykorzystane w pracy. W rozdziale
 \ref{chap:badania} przedstawiono opis stworzonych systemów i wyniki testów. Rozdział
 \ref{chap:podsumowanie} zawiera porównanie wyników i podsumowanie czy założone
-cele zostały osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z kodem aplikacji,
-wersją elektroniczną tej pracy oraz kopią wykorzystanych źródeł internetowych.
+cele zostały osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z
+kodem źródłowym aplikacji oraz wersją elektroniczną tej pracy.
 
