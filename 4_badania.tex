@@ -125,8 +125,11 @@ prawdopodobnej sekwencji przyporządkowań liter do ramek, w której litery zgad
 \label{sec:test_results}
 
 W celu oceny systemów wykonano pierwsze zadanie zdefiniowane w zbiorze \techname{RedDots}. Każdy z modeli został
-wykorzystany do zapisów mówców, a następnie do testów. Wyniki w postaci krzywej \shortcut{ROC}, \shortcut{EER}
-i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
+wykorzystany do zapisów mówców, a następnie do testów. Algorytm wykorzystania modeli wraz ze wszystkimi parametrami
+zapisany jest w plikach \techname{Jupyter}, co powinno uczynić wyniki łatwymi do odtworzenia,
+choć powtórzenie obliczeń może zająć dużo czasu.
+Wyniki w postaci krzywej \shortcut{ROC}, \shortcut{EER} i \shortcut{AUC} zapisano w poniższej tabeli
+i zwizualizowano pod tabelą.
 
 \begin{table}[H]
     \centering
@@ -153,13 +156,13 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
         \label{fig:4_3_gmm_roc_speaker}
     \end{minipage}%
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_sentence}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji treści.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji treści}
         \label{fig:4_3_gmm_roc_sentence}
     \end{minipage}
 \end{figure}
@@ -169,13 +172,13 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_both}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
         \label{fig:4_3_gmm_roc_both}
     \end{minipage}%
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
         \label{fig:4_3_dnn_roc_speaker}
     \end{minipage}
 \end{figure}
@@ -185,13 +188,13 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_sentence}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji treści.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji treści}
         \label{fig:4_3_dnn_roc_sentence}
     \end{minipage}%
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_both}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
         \label{fig:4_3_dnn_roc_both}
     \end{minipage}
 \end{figure}
@@ -199,7 +202,7 @@ i \shortcut{AUC} zapisano w poniższej tabeli i zwizualizowano pod tabelą.
 \begin{figure}[H]
         \centering
         \includegraphics[width=0.7\textwidth]{images/4_3_hmm_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy.}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
         \label{fig:4_3_hmm_roc_speaker}
 \end{figure}
 

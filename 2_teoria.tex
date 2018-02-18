@@ -15,6 +15,10 @@ oraz zapewnieniu, że poszczególne cechy są nieskorelowane, co zachodzi przy \
 
 Krokiem wstępnym policzenia \shortcut{MFCC} jest \foreign{preemphasis}, czyli przefiltrowanie sygnału
 prostym filtrem wysokoprzepustowym, zwykle postaci $[-0.95, 1.0]$ lub \\ $[-0.97, 1.0]$.
+Jak pokazuje \ref{fig:2_1_b_example_preemphasis}, energia w wyższych pasmach po tej operacji,
+choć początkowo znacznie niższa, została wyrównana z energią w niższych pasmach częstotliwości.
+Ogranicza to błędy numeryczne
+pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starszych komputerach.
 
 \begin{figure}[H]
     \centering
@@ -37,12 +41,9 @@ prostym filtrem wysokoprzepustowym, zwykle postaci $[-0.95, 1.0]$ lub \\ $[-0.97
     \label{fig:2_1_b_example_preemphasis}
 \end{figure}
 
-Jak pokazuje \ref{fig:2_1_b_example_preemphasis}, energia w wyższych pasmach po tej operacji
-została wyrównana z energią w niższych pasmach częstotliwości. Ogranicza to błędy numeryczne
-pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starszych komputerach.
-
 W drugim kroku należy policzyć \foreign{Short Time Fourier Transform}, to znaczy podzielić
-sygnał na ramki i dla każdej ramki policzyć spektrum częstotliwościowe. Typowa szerokość
+sygnał na ramki i dla każdej ramki policzyć spektrum częstotliwościowe. Dalsze operacje
+będą wykonywane na reprezentacji sygnału w dziedzinie częstotliwości. Typowa szerokość
 okna to $25$ms, przy czym każde kolejne okno jest przesunięte o ok. połowę szerokości,
 np. można przyjąć $10$ms. W przypadku zbioru \techname{RedDots} nagrania mają częstotliwość próbkowania $16$kHz,
 więc by uzyskać takie przesunięcie okna muszą zawierać $400$ próbek z przesunięciem $160$ próbek.
@@ -150,14 +151,14 @@ gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowarianc
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{images/2_2_a_leipzig_datashader}
-    \caption{Wizualizacja \foreign{datashader} danych o przejazdach w okolicach Lipska.}
+    \caption{Wizualizacja \foreign{datashader} danych o przejazdach w okolicach Lipska pobranych z nawigacji samochodowych}
     \label{fig:2_2_a_leipzig_datashader}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{images/2_2_a_leipzig_gmm}
-    \caption{Wizualizacja \shortcut{GMM} dopasowanych za pomocą \shortcut{EM} do danych o przejazdach z rysunku \ref{fig:2_2_a_leipzig_datashader}.}
+    \caption{Wizualizacja \shortcut{GMM} dopasowanych za pomocą \shortcut{EM} do danych o przejazdach z rysunku \ref{fig:2_2_a_leipzig_datashader}}
     \label{fig:2_2_a_leipzig_gmm}
 \end{figure}
 
@@ -237,7 +238,7 @@ do najbardziej korzystnego wyniku z pośród trzech opcji:
 Poniżej przedstawiono kilka przykładów tabelek z wynikami $DTW$. Elementami są liczby, a w roli metryki jest kwadrat różnicy.
 
 \begin{table}[H]
-    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład gdy elementy jednej sekwencja są wielokrotnie dopasowana do pierwszego elementu z drugiej sekwencji, dopóki jest to możliwe.}
+    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład gdy elementy jednej sekwencja są wielokrotnie dopasowana do pierwszego elementu z drugiej sekwencji, dopóki jest to możliwe}
     \centering
     \label{tab:dtw_example0}
     \small
@@ -261,7 +262,7 @@ Poniżej przedstawiono kilka przykładów tabelek z wynikami $DTW$. Elementami s
 \end{table}
 
 \begin{table}[H]
-    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład z dokładnie dopasowanymi sekwencjami, z wydłużonymi lub skróconymi fragmentami.}
+    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład z dokładnie dopasowanymi sekwencjami, z wydłużonymi lub skróconymi fragmentami}
     \centering
     \label{tab:dtw_example1}
     \small
@@ -658,7 +659,7 @@ z linią od $(0, 1)$ do $(1, 0)$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/2_2_b_roc_example}
-    \caption{Przykładowy wykres krzywej \shortcut{ROC} wygenerowany na podstawie wyników modelu \shortcut{GMM-UBM} opisanego w pracy.}
+    \caption{Przykładowy wykres krzywej \shortcut{ROC} wygenerowany na podstawie wyników modelu \shortcut{GMM-UBM} opisanego w pracy}
     \label{fig:2_2_b_roc_example}
 \end{figure}
 

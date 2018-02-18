@@ -35,30 +35,31 @@ związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. R
 stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
 wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi
-\shortcut{GMM} w obecnych systemach do rozpoznania
+mikstur gaussowskich w obecnych systemach do rozpoznania
 jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw.
 \foreign{bottleneck features}\cite{investigationOfBottleneck}.
 Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
 neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i wypróbowanie innego sposobu zaaplikowania
-sieci neuronowej.
+sieci neuronowych.
 
 Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety,
 że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców,
 albo dostępne, lecz za opłatą. Na szczęście w 2015 ta potrzeba
 została zaadresowana przez naukowców między innymi z Singapuru. Zgromadzili oni nagrania o znanej
 treści od ochotników z całego świata i opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
-zasoby posiadane przez korporacje w postaci danych i w postaci czasu i talentu pracowników sprawiają,
-że dorównanie ich wynikom jest nierealne. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
-jest w ogóle warty uwagi, i porównanie go z systemami \foreign{baseline}.
+zasoby posiadane przez korporacje w postaci danych i talentu pracowników sprawiają stawiają ich
+w pozycji, w której trudno im dorównać.  Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
+jest w ogóle warty uwagi i w jakich sytuacjach, oraz porównanie go z wybranymi systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
 Celem pracy jest stworzenie systemu do rozpoznawania mówcy wykorzystującego sieć neuronową.
 Zostanie on przetestowany na zbiorze \techname{RedDots} i porównany z innymi stworzonymi systemami.
-Nie oczekujemy uzyskania lepszych wyników, lecz warto by było, gdyby świadczyły o tym,
-że dana metoda nie jest zupełnie losowa.
+Wyniki pozwolą ocenić sensowność używania wybranej metody oraz wskazać, gdzie może sprawdzić się lepiej
+od innych metod.
 
-Systemy, które zostały stworzone i przetestowane, to:
+Zostaną stworzone dwa systemy bazujące na innych metodach niż sieci neuronowe oraz jeden bazujący na nich. Przetestowane
+modele to:
 
 \begin{itemize}
     \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła (\shortcut{GMM-UBM})
