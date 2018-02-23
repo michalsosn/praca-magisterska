@@ -41,7 +41,7 @@ pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starsz
     \label{fig:2_1_b_example_preemphasis}
 \end{figure}
 
-W drugim kroku należy policzyć \foreign{Short Time Fourier Transform}, to znaczy podzielić
+W drugim kroku należy policzyć \shortcut{STFT} (\foreign{Short Time Fourier Transform}), to znaczy podzielić
 sygnał na ramki i dla każdej ramki policzyć spektrum częstotliwościowe. Dalsze operacje
 będą wykonywane na reprezentacji sygnału w dziedzinie częstotliwości. Typowa szerokość
 okna to $25$ms, przy czym każde kolejne okno jest przesunięte o ok. połowę szerokości,
@@ -56,23 +56,21 @@ Każde okno można wyciąć z użyciem okna Hamminga lub Hanna, które mają mni
 na wynikowe spektrum sygnału niż okno prostokątne. (Wycięcie wybranego przedziału próbek
 z sygnału jest równoważne przemnożeniu przez okno prostokątne)
 
-Następnie budowany jest bank filtrów w skali Mela. Przeliczenia częstotliwości Melach na
+Następnie budowany jest bank filtrów w skali melowej. Przeliczenia częstotliwości w melach na
 częstotliwość w Hertzach dokonuje się według poniższych wzorów.
-
 $$m = 2595 log_{10}(1 + \frac{f}{700})$$
 $$f = 700 (10^{m/2595} - 1)$$
-
 Jest to skala w nieliniowej zależności z Hertzami. Jej postać i stałe zostały tak dobrane,
 że zmiana w tej skali odpowiada subiektywnemu odczuciu zmiany wysokości dźwięku przez ludzi.
 
 Bank filtrów składa się z pewnej liczby, zwykle $20$ lub $26$, trójkątnych filtrów o równej
-szerokości w skali Mela, rozmieszczonych z przesunięciem 50\% szerokości. Ich szerokość
+szerokości w skali melowej, rozmieszczonych z przesunięciem 50\% szerokości. Ich szerokość
 jest tak dobrana, by pokryły cały przedział częstotliwości sygnału.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/2_1_d_mel_filters}
-    \caption{Charakterystyka w skali Hertza banku 20 trójkątnych filtrów o równej szerokości w skali Mela}
+    \caption{Charakterystyka w skali Hertza banku 20 trójkątnych filtrów o równej szerokości w skali melowej}
     \label{fig:2_1_d_mel_filters}
 \end{figure}
 
@@ -87,12 +85,14 @@ W wynikowych cechach jeżeli sygnał mowy został z czymś spleciony, to skutkuj
 ze wszystkich ramek. Można wtedy, przy założeniu, że wpływ otoczenia jest stały, znormalizować średnią tych cech,
 by zmniejszyć jego wpływ.
 
-Znormalizowane współczynniki filtrów Mela bywają używane jako gotowy zestaw cech. Do uzyskania \shortcut{MFCC}
+Znormalizowane współczynniki filtrów melowej bywają używane jako gotowy zestaw cech. Do uzyskania \shortcut{MFCC}
 potrzebne jest jeszcze policzenie dyskretnej transformaty cosinusowej. Dyskretna transformata cosinusowa to modyfikacja
 transformaty Fouriera, która w wyniku daje ciąg współczynników rzeczywistych, a nie zespolonych. Wykorzystana jest
-właściwość \shortcut{DFT}, że jeżeli sygnał w dziedzinie czasu ma współczynniki rzeczywiste, to współczynniki transformaty
+właściwość \shortcut{DFT} (\foreign{Discrete Fourier Transform}), że jeżeli sygnał w dziedzinie czasu ma
+współczynniki rzeczywiste, to współczynniki transformaty
 będą Hermitian-symetryczne. A jeżeli sygnał w dziedzinie czasu jest symetryczny, to transformata będzie miała
-tylko współczynniki rzeczywiste. \shortcut{DCT} liczy się zatem tak, iż tworzony jest nowy sygnał dwa razy większej długości niż
+tylko współczynniki rzeczywiste. \shortcut{DCT} (\foreign{Discrete Cosine Transform}) liczy się zatem tak,
+iż tworzony jest nowy sygnał dwa razy większej długości niż
 sygnał wyjściowy, przez odbicie wyjściowego sygnału. Taki sygnał będzie symetryczny i rzeczywisty, więc jego transformata
 Fouriera będzie również symetryczna i rzeczywista. Połowę transformaty można odrzucić, a druga połowa, zawierająca
 współczynniki rzeczywiste i będąca takiego samego rozmiaru co wyjściowy sygnał, nazywamy dyskretną transformatą cosinusową.
@@ -110,7 +110,7 @@ jest macierzą diagonalną.
     \label{fig:2_1_e_mfcc}
 \end{figure}
 
-Wynik \shortcut{DCT} nazywamy \foreign{Mel-frequency cepstral coefficients} i ze względu na wspomniane właściwości użyjemy ich
+Wynik \shortcut{DCT} nazywamy \foreign{mel-frequency cepstral coefficients} i ze względu na wspomniane właściwości użyjemy ich
 w naszych systemach. W praktyce z $26$ współczynników wybiera się tylko pierwsze $13$ lub $20$, gdyż dalsze opisują
 wysokie częstotliwości, które są nieprzydatne przy rozumieniu sygnału mowy. Do tych współczynników dołącza się $26$ lub $40$
 współczynników delta oraz delta-delta. Współczynniki delta mają opisać jak konkretne współczynniki zmieniają się w czasie,
@@ -138,14 +138,10 @@ Następnie uznaje się, że dla każdej wartości zmiennej ukrytej rozkład zmie
 Zwykle zmienna ukryta jest dyskretna, wyjściowa zmienna może być dyskretna lub ciągła i przyjmuje się, że wszystkie
 warunkowe rozkłady $P(X|\Theta)$ pochodzą z tej samej rodziny i różnią się parametrami. Rozkład zmiennej $X$ można
 uzyskać przez marginalizację zmiennej ukrytej.
-
 $$f(x) = \sum_{\theta_i} f(X | \theta_i) P(\theta_i)$$
-
 Przy miksturach gaussowskie przyjmuje się, że warunkowe prawdopodobieństwa zmiennej wyjściowej od zmiennej ukrytej
 należą do rodziny wielowymiarowych rozkładów normalnych, tj. mają gęstość
-
 $$f(x | \theta_i) = \frac{1}{\sqrt{(2 \pi)^d |\Sigma_i|}} exp(-\frac{1}{2} (x - \mu_i)^T \Sigma_i^{-1} (x - \mu_i))$$
-
 gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowariancji rozmiaru $d \times d$
 
 \begin{figure}[H]
@@ -168,11 +164,9 @@ Parametry wielowymiarowego rozkładu normalnego można wyestymować na podstawie
 stosując estymator maksymalizujący prawdopodobieństwo danych.
 
 Estymatory parametrów maksymalizujące prawdopodobieństwo $M$ elementów $x^j$.
+$$\hat{\mu} = \frac{1}{m} \sum_{j=0}^M x^{j}$$
 
-$\hat{\mu} = \frac{1}{m} \sum_{j=0}^M x^{j}$
-
-$\hat{\Sigma} = \frac{1}{m} \sum_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu})$
-
+$$\hat{\Sigma} = \frac{1}{m} \sum_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu})$$
 Jednak w przypadku mikstury, jeżeli nie przypiszemy z góry próbek wybranym wartościom ukrytej zmiennej, problem
 estymacji parametrów wymaga innego podejścia. Jedną z metod jest \foreign{Expectation Maximization}, iteracyjny
 algorytm wyznaczania wartości parametrów dla mikstur dystrybucji lub ogólniej dla modeli z ukrytymi zmiennymi.
@@ -186,7 +180,8 @@ globalnie optymalnego rozwiązania.
         lub inaczej gwarantowały, że każda z próbek jest zgodnie z ich wartościami możliwa do wygenerowania. Inaczej
         pełne dopasowanie do danych będzie niemożliwe. Bardzo małe prawdopodobieństwo może przez błędy numeryczne
         zostać zaokrąglone do $0$ i również spowodować błąd.
-    \item \foreign{Maximization} - zakładając wyznaczone wartości ukrytych parametrów, znaleźć nowe \shortcut{MAP} estymaty
+    \item \foreign{Maximization} - zakładając wyznaczone wartości ukrytych parametrów, znaleźć nowe \shortcut{MAP}
+        (\foreign{Maximum a Posteriori}) estymaty
         jawnych parametrów. Trzeba zwrócić uwagę, że pewne mikstury mogą nie mieć przypisanych żadnych próbek
         i wtedy uaktualnienie parametrów jest niemożliwe. Do tego uaktualniając wagi \shortcut{GMM} należałoby
         przypisać danej miksturze wagę $0$, przez co nigdy nie byłaby już użyta. Trzeba zwrócić uwagę na ten problem
@@ -218,9 +213,7 @@ rząd i pierwsza kolumna jest wypełniana cyfrową reprezentacją $\infty$, co o
 Wyjątkiem jest komórka w pierwszym rzędzie i pierwszej kolumnie z wartością $D_{0,0} = 0$.
 
 Pozostałe wartości macierzy są liczone ze wzoru
-
 $$D_{i+1, j+1} = min(D_{i+1, j}, D_{i, j+1}, D_{i, j}) + d(N_i, M_j)$$
-
 gdzie $N_i$ i$M_j$ oznaczają elementy porównywanych ciągów, a $d(N_i, M_j)$ to jak już wspomniano wybrana
 niezależnie od algorytmu odległość między dwoma elementami. Odległość ciągów od siebie znaleziona przez \shortcut{DTW}
 to $D_{n, m}$.  Licząc te wartości rzędami możliwe jest osiągnięcie liniowej złożoności pamięciowej względem
@@ -291,7 +284,8 @@ Poniżej przedstawiono kilka przykładów tabelek z wynikami $DTW$. Elementami s
 
 \subsection{Ukryte modele Markowa}\label{sec:hmm}
 
-Ukryty model Markowa to proces stochastyczny, dyskretny w czasie, pozwalający na modelowanie dystrybucji
+Ukryty model Markowa (\shortcut{HMM}, \foreign{Hidden Markov Model}) to proces stochastyczny,
+dyskretny w czasie, pozwalający na modelowanie dystrybucji
 sekwencji zdarzeń. Będzie zatem użyteczny ze względu na możliwość uwzględnienia w nim zależności
 między ramkami w czasie.
 
@@ -343,20 +337,13 @@ Algorytm w przód (\foreign{Forward algorithm}) liczy łączone prawdopodobieńs
 i wystąpienia pewnego ciągu obserwacji $y_{t-1} \dots y_0$ w przeszłości.
 
 To znaczy liczy $P(x_t, y_t \dots y_0)$. Korzysta z rekurencyjnej zależności
-
 $$P(x_t, y_t \dots y_0) = \sum_{x_{t-1}} P(x_t, x_{t-1}, y_t \dots y_0) =$$
 $$\sum_{x_{t-1}} P(y_t | x_t, x_{t-1}, y_{t-1} \dots y_0) P(x_t | x_{t-1}, y_{t-1} \dots y_0) P(x_{t-1}, y_{t-1} \dots y_0)$$
-
 Dzięki własności Markowa można to uprościć do:
-
 $$P(y_t | x_t, x_{t-1}, y_{t-1} \dots y_0) = P(y_t | x_t) = V_{x_t, y_t}$$
-
 $$P(x_t | x_{t-1}, y_{t-1} \dots y_0) = P(x_t | x_{t-1}) = H_{x_{t-1}, x_t}$$
-
 Ostateczną zależnością jest
-
-$$P(x_t, y_t \dots y_0) = V_{x_t, y_t} \sum_{x_{t-1}} H_{x_{t-1}, x_t} P(x_{t-1}, y_{t-1} \dots y_0) $$
-
+$$P(x_t, y_t \dots y_0) = V_{x_t, y_t} \sum_{x_{t-1}} H_{x_{t-1}, x_t} P(x_{t-1}, y_{t-1} \dots y_0)$$
 gdzie $P(x_{t-1}, y_{t-1} \dots y_0)$ może być rekurencyjnie obliczone w ten san sposób aż do przypadku bazowego $P(x_0, \emptyset) = \pi_1$, gdzie $\pi$ to rozkład początkowy.
 
 Użycie własności Markowa pozwala zredukować złożoność obliczeniową problemu z $\theta(MN^M)$ do $\theta(MN^2)$, gdzie $M$ to możliwa liczba obserwacji, a $N$ to liczba stanów ukrytych.
@@ -364,23 +351,16 @@ Użycie własności Markowa pozwala zredukować złożoność obliczeniową prob
 \subsubsection{Algorytm w tył}
 
 Algorytm w tył (\foreign{backward algorithm}), jest podobny do algorytmu w przód. Oblicza $P(y_{t+1} \dots y_{T-1} | x_t)$, to znaczy prawdopodobieństwo wystąpienia wskazanej sekwencji obserwacji $y_{t+1} \dots y_{T-1}$, gdzie $T$ to liczba obserwacji, zakładając początkowy stan ukryty $x_t$ w chwili $t$. Obliczenia zaczyna się od końcowego stanu $x_{T-1}$.
-
 $$P(y_{t+1} \dots y_{T-1} | x_t) = \sum_{x_{t+1}} P(y_{t+1} \dots y_{T-1}, x_{t+1} | x_t) =$$
 $$\sum_{x_{t+1}} P(y_{t+1} | y_{t+2} \dots y_{T-1}, x_{t+1}, x_t) P(y_{t+2} \dots y_{T-1} | x_{t+1}, x_t) P(x_{t+1} | x_t)$$
-
 Korzystając z tego można uprościć:
-
 $$P(y_{t+1} | y_{t+2} \dots y_{T-1}, x_{t+1}, x_t) = P(y_{t+1} | x_{t+1}) = V_{x_{t+1},y_{t+1}}$$
-
 $$P(y_{t+2} \dots y_{T-1} | x_{t+1}, x_t) = P(y_{t+2} \dots y_{T-1} | x_{t+1})$$
-
 $$P(x_{t+1} | x_t) = H_{x_t,x_{t+1}}$$
-
 Ostateczna zależność to:
-
 $$P(y_{t+1} \dots y_{T-1} | x_t) =  \sum_{x_{t+1}} V_{x_{t+1},y_{t+1}} H_{x_t,x_{t+1}} P(y_{t+2} \dots y_{T-1} | x_{t+1})$$
-
-Prawdopodobieństwo jest liczone rekurencyjnie, aż do przypadku bazowego $P(\emptyset | x_{T-1}) = 1$
+Prawdopodobieństwo jest liczone rekurencyjnie, z przypadkiem bazowym
+$$P(\emptyset | x_{T-1}) = 1$$
 
 \subsubsection{Algorytm w przód i w tył}
 Algorytm w przód i w tył (\foreign{Forward-Backward algorithm}) działa przez połączenie wyników algorytmu w przód i w tył.
@@ -394,12 +374,10 @@ Przypomnijmy, że:
 \end{enumerate}
 
 Wynik \foreign{Forward-Backward} wykorzystuje poprzednie dwa algorytmy tak:
-
 $$P(x_t, y_t \dots y_0) P(y_{T-1} \dots y_{t+1} | x_t) = P(y_t \dots y_0 | x_t) P(y_{T-1} \dots y_{t+1} | x_t) P(x_t) = $$
 $$P(y_{T-1} \dots y_0 | x_t) P(x_t) = P(y_{T-1} \dots y_0, x_t) = P(x_t | y_{T-1} \dots y_0) P(y_{T-1} \dots y_0)$$
 
 $$P(x_t | y_{T-1} \dots y_0) = \frac{P(x_t, y_t \dots y_0) P(y_{T-1} \dots y_{t+1} | x_t)}{P(y_{T-1} \dots y_0)}$$
-
 Prawdopodobieństwo w mianowniku można wyznaczyć przez zsumowanie po $X_{T-1}$ w wynikach algorytmu w przód $\sum_{x_{T-1}} P(x_{T-1}, y_{T-1} \dots y_0)$
 
 \subsubsection{Algorytm Bauma-Welcha}
@@ -417,7 +395,6 @@ Jak próbowano pokazać powyżej algorytm \foreign{forward-backward} pozwala obl
 Do przeprowadzenia treningu \foreign{Bauma-Welcha} potrzebne jest dodatkowo wyznaczenie $P(x_t, x_{t+1} | y_{T-1} dots y_0)$,
 czyli prawdopodobieństwa przejścia z jednego stanu w chwili $t$ do drugiego w chwili $t+1$,
 uwzględniając sekwencję $T$ obserwacji i, niejawnie, parametrów modelu.
-
 $$P(x_t, x_{t+1} | y_{T-1} dots y_0)
 = \frac{P(x_t, x_{t+1}, y_{T-1} dots y_0)}{P(y_{T-1} dots y_0)}$$
 
@@ -433,9 +410,7 @@ $$P(y_{T-1} \dots y_{t+2} | x_{t+1}) P(y_{t+1} | x_{t+1}) P(y_t \dots y_0, x_t) 
 
 $$P(x_t, x_{t+1} | y_{T-1} \dots y_0)
 = \frac{P(y_{T-1} \dots y_{t+2} | x_{t+1}) P(y_t \dots y_0, x_t) V_{x_{t+1}, y_{t+1}} H_{x_t, x_{t+1}}}{P(y_{T-1} \dots y_0)}$$
-
 Wtedy można uaktualniać parametry w ten sposób, zakładając dyskretne obserwacje opisane macierzą stochastyczną. Inaczej trzeba użyć odpowiedniego estymatora.
-
 $$\pi_i = P(X_0 = x_i | y_{T-1} \dots y_0)$$
 
 $$H_{x_t, x_{t+1}} = \frac{\sum_{t=0}^{T-1} P(x_t, x_{t+1} | y_{T-1} \dots y_0)}{\sum_{t=0}^{T-1} P(x_t | y_{T-1} \dots y_0)}$$
@@ -460,7 +435,6 @@ czyli zawiera największe prawdopodobieństwo jakie może mieć ciąg stanów $x
 $$B_{t,x_i} = argmax_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t)$$ i służy do odtworzenia na koniec, które ukryte stany wchodzą w skład wybranej ścieżki. Warto zauważyć, że w tym przypadku $t > 0$.
 
 Mając $A_{t,x_i}$, algorytm oblicza prawdopodobieństwo dla następnej chwili czasu $A_{t+1,x_i}$ w taki sposób:
-
 $$P(x_1 \dots x_t, y_0 \dots y_t) = P(y_t | x_1 \dots x_t, y_0 \dots y_{t-1}) P(x_1 \dots x_t, y_0 \dots y_{t-1}) =$$
 $$P(y_t | x_1 \dots x_t, y_0 \dots y_{t-1}) P(x_t | x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
 $$P(y_t | x_t) P(x_t | x_{t-1}) P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
@@ -469,14 +443,11 @@ $$V_{x_t, y_t} H_{x_{t-1}, x_t} P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1})$$
 $$A_{t,x_i} = max_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t) =$$
 $$max_{x_1 \dots x_{t-1}} V_{x_i, y_t} H_{x_{t-1}, x_i} P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
 $$V_{x_i, y_t} max_{x_{t-1}}H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
-
 Przypadek bazowy to $A_{1,x_i} = P(X_1 = x_i, y_0) = \pi_i V_{x_i, y_0}$
 
 Jeśli chodzi o $B$, to zachowuje argumenty, dla których w $A$ jest maksimum:
-
 $$B_{t, x_i} = argmax_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t) =$$
 $$argmax_{x_{t-1}} H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
-
 Po zakończeniu obliczeń możemy znaleźć najbardziej prawdopodobną ścieżkę stanów przez wybranie stanu $x_i$ z największym prawdopodobieństwem w chwili $T-1$ i odtworzyć całą ścieżkę korzystając z $B$\cite{aTutorialOnHidden}.
 
 \section{Rozpoznawanie mówcy}\label{sec:rozpoznawanie_mowcy}
@@ -493,17 +464,14 @@ wcześniej nagrań.
 \subsection{MAP adaptacja}
 
 MAP adaptacja pozwala na uzyskanie modelu dla mówcy na podstawie niewielu nagrań. Wykorzystywany jest model niezależny
-od mówcy, jak \shortcut{UBM}, nauczony na dużym zbiorze danych. Metoda polega na znalezieniu parametrów $\lambda$
+od mówcy, jak \shortcut{UBM} (\foreign{Universal Background Model}), nauczony na dużym zbiorze danych.
+Metoda polega na znalezieniu parametrów $\lambda$
 maksymalizujących $P(\lambda | X)$, czyli prawdopodobieństwo wartości parametrów przy uwzględnieniu zestawu danych.
 
-Zgodnie z regułą Bayesa :
-
+Zgodnie z regułą Bayesa:
 $$P(\lambda | X) = \frac{P(X | \lambda) P(\lambda)}{P(X)}$$
-
-Nazwa $MAP$ (\foreign{maximum a posteriori}) wzięła się z terminów używanych wobec zmiennych w tym równaniu:
-
+Nazwa $MAP$ (\foreign{Maximum a Posteriori}) wzięła się z terminów używanych wobec zmiennych w tym równaniu:
 $$\text{posterior} = \frac{\text{likelihood} \times \text{prior}}{\text{evidence}}$$
-
 W statystyce bayesowskiej parametry opisuje się jako zmienne losowe. Przy wyborze ich dystrybucji zwraca się uwagę
 na to czy są tzw. \foreign{conjugate prior} wobec $P(X | \lambda)$, czyli dystrybucji, która zależy od tych parametrów.
 Oznacza to taką cechę, że \foreign{posterior} będzie po uwzględnieniu \foreign{likelihood} miał rozkład z tej samej
@@ -520,7 +488,7 @@ Jeżeli dystrybucja z której generowane są dane ma rozkład normalny, to wzór
 $$\bar{\mu_{MAP}} = \frac{\sigma^2}{\sigma^2 + n \sigma_0^2} \mu_0 + \frac{n \sigma^2_0}{\sigma^2 + n \sigma_0^2} \bar{\mu}$$
 
 gdzie $\mu_0$, $\sigma_0^2$ to średnia i wariancja \foreign{priora}, $\bar{\mu}$ to średnia obliczona na podstawie nowej próbki, $\sigma^2$ to wariancja, której się dla uproszczenia w praktyce nie uaktualnia i przyjmuje, że jest prawdziwa. Jak widać
-dla $n = 0$ \shortcut{MAP} estymatem będzie po prostu poprzednia średnia $\mu_0$, a im większa liczba danych, tym
+dla $n = 0$ \shortcut{MAP} estymatą będzie po prostu poprzednia średnia $\mu_0$, a im większa liczba danych, tym
 większy będzie współczynnik przy $\bar{\mu}$. Do tego im większa będzie wariancja \foreign{priora} $\sigma_0^2$ względem
 $\sigma^2$, tym również poprzednia wartość średniej będzie miała mniejszy wpływ na wynik, przy bardzo dużej wariancji
 mówi się o \foreign{uninformative prior}\cite{fundamentalsOfSpeech}.
@@ -533,7 +501,6 @@ stosunkowi wariancji $\frac{\sigma^2}{\sigma_0^2}$. Im większy $r$, tym większ
 parametru na wynik adaptacji przy tej samej liczbie danych. Wzór na adaptację $k$ mikstury z \shortcut{GMM}\cite{comparisonOfMultiple}:
 
 $$\bar{\mu_{MAP k}} = (1 - \alpha_k) \mu_{0,k} + \alpha_k \bar{\mu_k}$$
-
 gdzie
 
 $$\alpha_k = \frac{N_k}{N_k + r}$$
@@ -648,7 +615,6 @@ Przydatna jest możliwość zawarcia oceny klasyfikatora za pomocą jednej liczb
 Dlatego wylicza się pole pod krzywą \shortcut{ROC}, tzw. \shortcut{AUC}. (\foreign{area under the curve})
 
 $$\mathit{AUC} = \int_{-\infty}^{\infty} \mathit{TPR}(T) \mathit{FPR}'(T) dT$$.
-
 \shortcut{AUC} przyjmuje od $0.5$ dla klasyfikatora losowego do $1.0$ dla klasyfikatora idealnego.
 
 Alternatywą dla \shortcut{AUC} jest \shortcut{EER} (\foreign{equal error rate}). Wyznacza się je
@@ -663,8 +629,86 @@ z linią od $(0, 1)$ do $(1, 0)$.
     \label{fig:2_2_b_roc_example}
 \end{figure}
 
-% \subsection{LSTM}
-% TODO
+\subsection{Long Short-Term Memory}
+
+Rekurencyjne sieci neuronowe (\shortcut{RNN}, \foreign{Recursive Neural Network}) to rodzaj sieci neuronowych,
+które, jak \shortcut{HMM}, służą do modelowania ciągów obserwacji w czasie. Posiadają one połączenia między
+ukrytymi warstwami, które prowadzą do tej samej lub poprzednich warstw
+(w przeciwieństwie do sieci \foreign{feed-forward}) i przekazują wartości z opóźnieniem
+w czasie\cite{onTheDifficulty}.
+
+Choć prosta architektura, w której wyjścia z warstwy są ponownie przekazywane na jej wejście, pozwala
+wyrazić wiele zależności, to wyznaczenie parametrów w tej sieci sprawia trudności. Jeżeli zamiast
+ręcznie dobierać wagi zastosuje się do ich wyznaczenia metodę gradientową, pojawia się problem
+z zanikającym lub eksplodującym gradientem. Polega on na tym, iż przy liczeniu gradientu błędu
+następuje wielokrotne mnożenie przez macierz wag. Jeżeli ta operacja powoduje zmianę długości
+wektora, to przy wielokrotnym mnożeniu ta długość szybko będzie rosnąć lub maleć. Sprawia to,
+że trudno jest odpowiednio dopasować wagi, gdy wynik zależy od ramki w odległej przeszłości.
+
+W \shortcut{LSTM} ten problem został ominięty. W ich przypadku poza tym, że wartości na wyjściu są przekazywane
+na wejście w następnej chwili czasu, na stan składa się także dodatkowa komórka z ukrytym stanem.
+Architektura sieci jest tak wymyślona, że stan ukryty jest mnożony tylko przez bramkę o ograniczonych wartościach
+oraz w sumowany z nowym kandydatem na stan ukryty, lecz nie jest wielokrotnie mnożony przez żadną macierz o
+trudnej do ograniczenia postaci. Może zatem zostać w pewnej części wymazany lub zastąpiony, lecz jego długość
+nie ma tendencji, by z każdym krokiem wykładniczo rosnąć lub maleć. Tak samo przy liczeniu gradientu
+zachowywana jest jego długość. Utrzymywanie takiej samej wartości stanu ukrytego przez wiele kroków lub
+jego całkowite zastąpienie w jednym kroku jest proste do osiągnięcia.
+
+\shortcut{LSTM} opisuje się tak:
+
+\begin{align*}
+& x_t & \text{wejście w chwili } t\\
+& X_t = [h_{t-1}, x_t] & \text{konkatenacja } x_t \text{ i } h_t\\
+& f_t = \sigma(W_f \cdot X_t + b_f) & \text{bramka zapomnienia}\\
+& i_t = \sigma(W_i \cdot X_t + b_i) & \text{bramka wejścia}\\
+& o_t = \sigma(W_o \cdot X_t + b_o) & \text{bramka wyjścia}\\
+& \bar{C_t} = tanh(W_c \cdot X_t + b_c) & \text{nowy kandydat na stan}\\
+& C_t = f_t \circ C_{t-1} + i_t \circ \bar{C_t} & \text{nowy ukryty stan komórki}\\
+& h_t = o_t \circ tanh(C_t) & \text{wyjście w chwili } t
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[->, >=stealth',shorten >=1pt,auto,very thick,node distance=2cm]
+        \tikzset{VertexStyle/.style = {
+                draw,
+                shape          = circle,
+                color          = blue,
+                text           = black,
+                inner sep      = 2pt,
+                outer sep      = 0pt,
+                minimum size   = 1.25cm,
+                font=\Large\bfseries
+        }}
+        \tikzset{EdgeStyle/.style   = {
+        }}
+
+        \node[VertexStyle](Ct1){$C_{t-1}$};
+        \node[VertexStyle,right=of Ct1](xt){$[h_{t-1}, x_t]$};
+        \node[VertexStyle,above=of xt](it){$i_t$};     
+        \node[VertexStyle,left=of it](ft){$f_t$};     
+        \node[VertexStyle,right=of it](bCt){$\bar{C_t}$};     
+        \node[VertexStyle,right=of bCt](ot){$o_t$};     
+        \node[VertexStyle,above=of it](ht){$h_t$};     
+        \node[VertexStyle,left=2.75cm of ht](Ct){$C_t$};     
+
+        \draw[EdgeStyle,bend left=20](xt) to node{} (ft);
+        \draw[EdgeStyle](xt) to node{} (it);
+        \draw[EdgeStyle,bend right=20](xt) to node{} (bCt);
+        \draw[EdgeStyle,bend right=20](xt) to node{} (ot);
+        \draw[EdgeStyle](ft) to node{} (Ct);
+        \draw[EdgeStyle,bend right=20](it) to node{} (Ct);
+        \draw[EdgeStyle,bend right=15](bCt) to node{} (Ct);
+        \draw[EdgeStyle,bend right=20](ot) to node{} (ht);
+        \draw[EdgeStyle](Ct) to node{} (ht);
+        \draw[EdgeStyle,bend left=20](Ct1) to node{} (Ct);
+    \end{tikzpicture}
+    \caption{Graf przedstawiający zależności w opisie LSTM}
+    \label{fig:2_2_lstm_graph}
+\end{figure}
+
+Parametrami są wagi przy bramce zapomnienia $W_f$ i $b_f$, wagi przy bramce wejścia $W_i$, $b_i$, wagi przy bramce wyjścia $W_o$, $b_0$, wagi, którymi generowany jeset nowy kandydat na stan $W_c$, $b_c$. Jeżeli wektor wejściowy $x_t$ ma rozmiar $N$, a stan ukryty $C_t$ oraz wyjście sieci $h_t$ to wektory rozmiaru $M$, to $X_t$ ma rozmiar $M + N$, wyjścia na czterech bramkach mają rozmiar $M$. Macierze parametrów na bramkach mają rozmiar $M + N \times M$ oraz $M$. Sieć można wytrenować z użyciem
+wstecznej propagacji w czasie.
 
 \section{Istniejące systemy weryfikacji mówcy}\label{sec:istniejace_systemy}
 
@@ -672,7 +716,7 @@ z linią od $(0, 1)$ do $(1, 0)$.
 
 Jednym ze sposobów weryfikacji mówcy stosowanym od dawna jest \shortcut{GMM-UBM}. Polega on na utworzeniu modelu tła
 (\foreign{universal background model}), modelu mikstur gaussowskich i dopasowaniu ich do ramek \shortcut{MFCC} z nagrań
-treningowych. Dla każdego mówcy tworzony jest osobny model przez \shortcut{MAP} adaptację modelu tła do nagrań danego
+treningowych. Dla każdego mówcy tworzony jest osobny model przez \shortcut{MAP}-adaptację modelu tła do nagrań danego
 mówcy. W \cite{utteranceVerificationFor}
 następnie liczona jest różnica między logarytmem prawdopodobieństwa wygenerowania nagrania przez model
 dla mówcy i przez model tła. Różnica ta porównywana jest z progiem i na tej podstawie podejmowana jest decyzja
@@ -694,8 +738,8 @@ jest \shortcut{LDA}, które jest metodą nadzorowanego klastrowania.
 Na przykład w \cite{utteranceVerificationFor}
 zastosowano i-wektory do weryfikacji mówcy. Trenują \shortcut{GMM-UBM} z 512 miksturami, osobno dla każdej płci.
 I-wektor ma rozmiar 400, i-wektor dla danego mówcy jest średnią z wszystkich i-wektorów dla jego nagrań.
-Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyte jest
-\foreign{gaussian probabilistic linear discriminant analysis}. (\shortcut{g-PLDA})
+Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyta jest \shortcut{gPLDA}.
+(\foreign{gaussian probabilistic linear discriminant analysis})
 
 %%% GMM i-vectors JFA
 
@@ -704,7 +748,8 @@ Długość i-wektorów jest następnie normalizowana. Do weryfikacji użyte jest
 Powyższe systemy nie uwzględniają kolejności w jakiej ramki powinny być w wypowiedzi. W problemie weryfikacji
 zależnej od tekstu jest to jednak możliwe i powinno pozwolić na poprawienie skuteczności systemu.
 W \shortcut{GMM-UBM} te same mikstury uczestniczą niezależnie od czasu, a i-wektory są uśredniane dla całej
-wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} możliwe jest uwzględnienie tych informacji\cite{parallelSpeakerAnd}.
+wypowiedzi. Na szczęście dzięki użyciu \shortcut{HMM} lub \shortcut{DTW} możliwe jest uwzględnienie tych
+informacji\cite{parallelSpeakerAnd}.
 
 W pracy \cite{parallelSpeakerAnd}
 pracy utworzono kilka modeli \shortcut{HMM} z emisjami \shortcut{GMM}. Autorzy osobno
@@ -723,7 +768,7 @@ i tworzą dla każdej frazy \shortcut{HMM} typu \foreign{left-to-right}. Jako, �
 wytrenować model, by był w stanie wykryć, które ramki zawierają jakie fony, dlatego segmenty dzielą na sztywno
 i właściwie ręcznie dopasowują mikstury do ramek. Weryfikacja frazy przebiega w ten sposób, że liczą średnią
 różnicę w log-prawdopodobieństwie między pochodzeniem frazy z odpowiedniej dla mówcy i segmentu mikstury, a
-pochodzeniem ramki z \shortcut{GMM UBM}. (nie \shortcut{HMM})
+pochodzeniem ramki z \shortcut{GMM-UBM}, zamiast \shortcut{HMM}.
 
 Użyli 19 \shortcut{MFCC} z delta i delta-delta cechami. \shortcut{GMM-UBM} ma 512 mikstur. \shortcut{MAP} adaptacja
 dotyczy tylko wektora średnich. Liczba segmentów w drugiej części to 4 i 8, lecz 8 nie poprawiło im wyników. Liczba
@@ -762,12 +807,16 @@ gdzie spodziewana jest cisza (początek, koniec i przerwa między wyrazami), tam
 użyto 16 mikstur. Warto zauważyć, że we front-endzie użyto 20 \shortcut{MFCC} wziętych z banku filtrów rozmiaru
 40 i dołączono cechy delta i delta-delta.
 
-Mając taki model można użyć algorytmu Viterbiego lub \foreign{forward-backward}, by przypisać ramkom z nagrania fonemy, które na nich występują. Dla każdego mówcy
-przez \shortcut{MAP}-adaptację można stworzyć ich własny zestaw mikstur do każdego stanu i potem weryfikować mówcę przez porównanie logarytmu prawdopodobieństwa
-pochodzenia nagrania od mówcy, a pochodzenia od modelu do rozpoznawania mowy, tak jak w opisanej wcześniej \shortcut{GMM-UBM}.
+Mając taki model można użyć algorytmu Viterbiego lub \foreign{forward-backward}, by przypisać ramkom z nagrania
+fonemy, które na nich występują. Dla każdego mówcy
+przez \shortcut{MAP}-adaptację można stworzyć ich własny zestaw mikstur do każdego stanu i potem weryfikować
+mówcę przez porównanie logarytmu prawdopodobieństwa
+pochodzenia nagrania od mówcy, a pochodzenia od modelu do rozpoznawania mowy, tak jak
+w opisanej wcześniej \shortcut{GMM-UBM}.
 
 Zamiast tego na przykład w tej pracy \cite{iVectorHmmBased}
-użyto \shortcut{HMM}, lecz dokonując rejestracji i weryfikacji z wykorzystaniem metody i-wektorów. W przeciwieństwie do poprzedniej pracy, tu \shortcut{HMM} jest jednofonowy. Autorzy przetestowali
+użyto \shortcut{HMM}, lecz dokonując rejestracji i weryfikacji z wykorzystaniem metody i-wektorów.
+W przeciwieństwie do poprzedniej pracy, tu \shortcut{HMM} jest jednofonowy. Autorzy przetestowali
 i-wektory rozmiaru 400 oraz 600 i dokonują weryfikacji przez obliczenie podobieństwa cosinusowego.
 
 \subsection{Metody wykorzystujące sieci neuronowe}
@@ -780,40 +829,67 @@ Wyjście interpretowane są jako przynależności do trójek fonów. Trójki te 
 przy obliczaniu statystyk w metodzie i-wektorów. Weryfikacja następuje z wykorzystaniem \shortcut{gPLDA}.
 
 W \cite{timeDelayDeep}
-również użyta została \shortcut{DNN} do rozpoznawania mowy i zaadaptowana do weryfikacji mówcy. Wykorzystana sieć ma architekturę \foreign{Time-delay neural network}. Ma 6 warstw \foreign{feed-forward},
-na wejściu przyjmuje kilka kopii sygnału wejściowego z różnym przesunięciem w czasie, wagi w warstwach przetwarzających kopie są współdzielone. Takie przetwarzanie kilku kopii jest wykonywane na
-4 warstwach, z różnym przesunięciem i w efekcie sieć ma uwzględniać kontekst aż 13 ramek z przeszłości i 9 ramek z przyszłości. Ostatnia warstwy kończy się softmaxem z wyjściami odpowiadającymi 5297 trójkom fonemów.
-Ciekawe są ich następne kroki, gdyż trenują \shortcut{GMM} rozmiaru również 5297 i dopasowują mikstury w ten sposób, że dla $k$ mikstury estymują jej wektor średnich i macierz kowariancji (pełną)
-do danych ważonych przynależnością do $k$ trójki fonemów wyznaczoną przez \shortcut{TDNN}. Następnie używają \shortcut{GMM} standardowo do i-wektorów (600 wymiarowych) i \shortcut{PLDA}.
-Autorzy zauważają również, że sieć i \shortcut{GMM} mogą używać różnych wektorów cech, co może być korzystne, gdyż rozwiązują różne problemy - klasyfikacji fonemów oraz weryfikacji mówcy.
+również użyta została \shortcut{DNN} do rozpoznawania mowy i zaadaptowana do weryfikacji mówcy.
+Wykorzystana sieć ma architekturę \shortcut{TDNN} (\foreign{Time-delay neural network}). Ma 6 warstw \foreign{feed-forward},
+na wejściu przyjmuje kilka kopii sygnału wejściowego z różnym przesunięciem w czasie, wagi
+w warstwach przetwarzających kopie są współdzielone. Takie przetwarzanie kilku kopii jest wykonywane na
+4 warstwach, z różnym przesunięciem i w efekcie sieć ma uwzględniać kontekst aż 13 ramek
+z przeszłości i 9 ramek z przyszłości. Ostatnia warstwy kończy się softmaxem z wyjściami odpowiadającymi 5297 trójkom fonemów.
+Ciekawe są ich następne kroki, gdyż trenują \shortcut{GMM} rozmiaru również 5297
+i dopasowują mikstury w ten sposób, że dla $k$ mikstury estymują jej wektor średnich i macierz kowariancji (pełną)
+do danych ważonych przynależnością do $k$ trójki fonemów wyznaczoną przez \shortcut{TDNN}.
+Następnie używają \shortcut{GMM} standardowo do i-wektorów (600 wymiarowych) i \shortcut{PLDA}.
+Autorzy zauważają również, że sieć i \shortcut{GMM} mogą używać różnych wektorów cech,
+co może być korzystne, gdyż rozwiązują różne problemy - klasyfikacji fonemów oraz weryfikacji mówcy.
 
 W \cite{investigationOfBottleneck}
-używany jest \shortcut{DNN} wytrenowany do rozpoznawania fonemów. Najpierw autorzy wytrenowali \shortcut{GMM-HMM}, by wykorzystać go do przypisywania do ramek sygnału jaki
-jest w nich fonem. Następnie na tych danych, tym razem już oznakowanych przez \shortcut{GMM-HMM}, trenowany jest \shortcut{DNN} do dyskryminacji fonemów. Autorzy używają
-jednocześnie nagrań z angielskiego i chińskiego, by rozpoznawać więcej fonemów i uzyskać model działający dla wypowiedzi w różnych językach.
-Sieć jest wykorzystywana w roli ekstraktora cech. Wektor wartości na wyjściu przedostatniej warstwy tej sieci jest wykorzystywany jako tzw. \foreign{bottleneck features}.
-Warstwa ta ma nieco mniej neuronów, by uzyskać tam niskowymiarową reprezentację ramek na wejściu. Jako, że sieć została wytrenowana do rozpoznawania fonemów, to cechy te powinny
-wydajnie uwzględniać informację niezbędne właśnie do tego celu, choć nie jest jasne, czemu miałyby być tam informacje charakteryzujące mówcę.
-\shortcut{GMM} są trenowane na tych cechach, tak jak w innych systemach są trenowane na \shortcut{MFCC} i używane do ekstrakcji i-wektorów. Weryfikacja następuje przez \shortcut{gPLDA}.
+używany jest \shortcut{DNN} wytrenowany do rozpoznawania fonemów. Najpierw autorzy wytrenowali
+\shortcut{GMM-HMM}, by wykorzystać go do przypisywania do ramek sygnału jaki
+jest w nich fonem. Następnie na tych danych, tym razem już oznakowanych przez \shortcut{GMM-HMM},
+trenowany jest \shortcut{DNN} do dyskryminacji fonemów. Autorzy używają
+jednocześnie nagrań z angielskiego i chińskiego, by rozpoznawać więcej fonemów i uzyskać model działający
+dla wypowiedzi w różnych językach.
+Sieć jest wykorzystywana w roli ekstraktora cech. Wektor wartości na wyjściu przedostatniej warstwy
+tej sieci jest wykorzystywany jako tzw. \foreign{bottleneck features}.
+Warstwa ta ma nieco mniej neuronów, by uzyskać tam niskowymiarową reprezentację ramek na wejściu.
+Jako, że sieć została wytrenowana do rozpoznawania fonemów, to cechy te powinny
+wydajnie uwzględniać informację niezbędne właśnie do tego celu, choć nie jest jasne, czemu miałyby być
+tam informacje charakteryzujące mówcę.
+\shortcut{GMM} są trenowane na tych cechach, tak jak w innych systemach są trenowane na \shortcut{MFCC}
+i używane do ekstrakcji i-wektorów. Weryfikacja następuje przez \shortcut{gPLDA}.
 
-Zaletą \shortcut{DNN} jest możliwość operowania na większych wektorach wektorach, dlatego na wejściu sieć otrzymuje oprócz jednej ramki też po 5 ramek sąsiadujących przed i po, łącznie 11,
-do tego każda ramka zawiera 40 współczynników z filtrów w częstotliwości Mela oraz 80 cech delta i delta-delta. Sieć ma pięć warstw ukrytych, wszystkie mają wyjścia rozmiaru 1200, z wyjątkiem
-ostatniej, która ma rozmiar 39 i generuje \foreign{bottleneck features}. Na wyjściu autorzy rozważają różny rozmiar wektora, jednak wszystkie rozważone parametry są ponad 2000 i są zależne
-od budowy \shortcut{HMM-GMM} i tego ile trójek fonemów rozróżnia. Tworzone później \shortcut{GMM} ma 2048 mikstur, i-wektory są rozmiaru 400, \shortcut{gPLDA} operuje w 200 wymiarach.
-Warto zauważyć, że ostateczny wynik osiągnięty przez autorów ma wyższą \shortcut{EER} niż \foreign{baseline} w postaci \shortcut{GMM-UBM}.
+Zaletą \shortcut{DNN} jest możliwość operowania na większych wektorach wektorach, dlatego na wejściu sieć otrzymuje
+oprócz jednej ramki też po 5 ramek sąsiadujących przed i po, łącznie 11,
+do tego każda ramka zawiera 40 współczynników z filtrów w częstotliwości melowej oraz 80 cech delta i delta-delta.
+Sieć ma pięć warstw ukrytych, wszystkie mają wyjścia rozmiaru 1200, z wyjątkiem
+ostatniej, która ma rozmiar 39 i generuje \foreign{bottleneck features}. Na wyjściu autorzy rozważają
+różny rozmiar wektora, jednak wszystkie rozważone parametry są ponad 2000 i są zależne
+od budowy \shortcut{HMM-GMM} i tego ile trójek fonemów rozróżnia. Tworzone później
+\shortcut{GMM} ma 2048 mikstur, i-wektory są rozmiaru 400, \shortcut{gPLDA} operuje w 200 wymiarach.
+Warto zauważyć, że ostateczny wynik osiągnięty przez autorów ma wyższą \shortcut{EER} niż \foreign{baseline}
+w postaci \shortcut{GMM-UBM}.
 
 W pracy \cite{endToEnd}
-opisany jest model stworzony przez Google do weryfikacji mówcy. Wszystkie wykorzystane w nim nagrania zawierały fazę "Ok Google", co jest uproszczeniem wobec poprzednio wymienionych rozwiązań.
+opisany jest model stworzony przez Google do weryfikacji mówcy. Wszystkie wykorzystane
+w nim nagrania zawierały fazę "Ok Google", co jest uproszczeniem wobec poprzednio wymienionych rozwiązań.
 Zaproponowane modele, bazujące na sieci neuronowej, charakteryzują się tym, że w całości rozwiązują problem weryfikacji
 i są trenowane w całości, podczas gdy poprzednio wymienione modele były rozbite na osobno działające podsystemy.
-Na przykład \shortcut{DNN} z poprzednich prac były trenowane do rozpoznawania mowy i zaadaptowane do rozpoznawania mówcy albo w przypadku \shortcut{GMM} celem jest modelowanie dystrybucji cech, nie weryfikacja. Takie rozbicie skutkuje nieoptymalnym działaniem i zwiększa złożoność obliczeń.
+Na przykład \shortcut{DNN} z poprzednich prac były trenowane do rozpoznawania mowy i zaadaptowane do rozpoznawania
+mówcy albo w przypadku \shortcut{GMM} celem jest modelowanie dystrybucji cech, nie weryfikacja. Takie rozbicie
+skutkuje nieoptymalnym działaniem i zwiększa złożoność obliczeń.
 
-Pierwsza sieć, którą zaproponowali, to \shortcut{DNN} z lokalnie połączoną pierwszą warstwą i w pełni połączonymi kolejnymi warstwami. Warstwy używają funkcji aktywacji \shortcut{ReLU}, z wyjątkiem
-ostatniej z \foreign{softmaxem}. Wektor na wyjściu ma wymiar na każdego mówcę. Po wytrenowaniu sieci, dla każdej ramki z nagrania obliczane są wartości na wyjściach ostatniej ukrytej warstwy,
-są one uśredniane dla nagrania i wynik nazywany jest d-wektorem. Pierwszy system działa przez obliczenie d-wektora na nagraniach rejestracyjnych i uśrednieniu, by uzyskać d-wektor opisujący mówcę.
-Dla nagrań testowych również jest liczony d-wektor i weryfikacja następuje przez obliczenie cosinusowego podobieństwa między tym d-wektorem i d-wektorem mówcy. Warto zauważyć, że w przeciwieństwie
-do \foreign{bottleneck features}, tutaj sieć do ekstrakcji cech jest wytrenowana do rozpoznawania mówców, a nie fonemów, więc można się spodziewać, że zachowuje informacje charakteryzujące mówcę.
-Przy \foreign{bottleneck features} można podejrzewać, że cechy mówców są wręcz odrzucane, gdyż w problemie rozpoznania fonemów są przeszkodą.
+Pierwsza sieć, którą zaproponowali, to \shortcut{DNN} z lokalnie połączoną pierwszą warstwą i w pełni połączonymi
+kolejnymi warstwami. Warstwy używają funkcji aktywacji \shortcut{ReLU}, z wyjątkiem
+ostatniej z \foreign{softmaxem}. Wektor na wyjściu ma wymiar na każdego mówcę. Po wytrenowaniu sieci, dla każdej
+ramki z nagrania obliczane są wartości na wyjściach ostatniej ukrytej warstwy,
+są one uśredniane dla nagrania i wynik nazywany jest d-wektorem. Pierwszy system działa przez obliczenie d-wektora
+na nagraniach rejestracyjnych i uśrednieniu, by uzyskać d-wektor opisujący mówcę.
+Dla nagrań testowych również jest liczony d-wektor i weryfikacja następuje przez obliczenie cosinusowego podobieństwa
+między tym d-wektorem i d-wektorem mówcy. Warto zauważyć, że w przeciwieństwie
+do \foreign{bottleneck features}, tutaj sieć do ekstrakcji cech jest wytrenowana do rozpoznawania mówców, a nie
+fonemów, więc można się spodziewać, że zachowuje informacje charakteryzujące mówcę.
+Przy \foreign{bottleneck features} można podejrzewać, że cechy mówców są wręcz odrzucane, gdyż w problemie
+rozpoznania fonemów są przeszkodą.
 
 Druga sieć przyjmuje nagranie testowe oraz kilka nagrań rejestracyjnych i zwraca na wyjściu jedną liczbę
 reprezentującą wynik weryfikacji. Sieć ma architekturę \shortcut{LSTM}. Brane pod uwagę

@@ -30,12 +30,12 @@ przypuszczalnie większe niż problem identyfikacji. Zaletą bazowania na nagran
 jego nieinwazyjnego pozyskania. Jednakże niska skuteczność rozpoznawania sprawiała, że takie systemy
 pełnią tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjnego hasła.
 
-Systemu bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
+Systemy bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
 związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
 stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
 wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi
-mikstur gaussowskich w obecnych systemach do rozpoznania
+\shortcut{GMM} (\foreign{gaussian mixture model}) w obecnych systemach do rozpoznania
 jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw.
 \foreign{bottleneck features}\cite{investigationOfBottleneck}.
 Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
@@ -62,18 +62,18 @@ Zostaną stworzone dwa systemy bazujące na innych metodach niż sieci neuronowe
 modele to:
 
 \begin{itemize}
-    \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła (\shortcut{GMM-UBM})
-    \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych (\shortcut{HMM-GMM})
-    \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych.
+    \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła. (\shortcut{GMM-UBM}, \foreign{Gaussian Mixture Model - Universal Background Model})
+    \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych. (\shortcut{HMM-GMM}, \foreign{Hidden Markov Model - Gaussian Mixture Model})
+    \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych. (\shortcut{DNN-GMM}, \foreign{Deep Neural Network - Gaussian Mixture Model})
 \end{itemize}
 
 Modele zostaną przetestowane na zbiorze \techname{RedDots} i porównane między sobą oraz z wynikami innych prac.
 Osobno zostanie zaprezentowana skuteczność weryfikacji mówcy oraz treści. Uwzględnione zostaną następujące miary jakości:
 
 \begin{itemize}
-    \item Krzywa \shortcut{ROC}
-    \item \shortcut{EER}
-    \item \shortcut{AUR}
+    \item Krzywa \shortcut{ROC} (\foreign{Receiver Operating Characteristic})
+    \item \shortcut{EER} (\foreign{Equal Error Rate})
+    \item \shortcut{AUR} (\foreign{Area Under Curve})
 \end{itemize}
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}

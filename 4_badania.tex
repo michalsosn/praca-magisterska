@@ -144,7 +144,7 @@ i zwizualizowano pod tabelą.
         \\ \midrule
         \shortcut{GMM-UBM} & 4.69\% & 97.56\% & 6.04\% & 97.82\% & 3.20\% & 99.04\%
         \\
-        \shortcut{HMM-GMM} & 11.27\% & 95.24\% &   &   &   &
+        \shortcut{HMM-GMM} & 15.85\% & 92.73\% & - & - & 5.16\% & 98.32\%
         \\
         \shortcut{DNN-GMM} & 42.72\% & 62.89\% & 19.67\% & 85.79\% & 29.54\% & 78.85\%
         \\
@@ -200,9 +200,21 @@ i zwizualizowano pod tabelą.
 \end{figure}
 
 \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.7\textwidth]{images/4_3_hmm_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
-        \label{fig:4_3_hmm_roc_speaker}
 \end{figure}
 
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/4_3_hmm_roc_speaker}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
+        \label{fig:4_3_hmm_roc_speaker}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/4_3_hmm_roc_both}
+        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnejj weryfikacji mówcy i treści}
+        \label{fig:4_3_hmm_roc_both}
+    \end{minipage}
+\end{figure}
