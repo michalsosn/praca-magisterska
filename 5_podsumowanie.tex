@@ -19,16 +19,16 @@ z modeli, w którym nagranie arbitralnie podzielono na kilka równych części. 
 gdyż demonstruje on kilka ciekawych technik wykorzystujących wiedzę o fonetyce. Dostarcza on informacji
 o tym jaką skuteczność powinien wykazywać system z \shortcut{DNN}.
 
-Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż nie został bezpośrednio wzięty z innej pracy,
-lecz jest w pewnym stopniu nowy. Jego skuteczność niestety cierpi z powodu tego, że \techname{DeepSpeech}
+Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż sposób wykorzystania sieci neuronowej jest w nim
+w pewnym stopniu nowy. Jego skuteczność niestety cierpi z powodu tego, że \techname{DeepSpeech}
 wykrywa litery, choć odpowiednie do porównywania mówców byłyby fonemy. Wytrenowanie go od postaw przy
 obecnej dostępności zasobów i zbiorów danych byłoby jednak trudne i mało prawdopodobne, by mimo
 architektury odpowiadającej problemowi, uzyskana skuteczność była wyższa.
 Również ocena zgodności mówców mogłaby zyskać na skuteczności, gdyby wykorzystać popularne i-wektory.
-W problemie weryfikacji treści model ten radzi sobie najlepiej z tych trzech kategorii i ma
-dodatkową zaletę, iż można go użyć do weryfikacji dowolnej treści. Nie jest ograniczony do
-zamkniętego zbioru zdań jak \shortcut{GMM-UBM}. Ostatecznie wyniki są mało obiecujące
-i mimo złożoności modelu nie są lepsze niż te z pozostałych dwóch systemów.
+W problemie weryfikacji treści model ten ma taką zaletę, iż można go użyć do weryfikacji
+dowolnej treści. Nie jest ograniczony do zamkniętego zbioru zdań jak \shortcut{GMM-UBM}.
+Ostatecznie wyniki są mało obiecujące i mimo złożoności modelu nie są lepsze niż te
+z pozostałych dwóch systemów.
 
 \section{Perspektywy dalszych badań}
 
@@ -42,7 +42,7 @@ optymalizację hiperparametrów. Podobnie można spróbować zdobyć inny zbiór
 niż \techname{RedDots} na potrzeby treningu i walidacji. Możliwe wtedy
 byłoby lepsze porównanie wyników z wynikami innych prac.
 
-Metoda wyznaczania prawdopodobieństwo przynależności przez obliczanie stosunku
+Metoda wyznaczania prawdopodobieństwa przynależności przez obliczanie stosunku
 przynależności do mikstur gaussowskich użytkownika oraz modelu tła nie jest
 tak powszechnie stosowana jak metoda i-wektorów. Połączenie tej metody
 z metodą przypisywania ramek z tej pracy mogłoby poprawić wyniki.

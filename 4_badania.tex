@@ -6,18 +6,24 @@
 Nagrania \techname{RedDots} zostały przetworzone w ten sposób:
 
 \begin{itemize}
-    \item Przeprowadzane jest \foreign{voice actividy detection} za pomocą pakietu \techname{webrtcvad}. Użyty parametr agresji $2$. Z każdego nagrania zostały usunięte ramki bezpośrednio z początku i z końca, która zostały uznane za ciche. Ramki ze środka zostały niezależnie od wyniku \shortcut{VAD}.
-    \item Dla każdego obciętego nagrania obliczone zostały \shortcut{MFCC} korzystając z metody z pakietu \techname{python-speech-features}. Analizę przeprowadzono w oknach $25$ms z $10$ms skokiem. Użyto okna Hamminga. Utworzono $26$ filtrów pokrywających częstotliwości nagrania i zachowano z nich $13$. Użyto $0.97$ \foreign{preemphasis}. Wynikiem jest $13$ współczynników.
-    \item Dla każdej ramki obliczono cechy delta i delta-delta z użyciem pakietu \techname{python-speech-features}. Cechy
-        te obliczono biorąc pod uwagę sąsiedztwo $4$ ramek przed i $4$ ramek po danej ramce.
+    \item Przeprowadzana jest procedura \shortcut{VAD} (\foreign{voice activity detection}), czyli wyodrębnianie
+        fragmentów nagrania zawierających sygnał mowy, za pomocą pakietu \techname{webrtcvad}. Użyty parametr
+        agresji $2$. Z każdego nagrania zostały usunięte ramki bezpośrednio z początku i z końca, które zostały
+        uznane za ciche.
+    \item Dla każdego obciętego nagrania obliczone zostały \shortcut{MFCC} korzystając z metody z
+        pakietu \techname{python-speech-features}. Analizę przeprowadzono w oknach $25$ms z $10$ms skokiem.
+        Użyto okna Hamminga. Utworzono $26$ filtrów pokrywających częstotliwości nagrania i zachowano z nich
+        $13$. Użyto filtru \foreign{preemphasis} z parametrem $0.97$. Wynikiem jest $13$ współczynników.
+    \item Dla każdej ramki obliczono cechy delta i delta-delta z użyciem pakietu \techname{python-speech-features}.
+        Cechy te obliczono biorąc pod uwagę sąsiedztwo $4$ ramek przed i $4$ ramek po danej ramce.
     \item Bardzo krótkie nagrania, składające się z mniej niż $85$ ramek, zostały odrzucone. Kilka nagrań miało
         nawet długość $1$ ramki. Próg został wyznaczony przez zbadanie jakiej długości są nagrania. Między $85$
         i krótszymi jest skok, więc uznano je za anomalie.
 \end{itemize}
 
-Wykorzystano słownik \techname{CMUDict} do zamiany wszystkich transkrypcji z \techname{RedDots} na listy 39 fonów
+Wykorzystano słownik \techname{CMUDict} do zamiany wszystkich transkrypcji z \techname{RedDots} na listy 39 fonemów
 używanych w języku angielskim. Zignorowano przy tym akcenty. Części nagrań nie udało się zamienić, gdyż
-zawierały treść w innym języku, i one nie będą używane w modelach wykorzystujących fony.
+zawierały treść w innym języku, i one nie będą używane w modelach wykorzystujących fonemy.
 
 \section{Wykorzystane modele}
 \label{sec:data_models}
@@ -34,7 +40,7 @@ Wpierw zebrano wszystkie dane ze zbioru \techname{RedDots}, które nie są użyt
 do nich model tła, który jest miksturą 512 dystrybucji normalnych. Założono, że cechy są nieskorelowane
 i macierz kowariancji w miksturach jest diagonalna.
 
-W ramach zapisów model tła jest kopiowany i \shortcut{MAP} adaptowany z \foreign{relevance factor} równym $3.0$
+W ramach zapisów model tła jest kopiowany i \shortcut{MAP}-adaptowany z \foreign{relevance factor} równym $3.0$
 dla nagrań rejestracyjnych danego mówcy. Dodatkowo dla każdej grupy nagrań o tej samej treści również tworzona
 jest kopia modelu tła i \shortcut{MAP} adaptowana w ten sam sposób do nagrań z tej grupy.
 
@@ -58,7 +64,7 @@ przez odszukanie odpowiednich słów w słowniku \techname{CMUDict}. Dla każdej
 budowany jest \shortcut{HMM} przez złączenie odpowiednich trójek stanów zgodnie z kolejnością
 fonemów w wypowiedzi. Tworzony jest łańcuch z przejściami typu \foreign{beads-on-string}.
 
-Dla każdego mówcy i dla tła budowany jest zestaw \shortcut{GMM}, po jednym na stan \shortcut{HMM},
+Dla każdego mówcy i tła budowany jest zestaw mieszanin \shortcut{GMM}, po jednej na stan \shortcut{HMM},
 a zatem po trzy na fonem. Każda mikstura składa się z $8$ dystrybucji z diagonalną macierzą kowariancji.
 
 Parametry podsystemu rozpoznawania mowy są wyznaczane tak, że najpierw do wszystkich danych
@@ -77,11 +83,11 @@ Używając tego przyporządkowania mikstury tła są \shortcut{MAP} adaptowane d
 
 Testy wyglądają podobnie. Najpierw z użyciem systemu rozpoznawania mowy i algorytmu Viterbiego znajdowane
 jest, które ramki zawierają które części fonemów. Następnie dla każdej ramki obliczany jest logarytm prawdopodobieństwa,
-iż pochodzi ona z odpowiedniej mikstury mówcy i odpowiedniej mikstury tła. Sumując je uzyskiwany jest wyniki dla mikstur
+iż pochodzi ona z odpowiedniej mikstury mówcy i odpowiedniej mikstury tła. Sumując je uzyskiwany jest wynik dla mikstur
 mówcy i mikstur tła. Wynik weryfikacji mówcy obliczany jest jako stosunek tych prawdopodobieństw. Treść
 nagrania nie jest osobno sprawdzana.
 
-$$S_{sp}(x) = exp(\sum_{x_i \in x} log P(\theta_{sp} | x_i) - max(log P(\theta_{sp} | x_i), log P(\theta_{UBM} | x_i)))$$
+$$S_{sp}(x) = exp(\sum_{x_i \in x} (log P(\theta_{sp} | x_i) - max(log P(\theta_{sp} | x_i), log P(\theta_{UBM} | x_i))))$$
 
 \subsectionex{Model DNN-GMM}{Głęboka sieć neuronowa do dopasowania ramek, ocena miksturami gaussowskimi}
 \label{sec:dnn_gmm}
@@ -93,15 +99,15 @@ zwykłym komputerze pojedyncza epoka nauki może zająć nawet dwa tygodnie. Z t
 gotowy model stworzony przez organizację \techname{Mozilla}.
 
 Model ten został wytrenowany na ok. 2500 godzinach nagrań ze zbiorów \techname{WSJ}, \techname{Switchboard}
-i \techname{Fisher}. Warto zauważyć, że autorzy cytowanej pracy, \techname{Baidu}, poza tymi zbiorami użyli
+i \techname{Fisher}. Warto zauważyć, że autorzy cytowanej pracy z \techname{Baidu} poza tymi zbiorami użyli
 dodatkowo własnego, zamkniętego zbioru 5000 godzin nagrań. Sieć ta przyjmuje kolejne ramki, przy czym muszą
 one być wstępnie przetworzone do współczynników \shortcut{MFCC}. Dla każdej chwili zwracany jest wektor 28 liczb,
 które odpowiadają 25 literom alfabetu, przerwie, apostrofowi i szumowi.
 
 Podobnie jak w \shortcut{HMM-GMM} dla każdego nagrania znamy treść i z wykorzystaniem systemu rozpoznawania
 mowy przyporządkowujemy ramki literom. Istotna różnica jest taka, że tutaj system rozpoznawania mowy zwraca
-tekst, nie sekwencje fonemów, co dla naszych potrzeb jest niepożądane. Gdyby trenować model od podstaw do
-potrzeb rozpoznawania mówcy warto byłoby zmienić ten aspekt. Do przypisania ramek wykorzystano odpowiednio
+tekst, nie sekwencje fonemów, co dla naszych potrzeb jest niepożądane. Gdyby trenować model od podstaw na
+potrzeby rozpoznawania mówcy warto byłoby zmienić ten aspekt. Do przypisania ramek wykorzystano odpowiednio
 dostosowany algorytm Viterbiego. Wyjścia sieci są w nim znormalizowane do przedziału $[0.0, 1.0]$ i traktowane
 jako prawdopodobieństwa emisji danej ramki w kolejnych stanach ukrytych. Stany ukryte są tożsame z literami
 i algorytm wymusza, by zmieniały się zgodnie ze znaną treścią oraz by wszystkie litery się pojawiły.
@@ -111,7 +117,7 @@ bardzo małe to prawdopodobnie spodziewana treść i treść na nagraniu się r�
 
 Trening wygląda analogicznie jak opisano w \shortcut{HMM-GMM}. To znaczy korzystając z przypisania ramek
 zwróconego przez \shortcut{DNN}, tworzy się szereg \shortcut{GMM} z $8$ składnikami mikstury
-i macierzami diagonalnymi, po jednym na literę. Następnie Wyznaczane są ich parametry, by
+i macierzami diagonalnymi, po jednym na literę. Następnie wyznaczane są ich parametry, by
 maksymalizowały prawdopodobieństwo wystąpienia
 ramek z ich klasy. Rejestracja wygląda tak samo, tylko \shortcut{MAP} adaptuje modele tła do
 mniejszej liczby nagrań rejestracyjnych mówcy.
@@ -144,9 +150,9 @@ i zwizualizowano pod tabelą.
         \\ \midrule
         \shortcut{GMM-UBM} & 4.69\% & 97.56\% & 6.04\% & 97.82\% & 3.20\% & 99.04\%
         \\
-        \shortcut{HMM-GMM} & 15.85\% & 92.73\% & - & - & 5.16\% & 98.32\%
+        \shortcut{HMM-GMM} & 15.86\% & 92.73\% & - & - & 5.16\% & 98.32\%
         \\
-        \shortcut{DNN-GMM} & 42.72\% & 62.89\% & 19.67\% & 85.79\% & 29.54\% & 78.85\%
+        \shortcut{DNN-GMM} & 39.51\% & 65.12\% & 17.65\% & 86.73\% & 24.24\% & 84.38\%
         \\
     \end{tabu}
 \end{table}
@@ -155,66 +161,58 @@ i zwizualizowano pod tabelą.
     \centering
     \begin{minipage}{.5\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
+        \includegraphics[width=0.8\textwidth]{images/4_3_gmm_roc_speaker}
         \label{fig:4_3_gmm_roc_speaker}
     \end{minipage}%
     \begin{minipage}{.5\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_sentence}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i weryfikacji treści}
+        \includegraphics[width=0.8\textwidth]{images/4_3_gmm_roc_sentence}
         \label{fig:4_3_gmm_roc_sentence}
     \end{minipage}
+    \caption{Wykresy krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i przypadków weryfikacji mówcy oraz weryfikacji treści}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \begin{minipage}{.5\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{images/4_3_gmm_roc_both}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
-        \label{fig:4_3_gmm_roc_both}
-    \end{minipage}%
+    \includegraphics[width=0.6\textwidth]{images/4_3_gmm_roc_both}
+    \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{GMM-UBM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
+    \label{fig:4_3_gmm_roc_both}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
         \label{fig:4_3_dnn_roc_speaker}
-    \end{minipage}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_sentence}
+        \label{fig:4_3_dnn_roc_sentence}
+    \end{minipage}%
+    \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i przypadków weryfikacji mówcy oraz weryfikacji treści}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \begin{minipage}{.5\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_sentence}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji treści}
-        \label{fig:4_3_dnn_roc_sentence}
-    \end{minipage}%
-    \begin{minipage}{.5\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{images/4_3_dnn_roc_both}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
-        \label{fig:4_3_dnn_roc_both}
-    \end{minipage}
+    \includegraphics[width=0.6\textwidth]{images/4_3_dnn_roc_both}
+    \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{DNN-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnej weryfikacji mówcy i treści}
+    \label{fig:4_3_dnn_roc_both}
 \end{figure}
-
-\begin{figure}[H]
-\end{figure}
-
 
 \begin{figure}[H]
     \centering
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_hmm_roc_speaker}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i weryfikacji mówcy}
         \label{fig:4_3_hmm_roc_speaker}
     \end{minipage}%
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{images/4_3_hmm_roc_both}
-        \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i jednoczesnejj weryfikacji mówcy i treści}
         \label{fig:4_3_hmm_roc_both}
     \end{minipage}
+    \caption{Wykres krzywej \shortcut{ROC} dla \shortcut{HMM-GMM}, pierwszego zadania \techname{RedDots} i przypadków weryfikacji mówcy oraz jednoczesnej weryfikacji mówcy i treści}
 \end{figure}
+

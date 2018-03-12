@@ -2,20 +2,21 @@
 
 \section{Przetwarzanie mowy}\label{sec:przetwarzanie_mowy}
 
-\subsection{Mel Frequency Cepstral Coefficients}\label{sec:mfcc}
+\subsection{Współczynniki mel-cepstralne}\label{sec:mfcc}
 
-\shortcut{MFCC}, obok blisko z nimi związanych \foreign{filter banks} stanowią popularny zestaw
-cech dla systemów rozpoznawania mowy i rozpoznawania mówcy. Systemy bazujące na sieciach
-neuronowych wykorzystują często nieprzetworzone dalej spektrum sygnału, gdyż obowiązuje
+Współczynniki mel-cepstralne (\shortcut{MFCC}, \foreign{Mel Frequency Cepstral Coefficients}),
+obok blisko z nimi związanych \foreign{filter banks} stanowią popularny zestaw
+cech dla systemów rozpoznawania mowy i rozpoznawania mówcy. Systemy bazujące na głębokich sieciach
+neuronowych wykorzystują często nieprzetworzone dalej widmo sygnału (\foreign{spectrum}), gdyż obowiązuje
 w nich podejście, by zamiast ręcznie przetwarzać wejście lepiej zapewnić sieci neuronowej
 architekturę pozwalającą na nauczenie się odpowiednich cech. Na przykład zamiast ręcznie
 projektować filtr lepiej dodać do sieci warstwę konwolucyjną. Bardziej tradycyjne metody
 oparte o \shortcut{GMM} jednak bardzo korzystają na zredukowaniu wymiarowości problemu
 oraz zapewnieniu, że poszczególne cechy są nieskorelowane, co zachodzi przy \shortcut{MFCC}.
 
-Krokiem wstępnym policzenia \shortcut{MFCC} jest \foreign{preemphasis}, czyli przefiltrowanie sygnału
-prostym filtrem wysokoprzepustowym, zwykle postaci $[-0.95, 1.0]$ lub \\ $[-0.97, 1.0]$.
-Jak pokazuje \ref{fig:2_1_b_example_preemphasis}, energia w wyższych pasmach po tej operacji,
+Krokiem wstępnym policzenia \shortcut{MFCC} jest pre-emfaza (\foreign{preemphasis}), czyli przefiltrowanie sygnału
+prostym filtrem górnoprzepustowym, zwykle postaci wektora o współczynnikach $[-0.95\ 1.0]$ lub \\ $[-0.97\ 1.0]$.
+Jak pokazuje rysunek \ref{fig:2_1_b_example_preemphasis}, energia w wyższych pasmach po tej operacji,
 choć początkowo znacznie niższa, została wyrównana z energią w niższych pasmach częstotliwości.
 Ogranicza to błędy numeryczne
 pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starszych komputerach.
@@ -30,7 +31,7 @@ pojawiające się przy dalszym przetwarzaniu, co miało duże znaczenie w starsz
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/2_1_c_preemphasis_response}
-    \caption{Odpowiedź impulsowa \foreign{preemphasis} $[-0.95, 1.0]$}
+    \caption{Charakterystyka częstotliwościowa filtru typu \foreign{preemphasis} o współczynnikach $[-0.95, 1.0]$}
     \label{fig:2_1_c_preemphasis_response}
 \end{figure}
 
@@ -50,10 +51,10 @@ więc by uzyskać takie przesunięcie okna muszą zawierać $400$ próbek z prze
 Następnie spektra zamieniane są w spektra mocy przez wzięcie kwadratu wartości absolutnej
 z każdej wartości w spektrum.
 
-Wynik \shortcut{STFT} można zwizualizować jako spektrogram, jak na \ref{fig:2_1_a_example_spectrogram},
+Wynik \shortcut{STFT} można zwizualizować jako spektrogram, jak na rysunku \ref{fig:2_1_a_example_spectrogram},
 i zawiera on informacje o tym jak energia sygnału w różnych pasmach zmieniała się w czasie.
 Każde okno można wyciąć z użyciem okna Hamminga lub Hanna, które mają mniejszy wpływ
-na wynikowe spektrum sygnału niż okno prostokątne. (Wycięcie wybranego przedziału próbek
+na wynikowe spektrum sygnału niż okno prostokątne (wycięcie wybranego przedziału próbek
 z sygnału jest równoważne przemnożeniu przez okno prostokątne)
 
 Następnie budowany jest bank filtrów w skali melowej. Przeliczenia częstotliwości w melach na
@@ -74,31 +75,36 @@ jest tak dobrana, by pokryły cały przedział częstotliwości sygnału.
     \label{fig:2_1_d_mel_filters}
 \end{figure}
 
-Mając te filtry następnym etapem przetwarzania sygnału jest przemnożenie przez każdy z tych filtrów i zsumowanie
+Mając te filtry następnym etapem przetwarzania sygnału jest przemnożenie widma przez każdy z tych filtrów i zsumowanie
 dzięki czemu uzyskuje się jedną liczbę na filtr - całkowitą energię sygnału na pokrytych filtrami pasmach.
 
-Sumy są następnie logarytmowane. Pozwala to na dekonwolucję sygnału mowy i wpływu środowiska.
+Uzyskane sumy są następnie logarytmowane. Pozwala to na dekonwolucję sygnału mowy i wpływu środowiska.
 Dekonwolucja przebiega w ten sposób, że najpierw dzięki policzeniu transformaty Fouriera,
 uzyskiwane jest spektrum, a konwolucja sygnału w czasie jest równoważna przemnożeniu widm częstotliwościowych.
-Następnie jak ten iloczyn widm zostanie zlogarytmowany, to oba można go przedstawić jako sumę logarytmów.
+Następnie jak ten iloczyn widm zostanie zlogarytmowany, to można go przedstawić jako sumę logarytmów.
 W wynikowych cechach jeżeli sygnał mowy został z czymś spleciony, to skutkuje to tylko przesunięciem cech
 ze wszystkich ramek. Można wtedy, przy założeniu, że wpływ otoczenia jest stały, znormalizować średnią tych cech,
 by zmniejszyć jego wpływ.
 
-Znormalizowane współczynniki filtrów melowej bywają używane jako gotowy zestaw cech. Do uzyskania \shortcut{MFCC}
-potrzebne jest jeszcze policzenie dyskretnej transformaty cosinusowej. Dyskretna transformata cosinusowa to modyfikacja
+Znormalizowane współczynniki filtrów melowych bywają używane jako gotowy zestaw cech. Do uzyskania \shortcut{MFCC},
+widocznej na rysunku \ref{fig:2_1_e_mfcc},
+potrzebne jest jeszcze policzenie dyskretnej transformaty cosinusowej (\shortcut{DCT},
+\foreign{Discrete Cosine Transform}). Dyskretna transformata cosinusowa to modyfikacja
 transformaty Fouriera, która w wyniku daje ciąg współczynników rzeczywistych, a nie zespolonych. Wykorzystana jest
 właściwość \shortcut{DFT} (\foreign{Discrete Fourier Transform}), że jeżeli sygnał w dziedzinie czasu ma
 współczynniki rzeczywiste, to współczynniki transformaty
-będą Hermitian-symetryczne. A jeżeli sygnał w dziedzinie czasu jest symetryczny, to transformata będzie miała
-tylko współczynniki rzeczywiste. \shortcut{DCT} (\foreign{Discrete Cosine Transform}) liczy się zatem tak,
+będą cechować się symetrią sprzężoną. A jeżeli sygnał w dziedzinie czasu jest symetryczny,
+to transformata będzie miała tylko współczynniki rzeczywiste. \shortcut{DCT}
+(\foreign{Discrete Cosine Transform}) liczy się zatem tak,
 iż tworzony jest nowy sygnał dwa razy większej długości niż
 sygnał wyjściowy, przez odbicie wyjściowego sygnału. Taki sygnał będzie symetryczny i rzeczywisty, więc jego transformata
 Fouriera będzie również symetryczna i rzeczywista. Połowę transformaty można odrzucić, a druga połowa, zawierająca
 współczynniki rzeczywiste i będąca takiego samego rozmiaru co wyjściowy sygnał, nazywamy dyskretną transformatą cosinusową.
 
-Fakt, że \shortcut{DCT} sygnału jest również rzeczywista i ma ten sam rozmiar jest wygodny, lecz liczy się ją,
-gdyż ma właściwości dekorelacyjne. Dzięki temu przy modelowaniu \shortcut{MFCC} za pomocą wielowymiarowej
+Fakt, że \shortcut{DCT} sygnału jest również rzeczywista i ma ten sam rozmiar jest wygodny, lecz liczy się
+ją przede wszystkim dlatego, że ma właściwości dekorelacyjne. Zademonstrowano to na rysunkach
+\ref{fig:2_1_f_correlation_matrix_banks} i \ref{fig:2_1_g_correlation_matrix_mfcc}.
+Dzięki temu przy modelowaniu \shortcut{MFCC} za pomocą wielowymiarowej
 dystrybucji normalnej można przyjąć, że
 współczynniki są nieskorelowane i zastosować uproszczenie, że macierz kowariancji parametryzująca tę dystrybucję
 jest macierzą diagonalną.
@@ -110,10 +116,13 @@ jest macierzą diagonalną.
     \label{fig:2_1_e_mfcc}
 \end{figure}
 
-Wynik \shortcut{DCT} nazywamy \foreign{mel-frequency cepstral coefficients} i ze względu na wspomniane właściwości użyjemy ich
+Współczynniki wyjściowe \shortcut{DCT} określamy jako współczynniki mel-cepstralne i ze względu na
+wspomniane właściwości użyjemy ich
 w naszych systemach. W praktyce z $26$ współczynników wybiera się tylko pierwsze $13$ lub $20$, gdyż dalsze opisują
-wysokie częstotliwości, które są nieprzydatne przy rozumieniu sygnału mowy. Do tych współczynników dołącza się $26$ lub $40$
-współczynników delta oraz delta-delta. Współczynniki delta mają opisać jak konkretne współczynniki zmieniają się w czasie,
+wysokie częstotliwości kształtu widma, które są nieprzydatne przy rozumieniu sygnału mowy.
+Do tych współczynników dołącza się $26$ lub $40$
+współczynników delta oraz delta-delta, obliczonych jako różnica między wartościami współczynników w obecnej i poprzedniej
+ramce. Współczynniki delta opisują jak konkretne współczynniki zmieniają się w czasie,
 choć zapewne tracą na przydatności w modelach jak sieci neuronowe, które mogą na wejściu przyjąć nie tylko jedną ramkę sygnału,
 ale też kilka sąsiadujących ramek.
 
@@ -139,10 +148,10 @@ Zwykle zmienna ukryta jest dyskretna, wyjściowa zmienna może być dyskretna lu
 warunkowe rozkłady $P(X|\Theta)$ pochodzą z tej samej rodziny i różnią się parametrami. Rozkład zmiennej $X$ można
 uzyskać przez marginalizację zmiennej ukrytej.
 $$f(x) = \sum_{\theta_i} f(X | \theta_i) P(\theta_i)$$
-Przy miksturach gaussowskie przyjmuje się, że warunkowe prawdopodobieństwa zmiennej wyjściowej od zmiennej ukrytej
+Przy miksturach gaussowskich (\shortcut{GMM}, \foreign{Gaussian Mixture Model}) przyjmuje się, że warunkowe prawdopodobieństwa zmiennej wyjściowej od zmiennej ukrytej
 należą do rodziny wielowymiarowych rozkładów normalnych, tj. mają gęstość
-$$f(x | \theta_i) = \frac{1}{\sqrt{(2 \pi)^d |\Sigma_i|}} exp(-\frac{1}{2} (x - \mu_i)^T \Sigma_i^{-1} (x - \mu_i))$$
-gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowariancji rozmiaru $d \times d$
+$$f(x | \theta_i) = \frac{1}{\sqrt{(2 \pi)^d |\Sigma_i|}} \exp(-\frac{1}{2} (x - \mu_i)^T \Sigma_i^{-1} (x - \mu_i))$$
+gdzie $\mu_i$ to $d$-wymiarowy wektor średnich, $\Sigma_i$ to macierz kowariancji rozmiaru $d \times d$
 
 \begin{figure}[H]
     \centering
@@ -158,12 +167,15 @@ gdzie $\mu_i$ to $d$ wymiarowy wektor średnich, $\Sigma_i$ to macierz kowarianc
     \label{fig:2_2_a_leipzig_gmm}
 \end{figure}
 
+\ref{fig:2_2_a_leipzig_datashader}
+\ref{fig:2_2_a_leipzig_gmm}
+
 \subsection{Maksymalizowanie wartości oczekiwanej}\label{sec:expectation_maximization}
 
 Parametry wielowymiarowego rozkładu normalnego można wyestymować na podstawie próby, na przykład
 stosując estymator maksymalizujący prawdopodobieństwo danych.
 
-Estymatory parametrów maksymalizujące prawdopodobieństwo $M$ elementów $x^j$.
+Estymatory parametrów maksymalizujące prawdopodobieństwo $M$ elementów $x^j$ to:
 $$\hat{\mu} = \frac{1}{m} \sum_{j=0}^M x^{j}$$
 
 $$\hat{\Sigma} = \frac{1}{m} \sum_{j=0}^M (x^{j} - \hat{\mu})^T (x^{j} - \hat{\mu})$$
@@ -184,13 +196,13 @@ globalnie optymalnego rozwiązania.
         (\foreign{Maximum a Posteriori}) estymaty
         jawnych parametrów. Trzeba zwrócić uwagę, że pewne mikstury mogą nie mieć przypisanych żadnych próbek
         i wtedy uaktualnienie parametrów jest niemożliwe. Do tego uaktualniając wagi \shortcut{GMM} należałoby
-        przypisać danej miksturze wagę $0$, przez co nigdy nie byłaby już użyta. Trzeba zwrócić uwagę na ten problem
+        przypisać takiej miksturze wagę $0$, przez co nigdy nie byłaby już użyta. Trzeba zwrócić uwagę na ten problem
         i postarać się o lepsze zaincjalizowanie parametrów, dodatkowo modyfikować parametry, by nie dopuścić
-        do takiej sytuacji lub przynajmniej pamiętać, by usunąć mikstury z wagą $0$, gdyż będą niepotrzebne zajmować
+        do takiej sytuacji lub przynajmniej pamiętać, by usunąć mikstury z wagą $0$, gdyż będą niepotrzebnie zajmować
         zasoby komputera.
 \end{itemize}
 
-\subsection{Dynamic Time Warping}\label{sec:dtw}
+\subsection{Dynamic Time Warping (DTW)}\label{sec:dtw}
 
 Jako że praca dotyczy rozpoznawania zależnego od tekstu, konieczne by uzyskać wartościowe wyniki będzie
 użycie metod pozwalających na uwzględnienie informacji o sekwencji ramek. Samo dopasowanie mikstur do ramek
@@ -200,7 +212,7 @@ tej informacji nie uwzględni. Jedną z takich metod jest \foreign{dynamic time 
 dla nich wysokie podobieństwo (małą odległość) nawet jeśli pewne podciągi będą bardziej rozciągnięte lub krótsze
 w jednym ciągu niż w drugim.
 
-Algorytm wymaga wybrania metryki (oznaczmy ją $d$) określającą odległość pojedynczych elementów ciągu.
+Algorytm wymaga wybrania metryki (oznaczmy ją $d$) określającej odległość pojedynczych elementów ciągu.
 
 \shortcut{DTW} wykorzystuje technikę programowania dynamicznego i w podstawowej wersji znanej autorowi wymaga liczby operacji
 rzędu $\Theta(n \times m)$, gdzie $n$ i $m$ to długości porównywanych ciągów oraz ma złożoność pamięciową liniową
@@ -220,18 +232,18 @@ to $D_{n, m}$.  Licząc te wartości rzędami możliwe jest osiągnięcie liniow
 długości krótszego ciągu.
 
 Powyższy wzór na $D_{i+1, j+1}$ należy zinterpretować tak, że liczymy odległość pary elementów $N_i$, $M_j$ i dodajemy
-do najbardziej korzystnego wyniku z pośród trzech opcji:
+do najbardziej korzystnego wyniku spośród trzech opcji:
 
 \begin{itemize}
-    \item Wybór $D_{i+1, j}$ oznacza, że obecny rezultat składa się z $d(N_i, M_{j-1})$ i $d(N_i, M_j)$, a więc ten sam element ciągu $N$ jest porównany z dwoma elementami ciągu $M$. Na przykład w $N = [1, 20, 20, 20, 20]$, $M = [1, 1, 1, 10]$ i odległości różnicy absolutnej ten przypadek będzie kilka razy najkorzystniejszy.
+    \item Wybór $D_{i+1, j}$ oznacza, że obecny rezultat składa się z $d(N_i, M_{j-1})$ i $d(N_i, M_j)$, a więc ten sam element ciągu $N$ jest porównany z dwoma elementami ciągu $M$. Na przykład porównując $N = [1, 20, 20, 20, 20]$, $M = [1, 1, 1, 10]$ i stosując jako miarę odległości różnicę absolutną ten przypadek będzie kilka razy najkorzystniejszy.
     \item Wybór $D_{i, j+1}$ oznacza, że w sumie będzie zarazem $d(N_{i-1}, M_j)$ i $d(N_i, M_j)$, a więc dwa elementy ciągu $N$ są porównane z tym samym elementem ciągu $M$. Na przykład w wyniku dla $N = [1, 1, 1, 1, 1, 20]$ i $ M = [1, 10]$ ten przypadek będzie się składał na wynik minimalizujący odległość ciągów.
-    \item $D_{i, j}$ oznacza, że obliczono odległość następnego elementu zarówno z ciągu $N$ i z ciągu $M$. Przy porównywaniu $N = [1, 2, 3, 4]$ oraz $M = [1, 2, 3, 4]$ zajdzie wyłącznie on.
+    \item $D_{i, j}$ oznacza, że obliczono odległość następnego elementu zarówno z ciągu $N$ i z ciągu $M$. Przy porównywaniu $N = [1, 2, 3, 4]$ oraz $M = [1, 2, 3, 4]$ zajdzie wyłącznie ten przypadek.
 \end{itemize}
 
-Poniżej przedstawiono kilka przykładów tabelek z wynikami $DTW$. Elementami są liczby, a w roli metryki jest kwadrat różnicy.
+Poniżej przedstawiono kilka przykładów tabelek z wynikami $DTW$. Elementami są liczby, a w roli metryki jest moduł różnicy.
 
 \begin{table}[H]
-    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład gdy elementy jednej sekwencja są wielokrotnie dopasowana do pierwszego elementu z drugiej sekwencji, dopóki jest to możliwe}
+    \caption{Macierz $D$ dla $DTW$ na dwóch przykładowych sekwencjach $N$ i $M$. Przykład gdy elementy jednej sekwencji są wielokrotnie dopasowane do pierwszego elementu z drugiej sekwencji, dopóki jest to możliwe}
     \centering
     \label{tab:dtw_example0}
     \small
@@ -289,13 +301,13 @@ dyskretny w czasie, pozwalający na modelowanie dystrybucji
 sekwencji zdarzeń. Będzie zatem użyteczny ze względu na możliwość uwzględnienia w nim zależności
 między ramkami w czasie.
 
-Model składa się z zbioru $N$ ukrytych stanów $X = \{x_0, x_1, \dots\, x_{N-1}\}$, ciągu zmiennych losowych
+Model składa się ze zbioru $N$ ukrytych stanów $X = \{x_0, x_1, \dots\, x_{N-1}\}$, ciągu zmiennych losowych
 $X_t$, $t = 0, 1, \dots, T - 1$ oznaczających ukryty stan w chwili $t$, rozkładu początkowego stanu ukrytego
 $\pi_i = P(X_0 = x_i)$, zbioru obserwacji (emisji, stan jawny) $Y$, przy czym obserwacje mogą być dyskretne
 lub ciągłe i ciągu zmiennych losowych $Y_t$, $t = 0, 1, \dots, T - 1$ określających obserwację w chwili $t$.
 
 Do tego zdefiniowane są prawdopodobieństwa przejść między stanami oraz rozkłady obserwacji w każdym stanie.
-Kluczową kwestią w modelu Markowa, zwaną regułą Markowa, jest iż rozkład prawdopodobieństwo następnego stanu $X_t$
+Kluczową kwestią w modelu Markowa, zwaną regułą Markowa, jest iż rozkład prawdopodobieństwa następnego stanu $X_t$
 zależy wyłącznie od stanu poprzedzającego, nie jest ważna cała historia stanów w przeszłości. Podobnie rozkład
 obserwacji $Y_t$ zależy wyłącznie od obecnego stanu ukrytego.
 
@@ -304,7 +316,7 @@ niezależne od czasu $t$. Przy dyskretnych i jednorodnych stanach ukrytych prawd
 między stanami można zapisać w postaci macierzy $H$ (\foreign{transition matrix}) $P(X_t = x_i | X_{t-1} = x_j) = H_{j, i}$.
 Podobnie jeżeli emisje są dyskretne, to można je zapisać w postaci macierzy $V$ $P(Y_t = y_i | X_t = x_j) = V_{j, i}$.
 Lecz emisje często mają jakieś określone parametryczne dystrybucje i wtedy definiuje się w postaci wektorów parametrów.
-$H$ (oraz $V$ jeżeli mowa o dyskretnych emisjach) jest macierzą stochastyczną, więc $\forall_{i, j = 0 \dots N - 1} 0 \leq H_{i, j} \leq 1$ i $\forall_{i = 0 \dots N - 1} \sum_{j = 0}^{N - 1} H_{j, i} = 1$. (rzędy sumują się do 1)
+$H$ (oraz $V$ jeżeli mowa o dyskretnych emisjach) jest macierzą stochastyczną, więc $\forall_{i, j = 0 \dots N - 1} 0 \leq H_{i, j} \leq 1$ i $\forall_{i = 0 \dots N - 1} \sum_{j = 0}^{N - 1} H_{j, i} = 1$ (wiersze sumują się do 1).
 
 Czasami, w innych modelach regułę Markowa rozszerza się tak, iż prawdopodobieństwo może zależeć od $k$ ostatnich stanów
 $P(X_t | X_{t-1} \dots X_{t-k})$ i nazywa się to regułą Markowa $k$ rzędu. Są też inne wersje, w których zbiór
@@ -317,7 +329,7 @@ Jeżeli macierz przejść jest tak zdefiniowana, że zawsze możliwe jest przej�
 mówimy, że model jest ergodyczny. Jednak na przykład w rozpoznawaniu mowy często definiuje się macierz przejść,
 by pozwalała tylko na przejście do stanu o takim samym lub wyższym indeksie, tzw. model Bakisa lub model lewo-prawo
 (\foreign{left-to-right}) albo by miała niezerowe prawdopodobieństwo przejścia wyłącznie z danego stanu do jego
-samego lub stanu o indeksie o jeden większym. (model \foreign{beads-on-string})
+samego lub stanu o indeksie o jeden większym (model \foreign{beads-on-string}).
 
 Ważne w praktyce jest, że istnieją wydajne algorytmy rozwiązujące następujące problemy \shortcut{HMM}.
 
@@ -326,17 +338,15 @@ Ważne w praktyce jest, że istnieją wydajne algorytmy rozwiązujące następuj
     \item Algorytm w tył - problem znalezienia prawdopodobieństwa ciągu zdarzeń w przyszłości, pod warunkiem danego stanu ukrytego w danej chwili. Jest on istotny, gdyż jest częścią następnego algorytmu.
     \item Algorytm w przód i w tył - problem znalezienia prawdopodobieństwa stanu ukrytego w danej chwili pod warunkiem wystąpienia danego ciągu obserwacji. Brany pod uwagę jest cały ciąg obserwacji, tych przed i tych po danym stanie ukrytym. Działa przez połączenie wyników algorytmu w przód i w tył, stąd nazwa.
     \item Algorytm Viterbiego - problem znalezienia najbardziej prawdopodobnego ciągu stanów ukrytych dla danego ciągu obserwacji parametrów modelu. Jest podobny do algorytmu w przód, z tym, że na każdym kroku wybiera najbardziej prawdopodobną sekwencję zamiast uwzględniać prawdopodobieństwa wszystkich stanów.
-    \item Algorytm Bauma-Welcha - problem znalezienia parametrów modelu Markowa (prawdopodobieństwo przejść między stanami ukrytymi, rozkład obserwacji dla każdego stanu ukrytego, rozkład stanu początkowego) maksymalizującego prawdopodobieństwo wystąpienia danego ciągu obserwacji. Wykorzystuje algorytm w przód i w tył oraz opisany wcześniej algorytm \foreign{expectation maximization}, algorytm \foreign{forward-backward} służy do wyznaczenia ukrytych zmiennych opisujących jaki był stan w każdej chwili czasu na potrzeby kroku \foreign{expectation}, a następnie wyznaczane są najbardziej prawdopodobne parametry emisji w kroku \foreign{maximization}.
+    \item Algorytm Bauma-Welcha - problem znalezienia parametrów modelu Markowa (prawdopodobieństwo przejść między stanami ukrytymi, rozkład obserwacji dla każdego stanu ukrytego, rozkład stanu początkowego) maksymalizujących prawdopodobieństwo wystąpienia danego ciągu obserwacji. Wykorzystuje algorytm w przód i w tył oraz opisany wcześniej algorytm \foreign{expectation maximization}, algorytm w przód i w tył służy do wyznaczenia ukrytych zmiennych opisujących jaki był stan w każdej chwili czasu na potrzeby kroku \foreign{expectation}, a następnie wyznaczane są najbardziej prawdopodobne parametry emisji w kroku \foreign{maximization}.
 \end{enumerate}
 
 Poniżej wyprowadzono te algorytmy, zakładając przy tym dyskretne emisje.
 
 \subsubsection{Algorytm w przód}
 
-Algorytm w przód (\foreign{Forward algorithm}) liczy łączone prawdopodobieństwo znalezienia się w jakimś stanie w chwili $t$
-i wystąpienia pewnego ciągu obserwacji $y_{t-1} \dots y_0$ w przeszłości.
-
-To znaczy liczy $P(x_t, y_t \dots y_0)$. Korzysta z rekurencyjnej zależności
+Algorytm w przód (\foreign{forward algorithm}) liczy łączone prawdopodobieństwo znalezienia się w jakimś stanie w chwili $t$
+i wystąpienia pewnego ciągu obserwacji $y_{t-1} \dots y_0$ w przeszłości. To znaczy oblicza $P(x_t, y_t \dots y_0)$. Korzysta z rekurencyjnej zależności:
 $$P(x_t, y_t \dots y_0) = \sum_{x_{t-1}} P(x_t, x_{t-1}, y_t \dots y_0) =$$
 $$\sum_{x_{t-1}} P(y_t | x_t, x_{t-1}, y_{t-1} \dots y_0) P(x_t | x_{t-1}, y_{t-1} \dots y_0) P(x_{t-1}, y_{t-1} \dots y_0)$$
 Dzięki własności Markowa można to uprościć do:
@@ -363,17 +373,17 @@ Prawdopodobieństwo jest liczone rekurencyjnie, z przypadkiem bazowym
 $$P(\emptyset | x_{T-1}) = 1$$
 
 \subsubsection{Algorytm w przód i w tył}
-Algorytm w przód i w tył (\foreign{Forward-Backward algorithm}) działa przez połączenie wyników algorytmu w przód i w tył.
+Algorytm w przód i w tył (\foreign{forward-backward algorithm}) działa przez połączenie wyników algorytmu w przód i w tył.
 
 Przypomnijmy, że:
 
 \begin{enumerate}
     \item Algorytm w przód oblicza $P(x_t, y_t \dots y_0)$, to znaczy prawdopodobieństwo dla ukrytego stanu w chwili $t$ oraz ciągu stanów z przeszłości.
     \item Algorytm w tył oblicza $P(y_{T-1} \dots y_{t+1} | x_t)$, czyli warunkowe prawdopodobieństwo ciągu obserwacji z przyszłości wobec ukrytego stanu w chwili $t$.
-    \item Algorytm w przód i w tył oblicza $P(x_t | y_{T-1} \dots y_0)$. Oblicza zatem prawdopodobieństwo ukrytego stanu $x_t$ w dowolnej chwili $t$ biorąc pod uwagę całą ciąg obserwacji. Możliwe jest dzięki niemu wybranie najbardziej prawdopodobnego stanu w każdej chwili. Trzeba zauważyć, że biorąc najbardziej prawdopodobny stan z każdej chwili niekoniecznie uzyska się najbardziej prawdopodobny ciąg stanów ukrytych odpowiadający ciągowi obserwacji, bo przejście z jednego bardzo prawdopodobnego stanu do drugiego może być bardzo nieprawdopodobne. Dlatego do tego zadania służy algorytm Viterbiego.
+    \item Algorytm w przód i w tył oblicza $P(x_t | y_{T-1} \dots y_0)$. Oblicza zatem prawdopodobieństwo ukrytego stanu $x_t$ w dowolnej chwili $t$ biorąc pod uwagę cały ciąg obserwacji. Możliwe jest dzięki niemu wybranie najbardziej prawdopodobnego stanu w każdej chwili. Trzeba zauważyć, że biorąc najbardziej prawdopodobny stan z każdej chwili niekoniecznie uzyska się najbardziej prawdopodobny ciąg stanów ukrytych odpowiadający ciągowi obserwacji, bo przejście z jednego bardzo prawdopodobnego stanu do drugiego może być bardzo nieprawdopodobne. Dlatego do tego zadania służy algorytm Viterbiego.
 \end{enumerate}
 
-Wynik \foreign{Forward-Backward} wykorzystuje poprzednie dwa algorytmy tak:
+Wynik \foreign{forward-backward} wykorzystuje poprzednie dwa algorytmy tak:
 $$P(x_t, y_t \dots y_0) P(y_{T-1} \dots y_{t+1} | x_t) = P(y_t \dots y_0 | x_t) P(y_{T-1} \dots y_{t+1} | x_t) P(x_t) = $$
 $$P(y_{T-1} \dots y_0 | x_t) P(x_t) = P(y_{T-1} \dots y_0, x_t) = P(x_t | y_{T-1} \dots y_0) P(y_{T-1} \dots y_0)$$
 
@@ -383,22 +393,22 @@ Prawdopodobieństwo w mianowniku można wyznaczyć przez zsumowanie po $X_{T-1}$
 \subsubsection{Algorytm Bauma-Welcha}
 
 Algorytm Bauma-Welcha (\foreign{Baum-Welch algorithm}) pozwala na znalezienie najbardziej prawdopodobnych parametrów
-$H$, $\pi$, $V$ (lub innych zależnie od emisji) modelu Markowa zależnie od ciągu obserwacji. Algorytm bazuje na metodzie
+$H$, $\pi$, $V$ modelu Markowa zależnie od ciągu obserwacji. Algorytm bazuje na metodzie
 \foreign{expectation-maximization}. Wykorzystuje przy tym algorytm w przód i w tył (\foreign{forward-backward})
 do znalezienia w kroku \foreign{expectation} prawdopodobieństw ukrytych stanów dla danej sekwencji obserwacji.
 W kroku \foreign{maximization} estymuje parametry szukając takich, które maksymalizują prawdopodobieństwo wystąpienia
 obserwacji, przy założeniu takich ukrytych stanów jak to wyznaczono w poprzednim kroku. Operacje te są powtarzane.
 
-Jak próbowano pokazać powyżej algorytm \foreign{forward-backward} pozwala obliczyć $P(x_t | y_{T-1} \dots y_0)$,
+Jak pokazano powyżej algorytm \foreign{forward-backward} pozwala obliczyć $P(x_t | y_{T-1} \dots y_0)$,
 łącząc $P(x_t, y_t \dots y_0)$ $P(y_{T-1} \dots y_{t+1} | x_t)$ liczone przez algorytmy \foreign{forward} i \foreign{backward}.
 
-Do przeprowadzenia treningu \foreign{Bauma-Welcha} potrzebne jest dodatkowo wyznaczenie $P(x_t, x_{t+1} | y_{T-1} dots y_0)$,
-czyli prawdopodobieństwa przejścia z jednego stanu w chwili $t$ do drugiego w chwili $t+1$,
+Do przeprowadzenia treningu \foreign{Bauma-Welcha} potrzebne jest dodatkowo wyznaczenie $P(x_t, x_{t+1} | y_{T-1} \dots y_0)$,
+czyli prawdopodobieństwa przejścia z jednego stanu w chwili $t$ do drugiego w chwili $t + 1$,
 uwzględniając sekwencję $T$ obserwacji i, niejawnie, parametrów modelu.
-$$P(x_t, x_{t+1} | y_{T-1} dots y_0)
-= \frac{P(x_t, x_{t+1}, y_{T-1} dots y_0)}{P(y_{T-1} dots y_0)}$$
+$$P(x_t, x_{t+1} | y_{T-1} \dots y_0)
+= \frac{P(x_t, x_{t+1}, y_{T-1} \dots y_0)}{P(y_{T-1} \dots y_0)}$$
 
-$$P(x_t, x_{t+1}, y_{T-1} dots y_0) = P(y_{T-1} dots y_0 | x_t, x_{t+1}) P(x_{t+1} | x_t) P(x_t) = $$
+$$P(x_t, x_{t+1}, y_{T-1} \dots y_0) = P(y_{T-1} \dots y_0 | x_t, x_{t+1}) P(x_{t+1} | x_t) P(x_t) = $$
 $$P(y_{T-1} \dots y_{t+2} | x_t, x_{t+1}) P(y_{t+1} \dots y_0 | x_t, x_{t+1}) P(x_{t+1} | x_t) P(x_t)$$
 
 $$P(y_{t+1} \dots y_0 | x_t, x_{t+1}) P(x_t) = P(y_{t+1} \dots y_0, x_t | x_{t+1}) = $$
@@ -425,16 +435,16 @@ lecz nie dałoby to koniecznie najbardziej prawdopodobnej sekwencji stanów ukry
 prawdopodobieństwo przejścia między dwoma wybranymi stanami byłoby bardzo małe lub niemożliwe i w efekcie wystąpienie
 i jednego i drugiego z nich w jednym ciągu byłoby mało prawdopodobne.
 
-Algorytm Viterbiego (\foreign{Viterbi algorithm}) rozwiązuje problem znalezienia najbardziej prawdopodobnej sekwencji ukrytych stanów pod warunkiem danego ciągu obserwacji, $x_{T-1} \dots x_0$ maksymalizującego $P(x_{T-1} \dots x_0 | y_{T-1} \dots y_0)$.
+Algorytm Viterbiego (\foreign{Viterbi algorithm}) rozwiązuje problem znalezienia najbardziej prawdopodobnej sekwencji ukrytych stanów pod warunkiem danego ciągu obserwacji, $y_{T-1} \dots y_0$ maksymalizującego $P(x_{T-1} \dots x_0 | y_{T-1} \dots y_0)$.
 
-Algorytm wykorzystuje technikę programowania dynamicznego. Tworzy dwie matrycę, oznaczmy je $A$ i $B$.
+Algorytm wykorzystuje technikę programowania dynamicznego. Tworzy dwie matryce, oznaczmy je $A$ i $B$.
 
 $$A_{t,x_i} = max_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t)$$
 czyli zawiera największe prawdopodobieństwo jakie może mieć ciąg stanów $x_0 \dots x_{t-1}$ wraz z zajściem ciągu obserwacji $y_0 \dots y_t$ oraz z prawdopodobieństwem, że w następnym kroku stanem będzie $x_i$ .
 
 $$B_{t,x_i} = argmax_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t)$$ i służy do odtworzenia na koniec, które ukryte stany wchodzą w skład wybranej ścieżki. Warto zauważyć, że w tym przypadku $t > 0$.
 
-Mając $A_{t,x_i}$, algorytm oblicza prawdopodobieństwo dla następnej chwili czasu $A_{t+1,x_i}$ w taki sposób:
+Mając $A_{t-1,x_i}$, algorytm oblicza prawdopodobieństwo dla następnej chwili czasu $A_{t,x_i}$ w taki sposób:
 $$P(x_1 \dots x_t, y_0 \dots y_t) = P(y_t | x_1 \dots x_t, y_0 \dots y_{t-1}) P(x_1 \dots x_t, y_0 \dots y_{t-1}) =$$
 $$P(y_t | x_1 \dots x_t, y_0 \dots y_{t-1}) P(x_t | x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
 $$P(y_t | x_t) P(x_t | x_{t-1}) P(x_1 \dots x_{t-1}, y_0 \dots y_{t-1}) =$$
@@ -445,14 +455,14 @@ $$max_{x_1 \dots x_{t-1}} V_{x_i, y_t} H_{x_{t-1}, x_i} P(x_1 \dots x_{t-1}, y_0
 $$V_{x_i, y_t} max_{x_{t-1}}H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
 Przypadek bazowy to $A_{1,x_i} = P(X_1 = x_i, y_0) = \pi_i V_{x_i, y_0}$
 
-Jeśli chodzi o $B$, to zachowuje argumenty, dla których w $A$ jest maksimum:
+Jeśli chodzi o $B$, ta macierz zachowuje argumenty, dla których w $A$ jest maksimum:
 $$B_{t, x_i} = argmax_{x_1 \dots x_{t-1}} P(x_1 \dots x_{t-1}, X_t = x_i, y_0 \dots y_t) =$$
 $$argmax_{x_{t-1}} H_{x_{t-1}, x_i} A_{t-1, x_{t-1}}$$
 Po zakończeniu obliczeń możemy znaleźć najbardziej prawdopodobną ścieżkę stanów przez wybranie stanu $x_i$ z największym prawdopodobieństwem w chwili $T-1$ i odtworzyć całą ścieżkę korzystając z $B$\cite{aTutorialOnHidden}.
 
 \section{Rozpoznawanie mówcy}\label{sec:rozpoznawanie_mowcy}
 
-W naszej pracy nad systemami rozpoznawania mówcy wyróżniliśmy trzy etapy działania: treningu (\foreign{training}),
+W mojej pracy nad systemami rozpoznawania mówcy wyróżniliśmy trzy etapy działania: treningu (\foreign{training}),
 zapisów (\foreign{enrollment}) i prób (\foreign{evaluation}). Jest to podział inspirowany podziałem w zbiorze \techname{RedDots}.
 
 W czasie treningu model jest uczony na możliwie dużym zbiorze danych i przez być może długi czas. W czasie zapisów

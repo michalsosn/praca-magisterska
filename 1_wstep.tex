@@ -32,24 +32,24 @@ pełnią tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjn
 
 Systemy bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
 związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
-stanowią u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
+leżą u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
-wykorzystania głębokich sieci neuronowych np. przez zastąpienie nimi
-\shortcut{GMM} (\foreign{gaussian mixture model}) w obecnych systemach do rozpoznania
-jaki fonem znajduje się w ramce nagrania i wydobycia z nich tzw.
+wykorzystania głębokich sieci neuronowych. Na przykład zastąpiono nimi
+\shortcut{GMM} (\foreign{gaussian mixture model}) w celu rozpoznania
+jaki fonem znajduje się w ramce nagrania, a wektor aktywacji warstwy ukrytej użyto jako tzw.
 \foreign{bottleneck features}\cite{investigationOfBottleneck}.
-Korporacje jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
+Korporacje takie jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
 neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i wypróbowanie innego sposobu zaaplikowania
 sieci neuronowych.
 
 Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety,
 że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców,
-albo dostępne, lecz za opłatą. Na szczęście w 2015 ta potrzeba
-została zaadresowana przez naukowców między innymi z Singapuru. Zgromadzili oni nagrania o znanej
+albo dostępne, lecz za opłatą. Na szczęście w 2015 zajęli się tym ograniczeniem naukowcy
+między innymi z Singapuru. Zgromadzili oni nagrania o znanej
 treści od ochotników z całego świata i opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
-zasoby posiadane przez korporacje w postaci danych i talentu pracowników sprawiają stawiają ich
-w pozycji, w której trudno im dorównać.  Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
-jest w ogóle warty uwagi i w jakich sytuacjach, oraz porównanie go z wybranymi systemami \foreign{baseline}.
+zasoby posiadane przez korporacje w postaci danych i pracowników stawiają ich
+w pozycji, w której trudno im dorównać. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
+jest warty uwagi i w jakich sytuacjach, oraz porównanie go z wybranymi systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
@@ -58,7 +58,7 @@ Zostanie on przetestowany na zbiorze \techname{RedDots} i porównany z innymi st
 Wyniki pozwolą ocenić sensowność używania wybranej metody oraz wskazać, gdzie może sprawdzić się lepiej
 od innych metod.
 
-Zostaną stworzone dwa systemy bazujące na innych metodach niż sieci neuronowe oraz jeden bazujący na nich. Przetestowane
+Zostanie stworzony jeden system bazujący na sieciach neuronowych oraz dwa wykorzystujące inne metody. Przetestowane
 modele to:
 
 \begin{itemize}
@@ -73,31 +73,29 @@ Osobno zostanie zaprezentowana skuteczność weryfikacji mówcy oraz treści. Uw
 \begin{itemize}
     \item Krzywa \shortcut{ROC} (\foreign{Receiver Operating Characteristic})
     \item \shortcut{EER} (\foreign{Equal Error Rate})
-    \item \shortcut{AUR} (\foreign{Area Under Curve})
+    \item \shortcut{AUC} (\foreign{Area Under Curve})
 \end{itemize}
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
-Podstawy teorii rozpoznawania mowy są dobrze opisane w \titlei{Fundamentals of Speech Recognition}\cite{fundamentalsOfSpeech}
-od dr Lawrence Rabinera oraz w jego
-\titlei{A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition}\cite{aTutorialOnHidden}, które
-skupia się na praktycznym wprowadzeniu do ukrytych modeli Markowa, użytych w tej pracy.
-Innym bardzo praktycznym zasobem na ten temat jest \titlei{The HTK Book}\cite{theHtkBook}, opisująca rozwiązanie
+Podstawy teorii rozpoznawania mowy są dobrze opisane w \cite{fundamentalsOfSpeech}
+oraz \cite{aTutorialOnHidden} tego samego autora, które skupiają się na praktycznym wprowadzeniu
+do ukrytych modeli Markowa, użytych w tej pracy.
+Innym bardzo praktycznym zasobem na ten temat jest \cite{theHtkBook}, opisująca rozwiązanie
 tego problemu zastosowane w pakiecie \titlei{Hidden Markov Model Toolkit} i publicznie dostępne zasoby
 kursu \titlei{CS 224S Spoken Language Processing} z Uniwersytetu Stanford.
 
-O rozpoznawaniu mówcy traktuje \titlei{Fundamentals of Speaker Recognition} od prof. Homayoona Beigi.
+O rozpoznawaniu mówcy traktuje \cite{fundamentalsOfSpeaker}
 Jest to przydatny zasób, jednakże bardziej pomocne może okazać przejrzenie się mniejszych, lecz
 bardziej aktualnych publikacji na ten temat.
-% cite Beigi ?
 
 Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w
-\titlei{Pattern Classification}\cite{patternClassification} prof. Richarda Dudy.
-Porusza takie tematy jak statystyka Bayesowska, \foreign{expectation maximization}, sieci neuronowe, RBM
+\cite{patternClassification}. Pozycja ta porusza takie tematy jak statystyka Bayesowska, 
+\foreign{expectation maximization}, sieci neuronowe, RBM
 i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie
 uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa.
-Doskonałym zasobem do głębokich sieci neuronowych jest dostępna legalnie w Internecie książka
-\titlei{Deep Learning}\cite{deeplearningbook} od Iana Godfellowa i innych.
+Doskonałym zasobem do głębokich sieci neuronowych jest dostępna w Internecie książka
+\cite{deeplearningbook}.
 
 Godne polecenia są kursy internetowe dostępne za darmo na platformie Coursera.
 Wysoko oceniane, również przez autora, związane z tematem pracy kursy to
@@ -106,7 +104,7 @@ Wysoko oceniane, również przez autora, związane z tematem pracy kursy to
 \titlei{Digital Signal Processing} od Paolo Prandoniego i  Martina Vetterliego.
 Są to zaadoptowane do formy kursu internetowego kursy akademickie. Pozwalają
 doświadczyć lekcji prowadzonych przez światowej sławy naukowców, niezależnie
-od miejsca urodzenia, co jest bardzo cenne.
+od miejsca zamieszkania, co jest bardzo cenne.
 
 \section{Układ pracy}\label{sec:uklad_pracy}
 
