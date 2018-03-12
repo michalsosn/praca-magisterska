@@ -4,12 +4,12 @@
 
 \subsection{RedDots}
 
-W pracy wykorzystano zbiór \techname{RedDots}\cite{theReddotsDataCollection}.
+W~pracy wykorzystano zbiór \techname{RedDots}\cite{theReddotsDataCollection}.
 Jest to zbiór nagrań głosowych przeznaczony do problemu weryfikacji mówcy.
 Jest dostosowany do problemu weryfikacji zależnej od tekstu, gdyż transkrypcja każdej wypowiedzi jest znana,
-a mówcy wypowiadają w~nim wielokrotnie zdania o~tej samej treści. Zbiór został zebrany od ochotników z~całego
+a~mówcy wypowiadają w~nim wielokrotnie zdania o~tej samej treści. Zbiór został zebrany od ochotników z~całego
 świata przez Internet, co sprawia, że choć treści wypowiedzi są po angielsku, to mówcy wypowiadają słowa
-z różnym akcentem. Nagrania były tworzone w~niekontrolowanych warunkach i~często są zakłócone.
+z~różnym akcentem. Nagrania były tworzone w~niekontrolowanych warunkach i~często są zakłócone.
 Wśród ochotników znalazło się 49 mężczyzn i~13 kobiet z~21 krajów.
 
 Gromadzenie danych przebiegało w~cotygodniowych sesjach. Autorzy mieli plan zebrać po 52 sesji od każdego uczestnika,
@@ -58,7 +58,7 @@ rejestracyjnych (\foreign{enrollment}) i~zestaw nagrań weryfikacyjnych. (\forei
         \end{enumerate}
 \end{enumerate}
 
-W przejrzanych pracach zwykle zadania 2 i~3 były ignorowane. Możliwe, że budzą mniejsze zainteresowanie przez fakt,
+W~przejrzanych pracach zwykle zadania 2 i~3 były ignorowane. Możliwe, że budzą mniejsze zainteresowanie przez fakt,
 że różni mówcy zawsze różnią się treścią nagrania. Czyni to te części prostszymi, niż pozostałe dwie.
 Dodatkowo nagrań w~3 części jest mniej.
 Sprawdzenie jak system działa w~sytuacji, gdy ktoś podszywa się pod mówcę i~zna jego hasło jest bardzo
@@ -71,7 +71,7 @@ ograniczenia wykorzystania do celów naukowych. Jest warty uwagi, gdyż trudno z
 zbiór dostosowany do problemu weryfikacji zależnej od tekstu, który byłby publicznie dostępny i~darmowy.
 Istnieje na przykład zbiór \shortcut{YOHO} oraz zbiór \shortcut{RSR2015}, które
 zawierają więcej danych zebranych w~lepszych warunkach, lecz wymagają opłaty. Tym niemniej warto
-o nich pamiętać.
+o~nich pamiętać.
 
 \subsection{CMUDict}
 
@@ -83,13 +83,13 @@ Zbiór został wykorzystany do zamiany transkrypcji z~\techname{RedDots} na cią
 za tym taka idea, że fonemy będą stanowić lepsze klasy w~systemach rozpoznawania mówcy, jak
 \shortcut{HMM-GMM}, niż litery, którym mogą w~angielskim odpowiadać przeróżne fonemy.
 Niestety niektóre wypowiedzi z~części trzeciej, wybrane przez użytkowników, były w~innych językach
-i dla nich operacja zawiodła. Dlatego w~systemach, które bazują na fonetycznych transkrypcjach,
+i~dla nich operacja zawiodła. Dlatego w~systemach, które bazują na fonetycznych transkrypcjach,
 są one odrzucane. Nie jest to problemem jeżeli zupełnie zignoruje się trzeci problem.
 
 \section{Sprzęt}\label{sec:sprzet}
 
 Utworzone w~ramach pracy programy tworzono i~wykonywano na maszynie udostępnionej
-w Centrum Technologii Informatycznych Politechniki Łódzkiej. $64$GB pamięci i~$40$ rdzeniowy
+w~Centrum Technologii Informatycznych Politechniki Łódzkiej. $64$GB pamięci i~$40$ rdzeniowy
 procesor mocno przyśpieszył pracę oraz umożliwił załadowanie całego zbioru do pamięci.
 Praca nie wymaga jednak żadnych niestandardowych urządzeń lub warunków, odtworzenie eksperymentów
 jest możliwe na zwykłym komputerze.
@@ -133,9 +133,9 @@ Przed przetworzeniem cech używany jest również pakiet \techname{webrtcvad} do
 
 Przy pracach nad ukrytymi modelami Markowa wypróbowane zostały pakiety \techname{hmmlearn} i~\techname{pomegranate}.
 Niestety sprawiały wiele problemów numerycznych podczas dopasowywania modelu do nagrań. Ostatecznie zrezygnowano z~nich
-i zastąpiono własną implementacją.
+i~zastąpiono własną implementacją.
 
-W pracy użyty został również \techname{TensorFlow}. Biblioteka ta dostarcza
+W~pracy użyty został również \techname{TensorFlow}. Biblioteka ta dostarcza
 implementacji tensora - pozornie macierzy wielowymiarowej jak z~\techname{numpy}. Jest jednak
 dostosowana do potrzeb implementacji algorytmów uczenia maszynowego. Stosuje model opóźnionej
 ewaluacji, podobnie jak \techname{Spark} lub \techname{dask}. To znaczy, że
@@ -143,24 +143,24 @@ osobno definiuje się w~niej operacje do wykonania przez zbudowanie grafu i~osob
 Ten sposób wykonania umożliwia dokonanie optymalizacji po zdefiniowaniu obliczeń i~przed wykonaniem oraz
 obchodzi się tym samym wadę Pythona - relatywnie powolne wykonywanie kodu.
 \techname{Tensorflow} zawiera komponenty potrzebne do zdefiniowania grafu, w~tym wysokopoziomowe
-z pakietu \techname{tf.estimator}. Umożliwia automatyczne obliczanie pochodnych na potrzeby wstecznej propagacji.
+z~pakietu \techname{tf.estimator}. Umożliwia automatyczne obliczanie pochodnych na potrzeby wstecznej propagacji.
 Pozwala na wykonywanie operacji na \shortcut{GPU} oraz rozproszenie obliczeń.
 
-W pracy \techname{TensorFlowa} jest wykorzystany do wczytania modelu stworzonego przez organizację \techname{Mozilla}.
+W~pracy \techname{TensorFlowa} jest wykorzystany do wczytania modelu stworzonego przez organizację \techname{Mozilla}.
 Model ten powstał w~oparciu o~pracę \techname{DeepSpeech}\cite{deepSpeechScaling},
 opisującą komercyjny model do rozpoznawania mowy rozwinięty przez \techname{Baidu}.
 Ten model jest wczytywany w~sesji \techname{TensorFlowa} i~używany do dopasowania ramek do klas.
 
 \subsection{Narzędzia}
 
-W pracy wykorzystany został \techname{Docker}. Uruchamiany jest w~nim obraz \\ \techname{tensorflow/tensorflow:1.4.0-gpu-py3},
-z przygotowanym środowiskiem z~\techname{TensorFlowem}. Umożliwia to szybką instalację tego pakietu, która ogólnie nie
+W~pracy wykorzystany został \techname{Docker}. Uruchamiany jest w~nim obraz \\ \techname{tensorflow/tensorflow:1.4.0-gpu-py3},
+z~przygotowanym środowiskiem z~\techname{TensorFlowem}. Umożliwia to szybką instalację tego pakietu, która ogólnie nie
 jest trywialna. W~kontenerze uruchamiany jest serwer \techname{Jupyter} i~z jego wykorzystaniem przebiegła większość prac.
 
 \techname{Jupyter} stanowi rozwinięcie starszych narzędzi programowania interaktywnego jak \techname{IPython} czy zwykły \techname{Pythonowy} interpreter. W~sesjach interaktywnych występuje taki problem, że instrukcje trzeba wprowadzać linijka po linijce, a~wpisany kod jest zapisywany w~ograniczonej historii. Przeciwieństwem sesji są skrypty, które pozwalają wygodnie manipulować
 kodem oraz są trwałe i~powtarzalne, lecz zupełnie nieinteraktywne i~po każdej zmianie wymagają ponownego wykonania.
 \techname{Jupyter} łączy dobre strony obu podejść i~pozwala tworzyć skrypty, które można blokami wykonywać
-w interaktywnej sesji, tzw. notesy. (\foreign{notebook}, format \techname{ipynb})
+w~interaktywnej sesji, tzw. notesy. (\foreign{notebook}, format \techname{ipynb})
 
 \techname{Jupyter} działa jako serwer \shortcut{HTTP} i~dostarcza przeglądarkowe środowisko do edycji kodu. Jest ono
 ubogie w~funkcje, przynajmniej w~porównaniu z~rozwiniętymi środowiskami programistycznymi. Fakt, że
@@ -170,7 +170,7 @@ obliczeniowymi oraz bezpośrednim dostępem do danych, a~następnie pracować na
 Dużym atutem jest wsparcie dla bibliotek jak \techname{pandas}, \techname{matplotlib} czy \techname{bokeh}.
 \foreign{DataFrame} są automatycznie wyświetlane jako tabele, a~generowane wizualizacje są bezpośrednio wyświetlane
 między blokami notesu. Jest też możliwość tworzenia interaktywnych elementów jak przyciski czy pola tekstowe i
-w reakcji na zmiany ich stanu można wykonywać kod w~interaktywnej sesji.
+w~reakcji na zmiany ich stanu można wykonywać kod w~interaktywnej sesji.
 
 Poza tym warto wspomnieć, że wykorzystano \techname{gita} do wersjonowania pracy, zarówno \foreign{notebooków}, pakietów jak i~tekstu tego dokumentu. Do zarządzania pakietami wykorzystano \techname{pip}, ale być może lepszym wyborem są nowsze narzędzia jak \techname{conda} lub \techname{pipenv}.
 
