@@ -2,59 +2,59 @@
 
 \section{Dyskusja wyników}
 
-W kilku przypadkach wyniki zbliżyły się do tych z przejrzanych prac naukowych. W większości przypadków,
-w szczególności w przypadku najbardziej złożonego modelu z \shortcut{DNN}, wyniki były gorsze.
+W kilku przypadkach wyniki zbliżyły się do tych z~przejrzanych prac naukowych. W~większości przypadków,
+w szczególności w~przypadku najbardziej złożonego modelu z~\shortcut{DNN}, wyniki były gorsze.
 
-Model \shortcut{GMM-UBM}, dzięki jego prostocie, udało się odtworzyć i może pełnić
-rolę \foreign{baseline} w pracy. Sposób weryfikacji tekstu przez odpowiednie zaadaptowanie \shortcut{GMM}
-okazał się skuteczny, mimo że model nie uwzględnia tego jak fonemy następują po sobie w czasie.
+Model \shortcut{GMM-UBM}, dzięki jego prostocie, udało się odtworzyć i~może pełnić
+rolę \foreign{baseline} w~pracy. Sposób weryfikacji tekstu przez odpowiednie zaadaptowanie \shortcut{GMM}
+okazał się skuteczny, mimo że model nie uwzględnia tego jak fonemy następują po sobie w~czasie.
 
 Niestety drugi model \shortcut{HMM-GMM} osiągnął wyniki gorsze od oczekiwanych.
-Możliwe, że należało, podobnie jak w przypadku \shortcut{DNN}, użyć gotowego systemu do rozpoznawania mowy,
+Możliwe, że należało, podobnie jak w~przypadku \shortcut{DNN}, użyć gotowego systemu do rozpoznawania mowy,
 zamiast implementować własne rozwiązanie.
-Stany \shortcut{HMM}, które miały odpowiadać fonemom, nie dopasowują się do nagrania zgodnie z tym założeniem.
+Stany \shortcut{HMM}, które miały odpowiadać fonemom, nie dopasowują się do nagrania zgodnie z~tym założeniem.
 Wyniki udało się poprawić modyfikując algorytm Viterbiego, by przypisywał większe prawdopodobieństwo
-ciągom, w którym ukryte stany pokrywają równą liczbę okien. Założenie to przypomina jednak to z jednego
-z modeli, w którym nagranie arbitralnie podzielono na kilka równych części. Mimo tego jest on cenny,
-gdyż demonstruje on kilka ciekawych technik wykorzystujących wiedzę o fonetyce. Dostarcza on informacji
-o tym jaką skuteczność powinien wykazywać system z \shortcut{DNN}.
+ciągom, w~którym ukryte stany pokrywają równą liczbę okien. Założenie to przypomina jednak to z~jednego
+z modeli, w~którym nagranie arbitralnie podzielono na kilka równych części. Mimo tego jest on cenny,
+gdyż demonstruje on kilka ciekawych technik wykorzystujących wiedzę o~fonetyce. Dostarcza on informacji
+o tym jaką skuteczność powinien wykazywać system z~\shortcut{DNN}.
 
-Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż sposób wykorzystania sieci neuronowej jest w nim
-w pewnym stopniu nowy. Jego skuteczność niestety cierpi z powodu tego, że \techname{DeepSpeech}
+Stworzony model \shortcut{DNN-GMM} jest istotny, gdyż sposób wykorzystania sieci neuronowej jest w~nim
+w pewnym stopniu nowy. Jego skuteczność niestety cierpi z~powodu tego, że \techname{DeepSpeech}
 wykrywa litery, choć odpowiednie do porównywania mówców byłyby fonemy. Wytrenowanie go od postaw przy
-obecnej dostępności zasobów i zbiorów danych byłoby jednak trudne i mało prawdopodobne, by mimo
+obecnej dostępności zasobów i~zbiorów danych byłoby jednak trudne i~mało prawdopodobne, by mimo
 architektury odpowiadającej problemowi, uzyskana skuteczność była wyższa.
 Również ocena zgodności mówców mogłaby zyskać na skuteczności, gdyby wykorzystać popularne i-wektory.
 W problemie weryfikacji treści model ten ma taką zaletę, iż można go użyć do weryfikacji
 dowolnej treści. Nie jest ograniczony do zamkniętego zbioru zdań jak \shortcut{GMM-UBM}.
-Ostatecznie wyniki są mało obiecujące i mimo złożoności modelu nie są lepsze niż te
+Ostatecznie wyniki są mało obiecujące i~mimo złożoności modelu nie są lepsze niż te
 z pozostałych dwóch systemów.
 
 \section{Perspektywy dalszych badań}
 
-Przede wszystkim warto byłoby wypróbować sieć nauczoną do rozpoznawania fonemów, a nie liter.
-Jest to inne zadanie i szczególnie w angielskim mapowanie między literami i fonemami
-jest bardzo niejednoznaczne. Z przejrzanych prac wiadomo, że wykorzystanie sieci
-do dopasowywania ramek może dać dobre wyniki, lecz nie użyto w nich sieci rekurencyjnych.
+Przede wszystkim warto byłoby wypróbować sieć nauczoną do rozpoznawania fonemów, a~nie liter.
+Jest to inne zadanie i~szczególnie w~angielskim mapowanie między literami i~fonemami
+jest bardzo niejednoznaczne. Z~przejrzanych prac wiadomo, że wykorzystanie sieci
+do dopasowywania ramek może dać dobre wyniki, lecz nie użyto w~nich sieci rekurencyjnych.
 
-Wyniki tworzonych modeli z pewnością dałoby się poprawić wykonując dokładną
+Wyniki tworzonych modeli z~pewnością dałoby się poprawić wykonując dokładną
 optymalizację hiperparametrów. Podobnie można spróbować zdobyć inny zbiór danych,
-niż \techname{RedDots} na potrzeby treningu i walidacji. Możliwe wtedy
-byłoby lepsze porównanie wyników z wynikami innych prac.
+niż \techname{RedDots} na potrzeby treningu i~walidacji. Możliwe wtedy
+byłoby lepsze porównanie wyników z~wynikami innych prac.
 
 Metoda wyznaczania prawdopodobieństwa przynależności przez obliczanie stosunku
 przynależności do mikstur gaussowskich użytkownika oraz modelu tła nie jest
 tak powszechnie stosowana jak metoda i-wektorów. Połączenie tej metody
-z metodą przypisywania ramek z tej pracy mogłoby poprawić wyniki.
-Zwłaszcza, że i-wektory można wyliczyć w oparciu o statystyki z głębokich sieci
-neuronowych do rozpoznawania fonemów. W przejrzanych pracach te sieci bazowały
+z metodą przypisywania ramek z~tej pracy mogłoby poprawić wyniki.
+Zwłaszcza, że i-wektory można wyliczyć w~oparciu o~statystyki z~głębokich sieci
+neuronowych do rozpoznawania fonemów. W~przejrzanych pracach te sieci bazowały
 na dopasowaniu ramek dokonanym przez system \shortcut{HMM-GMM}.
 
 Przegląd prac wykazał, że można wymyślić wiele różnych sposobów na wykorzystanie sieci neuronowych przy problemie
-weryfikacji mówcy. Cechy \foreign{bottleneck}, wykorzystanie \foreign{DNN} w metodzie i-wektorów,
+weryfikacji mówcy. Cechy \foreign{bottleneck}, wykorzystanie \foreign{DNN} w~metodzie i-wektorów,
 wykorzystanie \foreign{TDNN} do dopasowania ramek czy system \foreign{end-to-end} od Google.
 Nie wszystkie cechują się wyższą skutecznością, na przykład system \foreign{bottleneck}
-również nie przewyższył tradycyjnych metodami, w których dopracowanie włożono więcej czasu.
-Możliwości jest wiele i jak pokazują te przykłady, niektóre dają obiecujące wyniki. Ze wzrostem wiedzy łatwiej
-będzie wyselekcjonować dobre pomysły, dlatego warto zmienić podejście i próbować dalej.
+również nie przewyższył tradycyjnych metodami, w~których dopracowanie włożono więcej czasu.
+Możliwości jest wiele i~jak pokazują te przykłady, niektóre dają obiecujące wyniki. Ze wzrostem wiedzy łatwiej
+będzie wyselekcjonować dobre pomysły, dlatego warto zmienić podejście i~próbować dalej.
 

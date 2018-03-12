@@ -3,58 +3,58 @@
 Zakresem niniejszej pracy magisterskiej są systemy rozpoznawania mówcy zależne od tekstu. Celem
 pracy jest zbadanie możliwości wykorzystania modelu sieci neuronowej do rozwiązania tego problemu.
 
-Rozpoznawanie mówcy polega na analizie nagrań dźwiękowych mowy w celu wydobycia cech biometrycznych
-charakteryzujących osobę mówiącą. Wyróżnia się dwa praktyczne problemy do rozwiązania z wykorzystaniem tych
+Rozpoznawanie mówcy polega na analizie nagrań dźwiękowych mowy w~celu wydobycia cech biometrycznych
+charakteryzujących osobę mówiącą. Wyróżnia się dwa praktyczne problemy do rozwiązania z~wykorzystaniem tych
 cech: problem weryfikacji mówcy oraz problem identyfikacji mówcy.
 
 Weryfikacja mówcy polega na stwierdzeniu, czy nagranie pochodzi od pewnej zarejestrowanej wcześniej osoby
 lub wykryciu, że jest na nim ktoś inny. Ten przypadek występuje na przykład przy uwierzytelnianiu za pomocą głosu
 do systemu bankowego. Konieczne jest wtedy wykrycie, gdy oszust podaje się za prawdziwego właściciela konta.
-Identyfikacja mówcy polega na rozpoznaniu, która z zarejestrowanych osób jest na nagraniu lub czy
+Identyfikacja mówcy polega na rozpoznaniu, która z~zarejestrowanych osób jest na nagraniu lub czy
 jest na nim ktoś niezarejestrowany. Identyfikacja może być wykorzystana przez służby policyjne do
 zidentyfikowania osób na zdobytym nagraniu.
 
-Rozpoznawanie mówcy można również podzielić według kryterium, czy treść nagrania jest znana z góry,
-na rozpoznawanie mówcy zależne od tekstu i niezależne od tekstu. Weryfikacja mówcy zwykle może
-być przeprowadzona zależnie od tekstu, gdyż w typowych zastosowaniach można oczekiwać od weryfikowanej
-osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w sytuacji,
-gdy nagrań rejestrujących jest niewiele\cite{parallelSpeakerAnd}. W przypadku,
+Rozpoznawanie mówcy można również podzielić według kryterium, czy treść nagrania jest znana z~góry,
+na rozpoznawanie mówcy zależne od tekstu i~niezależne od tekstu. Weryfikacja mówcy zwykle może
+być przeprowadzona zależnie od tekstu, gdyż w~typowych zastosowaniach można oczekiwać od weryfikowanej
+osoby kooperacji. Znajomość treści jest cenna, gdyż pozwala zwiększyć skuteczność, szczególnie w~sytuacji,
+gdy nagrań rejestrujących jest niewiele\cite{parallelSpeakerAnd}. W~przypadku,
 gdy nagranie nie zawiera oczekiwanej treści, wymagane jest odrzucenie weryfikowanego nagrania
 niezależnie od tożsamości mówcy.
-Identyfikację z kolei zwykle trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą
+Identyfikację z~kolei zwykle trzeba przeprowadzać bez założeń co do treści nagrania, gdyż nagrywane osoby mogą
 być tego nieświadome.
 
 Jako że przedmiotem pracy jest rozpoznawanie mówcy zależne od tekstu, uwaga zostanie poświęcona problemowi
-weryfikacji, a nie identyfikacji mówcy. Ten problem jest również ciekawy ze względu na potencjalne zastosowania,
+weryfikacji, a~nie identyfikacji mówcy. Ten problem jest również ciekawy ze względu na potencjalne zastosowania,
 przypuszczalnie większe niż problem identyfikacji. Zaletą bazowania na nagraniu mowy jest możliwość
 jego nieinwazyjnego pozyskania. Jednakże niska skuteczność rozpoznawania sprawiała, że takie systemy
 pełnią tylko rolę drugiej warstwy zabezpieczeń, jako uzupełnienie tradycyjnego hasła.
 
-Systemy bazujące na sieciach neuronowych osiągnęły w ostatnim czasie znakomite wyniki w problemach
-związanych z przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
+Systemy bazujące na sieciach neuronowych osiągnęły w~ostatnim czasie znakomite wyniki w~problemach
+związanych z~przetwarzaniem obrazów, dźwięków czy dokumentów tekstowych. Rekurencyjne sieci neuronowe
 leżą u podstaw najnowszych systemów do rozpoznawania mowy. Można się spodziewać, iż mogą one
 osiągnąć również dobre wyniki przy rozpoznawaniu mówcy. Rzeczywiście, miały już miejsce próby
 wykorzystania głębokich sieci neuronowych. Na przykład zastąpiono nimi
-\shortcut{GMM} (\foreign{gaussian mixture model}) w celu rozpoznania
-jaki fonem znajduje się w ramce nagrania, a wektor aktywacji warstwy ukrytej użyto jako tzw.
+\shortcut{GMM} (\foreign{gaussian mixture model}) w~celu rozpoznania
+jaki fonem znajduje się w~ramce nagrania, a~wektor aktywacji warstwy ukrytej użyto jako tzw.
 \foreign{bottleneck features}\cite{investigationOfBottleneck}.
-Korporacje takie jak Google również zgromadziły zbiory danych i zaproponowały architekturę bazującą na sieciach
-neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i wypróbowanie innego sposobu zaaplikowania
+Korporacje takie jak Google również zgromadziły zbiory danych i~zaproponowały architekturę bazującą na sieciach
+neuronowych\cite{endToEnd}. Celem tej pracy jest zbadanie tematu i~wypróbowanie innego sposobu zaaplikowania
 sieci neuronowych.
 
-Zainteresowanie tym tematem i potencjalne zyski, które mogą z niego płynąć, sprawiło niestety,
+Zainteresowanie tym tematem i~potencjalne zyski, które mogą z~niego płynąć, sprawiło niestety,
 że zbiory danych dopasowane do badania tego problemu są albo chronione przez przedsiębiorców,
-albo dostępne, lecz za opłatą. Na szczęście w 2015 zajęli się tym ograniczeniem naukowcy
-między innymi z Singapuru. Zgromadzili oni nagrania o znanej
-treści od ochotników z całego świata i opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
-zasoby posiadane przez korporacje w postaci danych i pracowników stawiają ich
-w pozycji, w której trudno im dorównać. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
-jest warty uwagi i w jakich sytuacjach, oraz porównanie go z wybranymi systemami \foreign{baseline}.
+albo dostępne, lecz za opłatą. Na szczęście w~2015 zajęli się tym ograniczeniem naukowcy
+między innymi z~Singapuru. Zgromadzili oni nagrania o~znanej
+treści od ochotników z~całego świata i~opublikowali zbiór \techname{RedDots}. Trzeba jednak przyznać, że
+zasoby posiadane przez korporacje w~postaci danych i~pracowników stawiają ich
+w pozycji, w~której trudno im dorównać. Tym niemniej możliwe jest zbadanie, czy wybrany pomysł
+jest warty uwagi i~w~jakich sytuacjach, oraz porównanie go z~wybranymi systemami \foreign{baseline}.
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
 Celem pracy jest stworzenie systemu do rozpoznawania mówcy wykorzystującego sieć neuronową.
-Zostanie on przetestowany na zbiorze \techname{RedDots} i porównany z innymi stworzonymi systemami.
+Zostanie on przetestowany na zbiorze \techname{RedDots} i~porównany z~innymi stworzonymi systemami.
 Wyniki pozwolą ocenić sensowność używania wybranej metody oraz wskazać, gdzie może sprawdzić się lepiej
 od innych metod.
 
@@ -62,12 +62,12 @@ Zostanie stworzony jeden system bazujący na sieciach neuronowych oraz dwa wykor
 modele to:
 
 \begin{itemize}
-    \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i modelu tła. (\shortcut{GMM-UBM}, \foreign{Gaussian Mixture Model - Universal Background Model})
-    \item System wykorzystujący ukryty model Markowa z emisjami będącymi miksturami wielowymiarowych rozkładów normalnych. (\shortcut{HMM-GMM}, \foreign{Hidden Markov Model - Gaussian Mixture Model})
-    \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych. (\shortcut{DNN-GMM}, \foreign{Deep Neural Network - Gaussian Mixture Model})
+    \item System bazujący na miksturach wielowymiarowych rozkładów normalnych i~modelu tła. (\shortcut{GMM-UBM}, \foreign{Gaussian Mixture Model - Universal Background Model})
+    \item System wykorzystujący ukryty model Markowa z~emisjami będącymi miksturami wielowymiarowych rozkładów normalnych. (\shortcut{HMM-GMM}, \foreign{Hidden Markov Model - Gaussian Mixture Model})
+    \item System wykorzystujący rekurencyjną sieć neuronową do dopasowania ramek do fonemów, a~następnie modelujący charakterystyczny sposób generowania określonych fonemów przez mówców za pomocą mikstur wielowymiarowych rozkładów normalnych. (\shortcut{DNN-GMM}, \foreign{Deep Neural Network - Gaussian Mixture Model})
 \end{itemize}
 
-Modele zostaną przetestowane na zbiorze \techname{RedDots} i porównane między sobą oraz z wynikami innych prac.
+Modele zostaną przetestowane na zbiorze \techname{RedDots} i~porównane między sobą oraz z~wynikami innych prac.
 Osobno zostanie zaprezentowana skuteczność weryfikacji mówcy oraz treści. Uwzględnione zostaną następujące miary jakości:
 
 \begin{itemize}
@@ -78,43 +78,43 @@ Osobno zostanie zaprezentowana skuteczność weryfikacji mówcy oraz treści. Uw
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
-Podstawy teorii rozpoznawania mowy są dobrze opisane w \cite{fundamentalsOfSpeech}
+Podstawy teorii rozpoznawania mowy są dobrze opisane w~\cite{fundamentalsOfSpeech}
 oraz \cite{aTutorialOnHidden} tego samego autora, które skupiają się na praktycznym wprowadzeniu
-do ukrytych modeli Markowa, użytych w tej pracy.
+do ukrytych modeli Markowa, użytych w~tej pracy.
 Innym bardzo praktycznym zasobem na ten temat jest \cite{theHtkBook}, opisująca rozwiązanie
-tego problemu zastosowane w pakiecie \titlei{Hidden Markov Model Toolkit} i publicznie dostępne zasoby
-kursu \titlei{CS 224S Spoken Language Processing} z Uniwersytetu Stanford.
+tego problemu zastosowane w~pakiecie \titlei{Hidden Markov Model Toolkit} i~publicznie dostępne zasoby
+kursu \titlei{CS 224S Spoken Language Processing} z~Uniwersytetu Stanford.
 
 O rozpoznawaniu mówcy traktuje \cite{fundamentalsOfSpeaker}
 Jest to przydatny zasób, jednakże bardziej pomocne może okazać przejrzenie się mniejszych, lecz
 bardziej aktualnych publikacji na ten temat.
 
-Ogólnie tematy związane z uczeniem maszynowym doskonale opisane są w
-\cite{patternClassification}. Pozycja ta porusza takie tematy jak statystyka Bayesowska, 
+Ogólnie tematy związane z~uczeniem maszynowym doskonale opisane są w
+\cite{patternClassification}. Pozycja ta porusza takie tematy jak statystyka Bayesowska,
 \foreign{expectation maximization}, sieci neuronowe, RBM
-i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w odbiorze niż powszechnie
-uznany i polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa.
-Doskonałym zasobem do głębokich sieci neuronowych jest dostępna w Internecie książka
+i \foreign{unsupervised learning}. Autor znalazł ten tekst jako przystępniejszy w~odbiorze niż powszechnie
+uznany i~polecany studentom \titlei{Pattern Recognition and Machine Learning} Christophera Bishopa.
+Doskonałym zasobem do głębokich sieci neuronowych jest dostępna w~Internecie książka
 \cite{deeplearningbook}.
 
 Godne polecenia są kursy internetowe dostępne za darmo na platformie Coursera.
-Wysoko oceniane, również przez autora, związane z tematem pracy kursy to
+Wysoko oceniane, również przez autora, związane z~tematem pracy kursy to
 \titlei{Machine Learning} od Andrew Ng,
 \titlei{Neural Networks for Machine Learning} od Geoffrey Hintona,
-\titlei{Digital Signal Processing} od Paolo Prandoniego i  Martina Vetterliego.
+\titlei{Digital Signal Processing} od Paolo Prandoniego i~ Martina Vetterliego.
 Są to zaadoptowane do formy kursu internetowego kursy akademickie. Pozwalają
 doświadczyć lekcji prowadzonych przez światowej sławy naukowców, niezależnie
 od miejsca zamieszkania, co jest bardzo cenne.
 
 \section{Układ pracy}\label{sec:uklad_pracy}
 
-Rozdział \ref{chap:wstep} zawiera wprowadzenie i określenie tematu oraz celu
-pracy. Rozdział \ref{chap:teoria} zawiera opis kilku zagadnień z zakresu
-rozpoznawania mówcy i rozpoznawania mowy, które zostały wybrane jako
+Rozdział \ref{chap:wstep} zawiera wprowadzenie i~określenie tematu oraz celu
+pracy. Rozdział \ref{chap:teoria} zawiera opis kilku zagadnień z~zakresu
+rozpoznawania mówcy i~rozpoznawania mowy, które zostały wybrane jako
 istotne dla tej pracy. Rozdział \ref{chap:technologie}
-opisuje zbiór danych, technologie i narzędzia wykorzystane w pracy. W rozdziale
-\ref{chap:badania} przedstawiono opis stworzonych systemów i wyniki testów. Rozdział
-\ref{chap:podsumowanie} zawiera porównanie wyników i podsumowanie czy założone
-cele zostały osiągnięte. W dodatku \ref{app:plyta} znajduje się płyta CD z
+opisuje zbiór danych, technologie i~narzędzia wykorzystane w~pracy. W~rozdziale
+\ref{chap:badania} przedstawiono opis stworzonych systemów i~wyniki testów. Rozdział
+\ref{chap:podsumowanie} zawiera porównanie wyników i~podsumowanie czy założone
+cele zostały osiągnięte. W~dodatku \ref{app:plyta} znajduje się płyta CD z
 kodem źródłowym aplikacji oraz wersją elektroniczną tej pracy.
 
